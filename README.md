@@ -27,10 +27,10 @@ An introduction to optimization for machine learning. Computation of derivatives
 
 ## Labs
 
-1. [Optimization, gradient descent](labs/lab1.ipynb)
-2. [Floating point issues, computing derivatives](labs/lab2.ipynb)
-3. [Neural networks](labs/lab3.ipynb)
-4. [Convolutional neural networks](labs/lab4.ipynb)
+1. [Optimization, gradient descent](labs/lab1/lab1.ipynb)
+2. [Floating point issues, computing derivatives](labs/lab2/lab2.ipynb)
+3. [Neural networks](labs/lab3/lab3.ipynb)
+4. [Convolutional neural networks](labs/lab4/lab4.ipynb)
 
 
 ## Reference Material
