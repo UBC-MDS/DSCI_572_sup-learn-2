@@ -4,7 +4,7 @@ An introduction to optimization for machine learning. Computation of derivatives
 
 2020 Instructor: [Mike Gelbart](https://mikegelbart.com)
 
-Note: lecture recording videos from the 2020 course offering are available [here](https://www.youtube.com/playlist?list=PLWmXHcz_53Q02OsWy9IduQiSGUSnVGFhm).
+Note: lecture recording videos from the 2020 course offering are available [here](https://www.youtube.com/playlist?list=PLWmXHcz_53Q3KLISD8jydKjz41b9iqERC).
 
 
 ## 2019 Lecture Schedule
