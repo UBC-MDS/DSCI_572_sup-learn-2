@@ -1,0 +1,25 @@
+# install with conda env create -f mds572.yaml
+
+name: mds572
+channels:
+  - conda-forge
+  - defaults
+  - tomasbeuzen
+  - pytorch
+dependencies:
+  - python=3.7
+  - ipykernel
+  - pandas
+  - matplotlib
+  - plotly
+  - nbformat
+  - scikit-learn
+  - torchvision
+  - torchaudio
+  - pytorch
+  - black
+  - flake8
+  - canvasutils
+  - pip
+  - pip:
+    - torch-summary
