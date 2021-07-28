@@ -1,0 +1,658 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSCI 572: Supervised Learning II &#8212; DSCI 572 Supervised Learning II</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction to the Course" href="lectures/lecture0_introduction.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/UBC_MDS_logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">DSCI 572 Supervised Learning II</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <p class="caption collapsible-parent">
+ <span class="caption-text">
+  Welcome
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture0_introduction.html">
+   Introduction to the Course
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture_learning_objectives.html">
+   Lecture Learning Objectives
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Lectures
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture1_floating-point.html">
+   Lecture 1: Floating Point Numbers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture2_gradient-descent.html">
+   Lecture 2: Optimization &amp; Gradient Descent
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture3_stochastic-gradient-descent.html">
+   Lecture 3: Stochastic Gradient Descent
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture4_pytorch-neural-networks-pt1.html">
+   Lecture 4: Introduction to Pytorch &amp; Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture5_neural-networks-pt2.html">
+   Lecture 5: Training Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture6_cnns-pt1.html">
+   Lecture 6: Introduction to Convolutional Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture7_cnns-pt2.html">
+   Lecture 7: Advanced Convolutional Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/lecture8_advanced-deep-learning.html">
+   Lecture 8: Advanced Deep Learning
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Appendices
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/appendixA_gradients.html">
+   Appendix A: Gradients Review
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/appendixB_logistic-loss.html">
+   Appendix B: Logistic Loss
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/appendixC_computing-derivatives.html">
+   Appendix C: Computing Derivatives
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lectures/appendixD_bitmoji-CNN.html">
+   Appendix D: Creating a CNN to Predict Bitmojis
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Tomas Beuzen, MDS 2021<br>Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/README.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#teaching-team">
+   Teaching team
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#course-schedule">
+   Course Schedule
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#lectures">
+     Lectures
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#labs-and-quizzes">
+     Labs and Quizzes
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#office-hours">
+     Office Hours
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dealing-with-covid-19">
+   Dealing With COVID-19
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optional-reference-learning-materials">
+   Optional Reference/Learning Materials
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#deep-learning-resources">
+     Deep learning resources
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ml-related-textbooks">
+     ML-related textbooks
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#math-for-ml">
+     Math for ML
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#other-ml-resources">
+     Other ML resources
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#interesting-ml-competition-write-ups">
+     Interesting ML Competition Write-Ups
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#policies">
+   Policies
+  </a>
+  <ul class="nav section-nav flex-column">
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <p><img alt="" src="_images/572_banner.png" /></p>
+<div class="section" id="dsci-572-supervised-learning-ii">
+<h1>DSCI 572: Supervised Learning II<a class="headerlink" href="#dsci-572-supervised-learning-ii" title="Permalink to this headline">¶</a></h1>
+<p>An introduction to deep learning with Python and Pytorch. Covers optmization, neural network basics, convolutional neural networks, and advanced topics such as autoencoders and generative adversarial networks.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://canvas.ubc.ca/courses/59090">Canvas Course Page</a></p></li>
+<li><p><a class="reference external" href="https://pages.github.ubc.ca/MDS-2020-21/DSCI_572_sup-learn-2_students/README.html">Course Jupyter Book</a></p></li>
+<li><p><a class="reference external" href="https://ubcca-my.sharepoint.com/:f:/g/personal/tomas_beuzen_ubc_ca/EnKLTLl7VDlKvJ9EM123qacBVeOq3az6m2Q-regia2Ct4A?e=HaR1cc">OneDrive Folder</a></p></li>
+</ul>
+<div class="section" id="teaching-team">
+<h2>Teaching team<a class="headerlink" href="#teaching-team" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Position</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Slack handle</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Lecture &amp; lab instructor</p></td>
+<td><p>Tomas Beuzen</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;tom</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Teaching assistant</p></td>
+<td><p>Alireza Iranpour</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;Alireza</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Teaching assistant</p></td>
+<td><p>Aaron Berk</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;Aaron</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Teaching assistant</p></td>
+<td><p>Tristan Pinsonneault-Marotte</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;Tristan</span> <span class="pre">Pinsonneault-Marotte</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Teaching assistant</p></td>
+<td><p>Peter Gysbers</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;Peter</span> <span class="pre">(TA)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Teaching assistant</p></td>
+<td><p>Ali Seyfi</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&#64;Ali</span> <span class="pre">(TA)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="course-schedule">
+<h2>Course Schedule<a class="headerlink" href="#course-schedule" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://ubc-mds.github.io/calendar/">MDS calendar</a> is the best resource for finding lecture, lab, quiz and office hour times.</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Activity</p></th>
+<th class="head"><p>Frequency</p></th>
+<th class="head"><p>Time</p></th>
+<th class="head"><p>Synchronous/Asynchronous?</p></th>
+<th class="head"><p>Recorded?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="#lectures">Lectures</a></p></td>
+<td><p>2 / week</p></td>
+<td><p>Pre-recorded &amp; released at start of week</p></td>
+<td><p>Asynchronous</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="#lecture-viewing-parties">Lecture Viewing Parties and Q&amp;A</a></p></td>
+<td><p>2 / week</p></td>
+<td><p>Mon &amp; Wed 10:30-12pm (PDT)</p></td>
+<td><p>Synchronous</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="#labs-and-quizzes">Labs</a></p></td>
+<td><p>1 / week</p></td>
+<td><p>Mon or Tues 2-4pm (PDT)</p></td>
+<td><p>Synchronous</p></td>
+<td><p>Partially</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="#labs-and-quizzes">Quizzes</a></p></td>
+<td><p>2 / block</p></td>
+<td><p>Week 3 &amp; 5</p></td>
+<td><p>Synchronous</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="#office-hours">Office Hours</a></p></td>
+<td><p>2 / week</p></td>
+<td><p>TBA</p></td>
+<td><p>Synchronous</p></td>
+<td><p>No</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="lectures">
+<h3>Lectures<a class="headerlink" href="#lectures" title="Permalink to this headline">¶</a></h3>
+<p>Find the lecture schedule below. I’m developing new material for this course, but I’ve included links to old lectures and other useful videos for those that are interested.</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>Topic</p></th>
+<th class="head"><p>Optional Watching/Reading</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p><a class="reference internal" href="lectures/lecture1_floating-point.html"><span class="doc std std-doc">Floating Point Errors</span></a></p></td>
+<td><p><ul><li><a class="reference external" href="https://evanw.github.io/float-toy/">Float Toy</a></li><li>Chapter 2 of Ascher and Greif’s book, <a class="reference external" href="http://epubs.siam.org/doi/book/10.1137/9780898719987">available online for students</a> (you must be on campus wifi)</li></ul></p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p><a class="reference internal" href="lectures/lecture2_gradient-descent.html"><span class="doc std std-doc">Optimization and Gradient Descent</span></a></p></td>
+<td><p><ul><li><a class="reference external" href="https://youtu.be/bzj1L997uT8?t=67">Mike’s old optimization video</a></li><li><a class="reference external" href="https://youtu.be/ao34xqQvuT4">Mike’s old gradient descent video</a></li></ul></p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p><a class="reference internal" href="lectures/lecture3_stochastic-gradient-descent.html"><span class="doc std std-doc">Stochastic Gradient Descent</span></a></p></td>
+<td><p><ul><li><a class="reference external" href="https://youtu.be/lmqV5Z5HZzc?t=106">Mike’s old stochastic gradient video</a></li></ul></p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p><a class="reference internal" href="lectures/lecture4_pytorch-neural-networks-pt1.html"><span class="doc std std-doc">Introduction to Neural Networks &amp; PyTorch</span></a></p></td>
+<td><p><ul><li><a class="reference external" href="https://www.youtube.com/watch?v=aircAruvnKk&amp;list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">3Blue1Brown’s video - But what is a Neural Network?</a></li><li> <a class="reference external" href="https://www.youtube.com/watch?v=CqOfi41LfDw">StatQuest’s video - Neural Networks Part 1: Inside the Black Box</a></li><li><a class="reference external" href="https://youtu.be/w60cKkCV_Qk?t=1466">Second part of Mike’s old neural network video</a></li><li><a class="reference external" href="http://www.deeplearningbook.org/">DL Book Chapter 6</a> </li></ul></p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p><a class="reference internal" href="lectures/lecture5_neural-networks-pt2.html"><span class="doc std std-doc">Training Neural Networks</span></a></p></td>
+<td><p><ul><li><a class="reference external" href="https://www.youtube.com/watch?v=IHZwWFHWa-w&amp;index=2&amp;list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">3Blue1Brown’s video - Gradient descent, how neural networks learn</a></li><li><a class="reference external" href="https://www.youtube.com/watch?v=IN2XmBhILt4">StatQuest’s video - Neural Networks Part 2: Backpropagation Main Ideas</a></li><li><a class="reference external" href="https://youtu.be/3l9pyhpxGtU?t=124">Mike’s old neural network fit video</a> (last 15 min is about convolutions)</li></ul></p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>Convolutional Neural Networks Part 1</p></td>
+<td><p><ul><li><a class="reference external" href="https://youtu.be/qb01ggeiT_g">Mike’s old convolutional neural network video</a></li><li><a class="reference external" href="http://cs231n.github.io/convolutional-networks/">Convolutional Neural Networks</a></li><li><a class="reference external" href="https://arxiv.org/pdf/1603.07285.pdf">A guide to convolution arithmetic for deep learning</a></li><li><a class="reference external" href="https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/">An Intuitive Explanation of Convolutional Neural Networks</a></li><li><a class="reference external" href="http://www.deeplearningbook.org/">DL Book Chapter 9</a></li></ul></p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>Convolutional Neural Networks Part 2</p></td>
+<td><p>TBD</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>Advanced Neural Networks</p></td>
+<td><p>TBD</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="labs-and-quizzes">
+<h3>Labs and Quizzes<a class="headerlink" href="#labs-and-quizzes" title="Permalink to this headline">¶</a></h3>
+<p>You are responsible for the following deliverables, which will determine your course grade:</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Assessment</p></th>
+<th class="head"><p>Weight</p></th>
+<th class="head"><p>Due Date</p></th>
+<th class="head"><p>Location</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Lab Assignment 1</p></td>
+<td><p>15%</p></td>
+<td><p>Saturday, Jan 16 at 23:59</p></td>
+<td><p>Submit to Github &amp; Canvas</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lab Assignment 2</p></td>
+<td><p>15%</p></td>
+<td><p>Saturday, Jan 23 at 23:59</p></td>
+<td><p>Submit to Github &amp; Canvas</p></td>
+</tr>
+<tr class="row-even"><td><p>Quiz 1</p></td>
+<td><p>20%</p></td>
+<td><p>Tuesday, Jan 26 at 8:00 and 20:00</p></td>
+<td><p>Canvas</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lab Assignment 3</p></td>
+<td><p>15%</p></td>
+<td><p>Saturday, Jan 30 at 23:59</p></td>
+<td><p>Submit to Github &amp; Canvas</p></td>
+</tr>
+<tr class="row-even"><td><p>Lab Assignment 4</p></td>
+<td><p>15%</p></td>
+<td><p>Saturday, Feb 6 at 23:59</p></td>
+<td><p>Submit to Github &amp; Canvas</p></td>
+</tr>
+<tr class="row-odd"><td><p>Quiz 2</p></td>
+<td><p>20%</p></td>
+<td><p>Tuesday, Feb 9 at 8:00 and 20:00</p></td>
+<td><p>Canvas</p></td>
+</tr>
+</tbody>
+</table>
+<p>Labs are Jupyter notebooks comprised of more comprehensive exercises aimed at demonstrating and reinforcing concepts learned during lectures. Quizzes will be conducted on Canvas in week 3 and week 5, are open book and are typically 40 mins long with a focus on short-answer questions. More information on quizzes will be provided closer to their dates.</p>
+</div>
+<div class="section" id="office-hours">
+<h3>Office Hours<a class="headerlink" href="#office-hours" title="Permalink to this headline">¶</a></h3>
+<p>We will be hosting multiple office hours during the block as a resource for you to ask questions, get help, or just hang out with us and other students. See the <a class="reference external" href="https://ubc-mds.github.io/calendar/">MDS calendar</a> for an up-to-date schedule of office hours.</p>
+</div>
+</div>
+<div class="section" id="dealing-with-covid-19">
+<h2>Dealing With COVID-19<a class="headerlink" href="#dealing-with-covid-19" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/events-as-they-happen">COVID-19 pandemic</a> has affected us all in different ways: it’s okay to not be okay, and we all need to support each other during this time. With that said:</p>
+<ul class="simple">
+<li><p>My (virtual) door is always open, please feel free to talk to me about how you’re doing and if/how I can help you (and if I can’t help you, I can point you in the direction of someone who can);</p></li>
+<li><p>You don’t ever need to explain yourself; if you need support, need to miss a class, or need extra time for an assignment, just ask;</p></li>
+<li><p>UBC has <a class="reference external" href="https://students.ubc.ca/covid19">great student support resources</a> related to COVID-19 (and otherwise).</p></li>
+</ul>
+<p>Further, teaching/learning an intense graduate course like MDS online is a very new concept to all of us. If you have feedback on how I can improve the teaching experience, don’t hesitate to reach out - I’m sure things won’t be perfect from the get-go.</p>
+<p>Finally, here is an official statement from UBC regarding the online learning experience:</p>
+<blockquote>
+<div><p><em>During this pandemic, the shift to online learning has greatly altered teaching and studying at UBC, including changes to health and safety considerations. Keep in mind that some UBC courses might cover topics that are censored or considered illegal by non-Canadian governments. This may include, but is not limited to, human rights, representative government, defamation, obscenity, gender or sexuality, and historical or current geopolitical controversies. If you are a student living abroad, you will be subject to the laws of your local jurisdiction, and your local authorities might limit your access to course material or take punitive action against you. UBC is strongly committed to academic freedom, but has no control over foreign authorities (please visit <a class="reference external" href="http://www.calendar.ubc.ca/vancouver/index.cfm?tree=3,33,86,0">http://www.calendar.ubc.ca/vancouver/index.cfm?tree=3,33,86,0</a> for an articulation of the values of the University conveyed in the Senate Statement on Academic Freedom). Thus, we recognize that students will have legitimate reason to exercise caution in studying certain subjects. If you have concerns regarding your personal situation, consider postponing taking a course with manifest risks, until you are back on campus or reach out to your academic advisor to find substitute courses. For further information and support, please visit: <a class="reference external" href="http://academic.ubc.ca/support-resources/freedom-expression">http://academic.ubc.ca/support-resources/freedom-expression</a>.</em></p>
+</div></blockquote>
+</div>
+<div class="section" id="optional-reference-learning-materials">
+<h2>Optional Reference/Learning Materials<a class="headerlink" href="#optional-reference-learning-materials" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="deep-learning-resources">
+<h3>Deep learning resources<a class="headerlink" href="#deep-learning-resources" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://d2l.ai/chapter_introduction/index.html">Dive into Deep Learning</a>, a book based on STAT 157 at UC Berkeley.</p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=aircAruvnKk">Deep learning YouTube series</a> by 3Blue1Brown.</p></li>
+<li><p><a class="reference external" href="http://neuralnetworksanddeeplearning.com/">Neural Networks and Deep Learning</a> (free online book).</p></li>
+<li><p><a class="reference external" href="http://www.deeplearningbook.org/">Deep Learning</a>. Ian Goodfellow, Yoshua Bengio and Aaron Courville.</p></li>
+<li><p><a class="reference external" href="https://machinelearningmastery.com/deep-learning-with-python">Deep Learning with Python</a>. Jason Brownlee.</p></li>
+<li><p><a class="reference external" href="http://deeplearning.stanford.edu/wiki/index.php/UFLDL_Tutorial">Stanford UFLDL tutorial</a> (or <a class="reference external" href="http://deeplearning.stanford.edu/tutorial/">here</a>)</p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/playlist?list=PLoRl3Ht4JOcdU872GhiYWf6jwrk_SNhz9">Geoff Hinton Coursera lectures</a></p></li>
+<li><p><a class="reference external" href="http://cs231n.github.io/">CS231n: Convolutional Neural Networks for Visual Recognition (Stanford)</a></p></li>
+<li><p><a class="reference external" href="https://www.manning.com/books/grokking-deep-learning">Grokking Deep Learning</a></p></li>
+<li><p><a class="reference external" href="http://course.fast.ai/">Practical Deep Learning For Coders, Part 1</a> and some more resources on their blog <a class="reference external" href="http://www.fast.ai/2016/12/19/favorite-posts/">here</a></p></li>
+<li><p><a class="reference external" href="http://yerevann.com/a-guide-to-deep-learning/">A Guide to Deep Learning</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ChristosChristofidis/awesome-deep-learning">Awesome Deep Learning</a>, which is a list of other resources</p></li>
+<li><p><a class="reference external" href="https://fullstackdeeplearning.com/">Full Stack Deep Learning</a></p></li>
+</ul>
+</div>
+<div class="section" id="ml-related-textbooks">
+<h3>ML-related textbooks<a class="headerlink" href="#ml-related-textbooks" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow: Concepts, Tools, and Techniques to Build Intelligent Systems by Aurélien Géron. Code/notebooks available <a class="reference external" href="https://github.com/ageron/handson-ml2">here</a>. (Endorsed by an MDS student!)</p></li>
+<li><p>James, Gareth; Witten, Daniela; Hastie, Trevor; and Tibshirani, Robert. An Introduction to Statistical Learning: with Applications in R. 2014. Plus <a class="reference external" href="https://github.com/JWarmenhoven/ISLR-python">Python code</a> and <a class="reference external" href="https://github.com/mscaudill/IntroStatLearn">more Python code</a>.</p></li>
+<li><p>Russell, Stuart, and Peter Norvig. Artificial intelligence: a modern approach. 1995.</p></li>
+<li><p>David Poole and Alan Mackwordth. Artificial Intelligence: foundations of computational agents. 2nd edition (2017). <a class="reference external" href="http://artint.info/">Free e-book</a>.</p></li>
+<li><p>Kevin Murphy. Machine Learning: A Probabilistic Perspective. 2012.</p></li>
+<li><p>Christopher Bishop. Pattern Recognition and Machine Learning. 2007.</p></li>
+<li><p>Pang-Ning Tan, Michael Steinbach, Vipin Kumar. Introduction to Data Mining. 2005.</p></li>
+<li><p>Mining of Massive Datasets. Jure Leskovec, Anand Rajaraman, Jeffrey David Ullman. 2nd ed, 2014.</p></li>
+</ul>
+</div>
+<div class="section" id="math-for-ml">
+<h3>Math for ML<a class="headerlink" href="#math-for-ml" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://mml-book.github.io/">Mathematics for Machine Learning</a></p></li>
+<li><p><a class="reference external" href="http://parrt.cs.usfca.edu/doc/matrix-calculus/index.html">The Matrix Calculus You Need For Deep Learning</a></p></li>
+<li><p><a class="reference external" href="https://blog.algorithmia.com/introduction-to-optimizers/">Introduction to Optimizers</a></p></li>
+</ul>
+</div>
+<div class="section" id="other-ml-resources">
+<h3>Other ML resources<a class="headerlink" href="#other-ml-resources" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://ciml.info/">A Course in Machine Learning</a></p></li>
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=PlhFWT7vAEw">Nando de Freitas lecture videos</a> and <a class="reference external" href="https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/">online course</a></p></li>
+</ul>
+</div>
+<div class="section" id="interesting-ml-competition-write-ups">
+<h3>Interesting ML Competition Write-Ups<a class="headerlink" href="#interesting-ml-competition-write-ups" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://jeffreydf.github.io/diabetic-retinopathy-detection/">Diabetic retinopathy Kaggle competition write-up</a></p></li>
+<li><p><a class="reference external" href="https://benanne.github.io/2014/04/05/galaxy-zoo.html">Galaxy Zoo Kaggle competition write-up</a></p></li>
+<li><p><a class="reference external" href="https://benanne.github.io/2015/03/17/plankton.html">National Data Science Bowl competition write-up</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="policies">
+<h2>Policies<a class="headerlink" href="#policies" title="Permalink to this headline">¶</a></h2>
+<p>Please see the general <a class="reference external" href="https://ubc-mds.github.io/policies/">MDS policies</a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='right-next' id="next-link" href="lectures/lecture0_introduction.html" title="next page">Introduction to the Course</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Tomas Beuzen<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>

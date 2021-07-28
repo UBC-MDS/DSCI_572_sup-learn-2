@@ -1,0 +1,1072 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecture 6: Introduction to Convolutional Neural Networks &#8212; DSCI 572 Supervised Learning II</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Lecture 7: Advanced Convolutional Neural Networks" href="lecture7_cnns-pt2.html" />
+    <link rel="prev" title="Lecture 5: Training Neural Networks" href="lecture5_neural-networks-pt2.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../index.html">
+  
+  <img src="../_static/UBC_MDS_logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">DSCI 572 Supervised Learning II</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <p class="caption collapsible-parent">
+ <span class="caption-text">
+  Welcome
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture0_introduction.html">
+   Introduction to the Course
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../lecture_learning_objectives.html">
+   Lecture Learning Objectives
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Lectures
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture1_floating-point.html">
+   Lecture 1: Floating Point Numbers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture2_gradient-descent.html">
+   Lecture 2: Optimization &amp; Gradient Descent
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture3_stochastic-gradient-descent.html">
+   Lecture 3: Stochastic Gradient Descent
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture4_pytorch-neural-networks-pt1.html">
+   Lecture 4: Introduction to Pytorch &amp; Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture5_neural-networks-pt2.html">
+   Lecture 5: Training Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Lecture 6: Introduction to Convolutional Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture7_cnns-pt2.html">
+   Lecture 7: Advanced Convolutional Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="lecture8_advanced-deep-learning.html">
+   Lecture 8: Advanced Deep Learning
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Appendices
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="appendixA_gradients.html">
+   Appendix A: Gradients Review
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="appendixB_logistic-loss.html">
+   Appendix B: Logistic Loss
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="appendixC_computing-derivatives.html">
+   Appendix C: Computing Derivatives
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="appendixD_bitmoji-CNN.html">
+   Appendix D: Creating a CNN to Predict Bitmojis
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Tomas Beuzen, MDS 2021<br>Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/lectures/lecture6_cnns-pt1.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#lecture-outline">
+   Lecture Outline
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#lecture-learning-objectives">
+   Lecture Learning Objectives
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#imports">
+   Imports
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#convolutional-neural-networks-cnns">
+   1. Convolutional Neural Networks (CNNs)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#motivation">
+     1.1. Motivation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#convolutions-and-filters">
+     1.2. Convolutions and Filters
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cooking-up-a-cnn">
+   2. Cooking up a CNN
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ingredient-1-convolutional-layers">
+     2.1. Ingredient 1: Convolutional Layers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ingredient-2-flattening">
+     2.2. Ingredient 2: Flattening
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ingredient-3-pooling">
+     2.3. Ingredient 3: Pooling
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-cnn-recipe-book">
+   3. The CNN Recipe Book
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cnn-vs-fully-connected-nn">
+   4. CNN vs Fully Connected NN
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#lecture-exercise-true-false-questions">
+   5. Lecture Exercise: True/False Questions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-lecture-in-three-conjectures">
+   6. The Lecture in Three Conjectures
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <p><img alt="" src="../_images/572_banner.png" /></p>
+<div class="section" id="lecture-6-introduction-to-convolutional-neural-networks">
+<h1>Lecture 6: Introduction to Convolutional Neural Networks<a class="headerlink" href="#lecture-6-introduction-to-convolutional-neural-networks" title="Permalink to this headline">¶</a></h1>
+<p><strong>Tomas Beuzen, January 2021</strong></p>
+<p><img alt="" src="../_images/block.png" /></p>
+<div class="section" id="lecture-outline">
+<h2>Lecture Outline<a class="headerlink" href="#lecture-outline" title="Permalink to this headline">¶</a></h2>
+<hr><div class="toc"><ul class="toc-item"><li><span><a href="#lecture-learning-objectives" data-toc-modified-id="Lecture-Learning-Objectives-2">Lecture Learning Objectives</a></span></li><li><span><a href="#imports" data-toc-modified-id="Imports-3">Imports</a></span></li><li><span><a href="#convolutional-neural-networks-cnns" data-toc-modified-id="1.-Convolutional-Neural-Networks-(CNNs)-4">1. Convolutional Neural Networks (CNNs)</a></span></li><li><span><a href="#cooking-up-a-cnn" data-toc-modified-id="2.-Cooking-up-a-CNN-5">2. Cooking up a CNN</a></span></li><li><span><a href="#the-cnn-recipe-book" data-toc-modified-id="3.-The-CNN-Recipe-Book-6">3. The CNN Recipe Book</a></span></li><li><span><a href="#cnn-vs-fully-connected-nn" data-toc-modified-id="4.-CNN-vs-Fully-Connected-NN-7">4. CNN vs Fully Connected NN</a></span></li><li><span><a href="#lecture-exercise-truefalse-questions" data-toc-modified-id="5.-Lecture-Exercise:-True/False-Questions-8">5. Lecture Exercise: True/False Questions</a></span></li><li><span><a href="#the-lecture-in-three-conjectures" data-toc-modified-id="6.-The-Lecture-in-Three-Conjectures-9">6. The Lecture in Three Conjectures</a></span></li></ul></div></div>
+<div class="section" id="lecture-learning-objectives">
+<h2>Lecture Learning Objectives<a class="headerlink" href="#lecture-learning-objectives" title="Permalink to this headline">¶</a></h2>
+<hr><ul class="simple">
+<li><p>Describe the terms convolution, kernel/filter, pooling, and flattening</p></li>
+<li><p>Explain how convolutional neural networks (CNNs) work</p></li>
+<li><p>Calculate the number of parameters in a given CNN architecture</p></li>
+<li><p>Create a CNN in <code class="docutils literal notranslate"><span class="pre">PyTorch</span></code></p></li>
+<li><p>Discuss the key differences between CNNs and fully connected NNs</p></li>
+</ul>
+</div>
+<div class="section" id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
+<hr><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torchsummary</span> <span class="kn">import</span> <span class="n">summary</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">utils.plotting</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s1">&#39;axes.labelweight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;axes.grid&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="convolutional-neural-networks-cnns">
+<h2>1. Convolutional Neural Networks (CNNs)<a class="headerlink" href="#convolutional-neural-networks-cnns" title="Permalink to this headline">¶</a></h2>
+<hr><div class="section" id="motivation">
+<h3>1.1. Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Up until now we’ve been dealing with “fully connected neural networks” meaning that every neuron in a given layer is connected to every neuron in the next layer. This has two key implications:</p>
+<ol class="simple">
+<li><p>It results in a LOT of parameters.</p></li>
+<li><p>The order of our features doesn’t matter.</p></li>
+</ol>
+</li>
+<li><p>Consider the simple image and fully connected network below:</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-1.png" /></p>
+<ul class="simple">
+<li><p>Every input node is connected to every node in the next layer - is that really necessary?</p></li>
+<li><p>When you look at this image, how do you know that it’s me?</p>
+<ul>
+<li><p>You notice the structure in the image (there’s a face, shoulders, a smile, etc.)</p></li>
+<li><p>You notice how different structures are positioned and related (the face is on top of the shoulders, etc.)</p></li>
+<li><p>You probably use the shading (colour) to infer things about the image too but we’ll talk more about that later.</p></li>
+</ul>
+</li>
+<li><p>The point here is that <strong>the structure of our data (the pixels) is important</strong></p></li>
+<li><p>So maybe, we should have each hidden node only look at a small area of the image, like this:</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-2.png" /></p>
+<ul class="simple">
+<li><p>We have far fewer parameters now because we’re acknowledging that pixels that are far apart are probably not all that related and so don’t need to be connected.</p></li>
+<li><p>We’re seeing that structure is important here, so then why should I need to flatten my image?</p></li>
+<li><p>Let’s be crazy and not flatten the image, but instead, make our hidden layer a 2D matrix:</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-3.png" /></p>
+<ul class="simple">
+<li><p>We’re almost there!</p></li>
+<li><p>As it stands, each group of 2 x 2 pixels has 4 unique weights associated with it (one for each pixel), which are being summed up into a single value in the hidden layer.</p></li>
+<li><p>But we don’t need to weights to be different for each group, we’re looking for <strong>structure</strong>, we don’t care if my face is in the top left or the bottom right, we’re just looking for a face!</p></li>
+<li><p>Let’s summarise the weights into a weight “filter”</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-4.png" /></p>
+<ul class="simple">
+<li><p>Let’s see how the filter works</p></li>
+<li><p>We’ll display some arbitrary values for our pixels</p></li>
+<li><p>The filter “convolves” over each group of pixels, multiplies corresponding elements and sums them up to give the values in the output nodes:</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-5.gif" /></p>
+<ul class="simple">
+<li><p>As we’ll see, we can add as many of these “filters” as we like to make more complex models that can identify more useful things:</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-6.png" /></p>
+<ul class="simple">
+<li><p>We just made a <strong>convolutional neural network</strong> (CNN)</p></li>
+<li><p>Instead of fully-connected hidden nodes, we have 2D filters that we “convolve” over our input data</p></li>
+<li><p>This has two key advantages:</p>
+<ol class="simple">
+<li><p>We have less parameters than a fully connected network.</p></li>
+<li><p>We preserve the useful structure of our data.</p></li>
+</ol>
+</li>
+</ul>
+</div>
+<div class="section" id="convolutions-and-filters">
+<h3>1.2. Convolutions and Filters<a class="headerlink" href="#convolutions-and-filters" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Convolution really just means “to pass over the data”</p></li>
+<li><p>What are we “passing”? Our filters - which are also called <strong>kernels</strong></p></li>
+<li><p>Here’s another gif like the one we saw earlier:</p></li>
+</ul>
+<p><img alt="" src="../_images/conv-1.gif" /></p>
+<blockquote>
+<div><p>Source: modified after <a class="reference external" href="https://theano-pymc.readthedocs.io/en/latest/tutorial/conv_arithmetic.html">theano-pymc.readthedocs.io</a>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>So how does this help us extract structure from the data?</p></li>
+<li><p>Well let’s see some examples!</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s2">&quot;img/tom_bw.png&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_21_0.png" src="../_images/lecture6_cnns-pt1_21_0.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>We can blur this image by applying a filter with the following weights:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix} 0.0625 &amp; 0.125 &amp; 0.0625 \\ 0.125 &amp; 0.25 &amp; 0.125 \\ 0.0625 &amp; 0.125 &amp; 0.0625 \end{bmatrix}\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kernel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[[[</span> <span class="mf">0.0625</span><span class="p">,</span>  <span class="mf">0.1250</span><span class="p">,</span>  <span class="mf">0.0625</span><span class="p">],</span>
+                         <span class="p">[</span> <span class="mf">0.1250</span><span class="p">,</span>  <span class="mf">0.2500</span><span class="p">,</span>  <span class="mf">0.1250</span><span class="p">],</span>
+                         <span class="p">[</span> <span class="mf">0.0625</span><span class="p">,</span>  <span class="mf">0.1250</span><span class="p">,</span>  <span class="mf">0.0625</span><span class="p">]]]])</span>
+<span class="n">plot_conv</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_23_0.png" src="../_images/lecture6_cnns-pt1_23_0.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>How about this one:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix} -2 &amp; -1 &amp; 0 \\ -1 &amp; 1 &amp; 1 \\ 0 &amp; 1 &amp; 2 \end{bmatrix}\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kernel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[[[</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span>  <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span>
+                         <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span>  <span class="mi">2</span><span class="p">]]]])</span>
+<span class="n">plot_conv</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_25_0.png" src="../_images/lecture6_cnns-pt1_25_0.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>One more:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix} -1 &amp; -1 &amp; -1 \\ -1 &amp; 8 &amp; -1 \\ -1 &amp; -1 &amp; -1 \end{bmatrix}\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kernel</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[[[</span>  <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="o">-</span><span class="mi">1</span><span class="p">,</span>   <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                         <span class="p">[</span>  <span class="o">-</span><span class="mi">1</span><span class="p">,</span>   <span class="mi">8</span><span class="p">,</span>   <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                         <span class="p">[</span>  <span class="o">-</span><span class="mi">1</span><span class="p">,</span>  <span class="o">-</span><span class="mi">1</span><span class="p">,</span>   <span class="o">-</span><span class="mi">1</span><span class="p">]]]])</span>
+<span class="n">plot_conv</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_27_0.png" src="../_images/lecture6_cnns-pt1_27_0.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://setosa.io/ev/image-kernels/">Here’s a great website</a> where you can play around with other filters.</p></li>
+<li><p>We usually use <strong>odd numbers for filters</strong> so that they are applied symmetrically around our input data</p></li>
+<li><p>Did you notice in the .gif earlier that the output from applying our kernel was smaller than the input? Take a look again:</p></li>
+</ul>
+<p><img alt="" src="../_images/conv-1.gif" /></p>
+<blockquote>
+<div><p>Source: modified after <a class="reference external" href="https://theano-pymc.readthedocs.io/en/latest/tutorial/conv_arithmetic.html">theano-pymc.readthedocs.io</a>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Be default, our kernels are only applied where the filter fully fits on top of the input</p></li>
+<li><p>But we can control this behaviour and the size of our output with:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">padding</span></code>: “pads” the outside of the input 0’s to allow the kernel to reach the boundary pixels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strides</span></code>: controls how far the kernel “steps” over pixels.</p></li>
+</ul>
+</li>
+<li><p>Below is an example with:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">padding=1</span></code>: we have <code class="docutils literal notranslate"><span class="pre">1</span></code> layer of 0’s around our border</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strides=(2,2)</span></code>: our kernel moves 2 data points to the right for each row, then moves 2 data points down to the next row</p></li>
+</ul>
+</li>
+</ul>
+<p><img alt="" src="../_images/conv-2.gif" /></p>
+<blockquote>
+<div><p>Source: modified after <a class="reference external" href="https://theano-pymc.readthedocs.io/en/latest/tutorial/conv_arithmetic.html">theano-pymc.readthedocs.io</a>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>We’ll look more at these below.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="cooking-up-a-cnn">
+<h2>2. Cooking up a CNN<a class="headerlink" href="#cooking-up-a-cnn" title="Permalink to this headline">¶</a></h2>
+<hr><div class="section" id="ingredient-1-convolutional-layers">
+<h3>2.1. Ingredient 1: Convolutional Layers<a class="headerlink" href="#ingredient-1-convolutional-layers" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>I showed some example kernels above</p></li>
+<li><p>In CNNs the actual values in <strong>the kernels are the weights your network will learn during training</strong>: your network will learn what structures are important for prediction</p></li>
+<li><p>In PyTorch, convolutional layers are defined as <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>, there are 5 important arguments we need to know:</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">in_channels</span></code>: how many features are we passing in. Our features are our colour bands, in greyscale, we have 1 feature, in colour, we have 3 channels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">out_channels</span></code>: how many kernels do we want to use. Analogous to the number of hidden nodes in a hidden layer of a fully connected network.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kernel_size</span></code>: the size of the kernel. Above we were using 3x3. Common sizes are 3x3, 5x5, 7x7.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stride</span></code>: the “step-size” of the kernel.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">padding</span></code>: the number of pixels we should pad to the outside of the image so we can get edge pixels.</p></li>
+</ol>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1 kernel of (3,3)</span>
+<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plot_convs</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv_layer</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_33_0.png" src="../_images/lecture6_cnns-pt1_33_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 2 kernels of (3,3)</span>
+<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">plot_convs</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv_layer</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_34_0.png" src="../_images/lecture6_cnns-pt1_34_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3 kernels of (5,5)</span>
+<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plot_convs</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv_layer</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_35_0.png" src="../_images/lecture6_cnns-pt1_35_0.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>If we use a kernel with no padding, our output image will be smaller as we noted earlier</p></li>
+<li><p>Let’s demonstrate that by using a larger kernel now:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1 kernel of (51,51)</span>
+<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="n">plot_convs</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv_layer</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_37_0.png" src="../_images/lecture6_cnns-pt1_37_0.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>As we saw, we can add <code class="docutils literal notranslate"><span class="pre">padding</span></code> to the outside of the image to avoid this:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1 kernel of (51,51) with padding</span>
+<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span> <span class="mi">51</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">plot_convs</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv_layer</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_39_0.png" src="../_images/lecture6_cnns-pt1_39_0.png" />
+</div>
+</div>
+<blockquote>
+<div><p>Setting <code class="docutils literal notranslate"><span class="pre">padding</span> <span class="pre">=</span> <span class="pre">kernel_size</span> <span class="pre">//</span> <span class="pre">2</span></code> will always result in an output the same shape as the input. Think about why this is…</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Finally, we also saw before how <code class="docutils literal notranslate"><span class="pre">strides</span></code> influence the size of the output:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1 kernel of (25,25) with stride of 3</span>
+<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plot_convs</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">conv_layer</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/lecture6_cnns-pt1_42_0.png" src="../_images/lecture6_cnns-pt1_42_0.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>With CNN we are no longer flattening our data, so what are our “features”?</p></li>
+<li><p>Our features are called “channels” in CNN-lingo -&gt; they are like the colour channels in an image:</p>
+<ul>
+<li><p>A grayscale image has 1 feature/channel</p></li>
+<li><p>A coloured image has 3 features/channel</p></li>
+</ul>
+</li>
+</ul>
+<p><img alt="" src="../_images/channels-1.png" /></p>
+<p><img alt="" src="../_images/channels-2.png" /></p>
+<ul class="simple">
+<li><p>What’s important with CNNs is that the <strong>size of our input data does not impact how many parameters we have in our convolutonal layers</strong>.</p></li>
+<li><p>For example, your kernels don’t care how big your image is (i.e., 28 x 28 or 256 x 256), all that matters is:</p>
+<ol class="simple">
+<li><p>How many features (“channels”) you have: <code class="docutils literal notranslate"><span class="pre">in_channels</span></code></p></li>
+<li><p>How many filters you use in each layer: <code class="docutils literal notranslate"><span class="pre">out_channels</span></code></p></li>
+<li><p>How big the filters are: <code class="docutils literal notranslate"><span class="pre">kernel_size</span></code></p></li>
+</ol>
+</li>
+<li><p>Let’s see some diagrams:</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-7.png" /></p>
+<ul class="simple">
+<li><p>For coloured images (3 channels):</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-8.png" /></p>
+</div>
+<div class="section" id="ingredient-2-flattening">
+<h3>2.2. Ingredient 2: Flattening<a class="headerlink" href="#ingredient-2-flattening" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>With our brand new, shiny convolutional layers, we’re basically just passing images through the network - cool!</p></li>
+<li><p>But we’re going to eventually want to do some regression or classification</p></li>
+<li><p>That means that by the end of our network, we are going to need to <code class="docutils literal notranslate"><span class="pre">torch.nn.Flatten()</span></code> our images:</p></li>
+</ul>
+<p><img alt="" src="../_images/cnn-9.png" /></p>
+<ul class="simple">
+<li><p>Let’s make that simple CNN above in PyTorch:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CNN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">CNN</span><span class="p">()</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1]                   --
+|    └─Conv2d: 2-1                       [-1, 3, 100, 100]         30
+|    └─ReLU: 2-2                         [-1, 3, 100, 100]         --
+|    └─Conv2d: 2-3                       [-1, 2, 100, 100]         56
+|    └─ReLU: 2-4                         [-1, 2, 100, 100]         --
+|    └─Flatten: 2-5                      [-1, 20000]               --
+|    └─Linear: 2-6                       [-1, 1]                   20,001
+==========================================================================================
+Total params: 20,087
+Trainable params: 20,087
+Non-trainable params: 0
+Total mult-adds (M): 0.85
+==========================================================================================
+Input size (MB): 0.04
+Forward/backward pass size (MB): 0.38
+Params size (MB): 0.08
+Estimated Total Size (MB): 0.50
+==========================================================================================
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Oh man! 20,000 parameters in that last layer, geez</p></li>
+<li><p>Is there a way we can reduce this somehow? Glad you asked! See you in the next section.</p></li>
+</ul>
+</div>
+<div class="section" id="ingredient-3-pooling">
+<h3>2.3. Ingredient 3: Pooling<a class="headerlink" href="#ingredient-3-pooling" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Pooling is how we can reduce the number of parameters we get out of a <code class="docutils literal notranslate"><span class="pre">torch.nn.Flatten()</span></code></p></li>
+<li><p>It’s pretty simple, we just aggregate the data, usually using the maximum or minimum of a window of pixels</p></li>
+<li><p>Here’s an example of max pooling:</p></li>
+</ul>
+<p><img alt="" src="../_images/pool.gif" /></p>
+<blockquote>
+<div><p>Source: modified after <a class="reference external" href="https://www.oreilly.com/radar/visualizing-convolutional-neural-networks/">www.oreilly.com/</a>.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>We use “pooling layers” to reduce the shape of our image as it’s passing through the network</p></li>
+<li><p>So when we eventually <code class="docutils literal notranslate"><span class="pre">torch.nn.Flatten()</span></code>, we’ll have less features in that flattened layer!</p></li>
+<li><p>We can implement pooling with <code class="docutils literal notranslate"><span class="pre">torch.nn.MaxPool2d()</span></code></p></li>
+<li><p>Let’s try it out and reduce the number of parameters:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CNN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1250</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">CNN</span><span class="p">()</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1]                   --
+|    └─Conv2d: 2-1                       [-1, 3, 100, 100]         30
+|    └─ReLU: 2-2                         [-1, 3, 100, 100]         --
+|    └─MaxPool2d: 2-3                    [-1, 3, 50, 50]           --
+|    └─Conv2d: 2-4                       [-1, 2, 50, 50]           56
+|    └─ReLU: 2-5                         [-1, 2, 50, 50]           --
+|    └─MaxPool2d: 2-6                    [-1, 2, 25, 25]           --
+|    └─Flatten: 2-7                      [-1, 1250]                --
+|    └─Linear: 2-8                       [-1, 1]                   1,251
+==========================================================================================
+Total params: 1,337
+Trainable params: 1,337
+Non-trainable params: 0
+Total mult-adds (M): 0.41
+==========================================================================================
+Input size (MB): 0.04
+Forward/backward pass size (MB): 0.27
+Params size (MB): 0.01
+Estimated Total Size (MB): 0.31
+==========================================================================================
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Damnnnnn - we reduced that last layer to 1,251 parameters. Nice job!</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="the-cnn-recipe-book">
+<h2>3. The CNN Recipe Book<a class="headerlink" href="#the-cnn-recipe-book" title="Permalink to this headline">¶</a></h2>
+<hr><ul class="simple">
+<li><p>Here’s a CNN diagram of a famous architecture called <a class="reference external" href="https://en.wikipedia.org/wiki/AlexNet">AlexNet</a> (we’ll talk more about “famous architectures” next lecture):</p></li>
+</ul>
+<p><img alt="" src="../_images/alexnet.png" /></p>
+<ul class="simple">
+<li><p>You actually know what all of the above means now!</p></li>
+<li><p>But, deep learning and CNN architecture remains very much an art</p></li>
+<li><p>Here is my general recipe book (based on experience, common practice, and popular pre-made architectures - more on those next lecture)</p></li>
+<li><p>Typical ingredients (in order):</p>
+<ul>
+<li><p>Convolution layer(s): <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code></p></li>
+<li><p>Activation function: <code class="docutils literal notranslate"><span class="pre">torch.nn.ReLU</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.Sigmoid</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.Softplus</span></code>, etc.</p></li>
+<li><p>(optional) Batch normalization: <code class="docutils literal notranslate"><span class="pre">torch.nn.BatchNorm2d</span></code> (more on that next lecture)</p></li>
+<li><p>(optional) Pooling: <code class="docutils literal notranslate"><span class="pre">torch.nn.MaxPool2d</span></code></p></li>
+<li><p>(optional) Drop out: <code class="docutils literal notranslate"><span class="pre">torch.nn.Dropout</span></code></p></li>
+<li><p>Flatten: <code class="docutils literal notranslate"><span class="pre">torch.nn.Flatten</span></code></p></li>
+</ul>
+</li>
+<li><p>I’ll be getting you to implement a CNN for our Bitmoji dataset from last lecture in lab this week so you can get some practice in there!</p></li>
+</ul>
+</div>
+<div class="section" id="cnn-vs-fully-connected-nn">
+<h2>4. CNN vs Fully Connected NN<a class="headerlink" href="#cnn-vs-fully-connected-nn" title="Permalink to this headline">¶</a></h2>
+<hr><ul class="simple">
+<li><p>As an example of the parameter savings introduced when using CNNs with structured data, let’s compare the Bitmoji classifier from last lecture, with an equivalent CNN version</p></li>
+<li><p>We’ll replace all linear layers with convolutional layers with 3 kernels of size (3, 3) and will assume an image size of 128 x 128:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">linear_block</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">),</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">conv_block</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">NN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">linear_block</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+            <span class="n">linear_block</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+            <span class="n">linear_block</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+            <span class="n">linear_block</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+    
+<span class="k">class</span> <span class="nc">CNN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_channels</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">49152</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">NN</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">128</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">128</span> <span class="o">*</span> <span class="mi">128</span><span class="p">,));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1]                   --
+|    └─Sequential: 2-1                   [-1, 256]                 --
+|    |    └─Linear: 3-1                  [-1, 256]                 4,194,560
+|    |    └─ReLU: 3-2                    [-1, 256]                 --
+|    └─Sequential: 2-2                   [-1, 128]                 --
+|    |    └─Linear: 3-3                  [-1, 128]                 32,896
+|    |    └─ReLU: 3-4                    [-1, 128]                 --
+|    └─Sequential: 2-3                   [-1, 64]                  --
+|    |    └─Linear: 3-5                  [-1, 64]                  8,256
+|    |    └─ReLU: 3-6                    [-1, 64]                  --
+|    └─Sequential: 2-4                   [-1, 16]                  --
+|    |    └─Linear: 3-7                  [-1, 16]                  1,040
+|    |    └─ReLU: 3-8                    [-1, 16]                  --
+|    └─Linear: 2-5                       [-1, 1]                   17
+==========================================================================================
+Total params: 4,236,769
+Trainable params: 4,236,769
+Non-trainable params: 0
+Total mult-adds (M): 12.71
+==========================================================================================
+Input size (MB): 0.06
+Forward/backward pass size (MB): 0.00
+Params size (MB): 16.16
+Estimated Total Size (MB): 16.23
+==========================================================================================
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">CNN</span><span class="p">(</span><span class="n">input_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 1]                   --
+|    └─Sequential: 2-1                   [-1, 3, 128, 128]         --
+|    |    └─Conv2d: 3-1                  [-1, 3, 128, 128]         30
+|    |    └─ReLU: 3-2                    [-1, 3, 128, 128]         --
+|    └─Sequential: 2-2                   [-1, 3, 128, 128]         --
+|    |    └─Conv2d: 3-3                  [-1, 3, 128, 128]         84
+|    |    └─ReLU: 3-4                    [-1, 3, 128, 128]         --
+|    └─Sequential: 2-3                   [-1, 3, 128, 128]         --
+|    |    └─Conv2d: 3-5                  [-1, 3, 128, 128]         84
+|    |    └─ReLU: 3-6                    [-1, 3, 128, 128]         --
+|    └─Sequential: 2-4                   [-1, 3, 128, 128]         --
+|    |    └─Conv2d: 3-7                  [-1, 3, 128, 128]         84
+|    |    └─ReLU: 3-8                    [-1, 3, 128, 128]         --
+|    └─Sequential: 2-5                   [-1, 3, 128, 128]         --
+|    |    └─Conv2d: 3-9                  [-1, 3, 128, 128]         84
+|    |    └─ReLU: 3-10                   [-1, 3, 128, 128]         --
+|    └─Flatten: 2-6                      [-1, 49152]               --
+|    └─Linear: 2-7                       [-1, 1]                   49,153
+==========================================================================================
+Total params: 49,519
+Trainable params: 49,519
+Non-trainable params: 0
+Total mult-adds (M): 5.85
+==========================================================================================
+Input size (MB): 0.06
+Forward/backward pass size (MB): 1.88
+Params size (MB): 0.19
+Estimated Total Size (MB): 2.13
+==========================================================================================
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>No pooling and our CNN has 49,519 parameters vs 4,236,769</p></li>
+<li><p>This is a somewhat arbitray comparison but it proves my point</p></li>
+<li><p>We’ll explore how accurate our CNN is in the lab this week</p></li>
+</ul>
+</div>
+<div class="section" id="lecture-exercise-true-false-questions">
+<h2>5. Lecture Exercise: True/False Questions<a class="headerlink" href="#lecture-exercise-true-false-questions" title="Permalink to this headline">¶</a></h2>
+<hr><p>Answer True/False for the following:</p>
+<ol class="simple">
+<li><p>The <em>input</em> to a <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2D</span></code> layer is a 2D image. (<strong>False</strong> - it’s a 3D image, don’t forget the channels!)</p></li>
+<li><p>The <em>output</em> of a <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2D</span></code> layer is a 2D image. (<strong>False</strong> - it’s a 3D image, don’t forget the channels!)</p></li>
+<li><p>The <em>parameters</em> of a <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2D</span></code> layer form a 4D array. (<strong>True</strong>)</p></li>
+<li><p>Adding more fully connected layers (after flattening) <em>always</em> increases the number of parameters of a convnet. (<strong>True</strong>)</p></li>
+<li><p>Adding more convolutional layers (before flattening) <em>always</em> increases the number of parameters of a convnet. (<strong>False</strong> - for example, we could increase the <code class="docutils literal notranslate"><span class="pre">stride</span></code> in a convolutional layer to reduce the size of our data before the flatten layer. Although it’s more common to do this with a pooling layer.)</p></li>
+</ol>
+</div>
+<div class="section" id="the-lecture-in-three-conjectures">
+<h2>6. The Lecture in Three Conjectures<a class="headerlink" href="#the-lecture-in-three-conjectures" title="Permalink to this headline">¶</a></h2>
+<hr><ol class="simple">
+<li><p>CNNs help us utilize the structure in our data to make predictions. They also typically have less parameters than fully connected networks.</p></li>
+<li><p>CNNs use filters/kernels which “convolve” over localized areas of the data.</p></li>
+<li><p>The core ingredients of CNNs are: convolutional layers, pooling layers, flattening layers</p></li>
+</ol>
+<p><img alt="" src="../_images/mission.png" /></p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-mds572-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-mds572-py",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-mds572-py'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="lecture5_neural-networks-pt2.html" title="previous page">Lecture 5: Training Neural Networks</a>
+    <a class='right-next' id="next-link" href="lecture7_cnns-pt2.html" title="next page">Lecture 7: Advanced Convolutional Neural Networks</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Tomas Beuzen<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
