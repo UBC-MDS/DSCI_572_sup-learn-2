@@ -4,7 +4,7 @@
 
 An introduction to deep learning with Python and Pytorch. Covers optmization, neural network basics, convolutional neural networks, and advanced topics such as autoencoders and generative adversarial networks.
 
-- [Course Jupyter Book](https://pages.github.ubc.ca/MDS-2020-21/DSCI_572_sup-learn-2_students/README.html)
+- [Course Jupyter Book](https://ubc-mds.github.io/DSCI_572_sup-learn-2/README.html)
 
 2021 Instructor: Tomas Beuzen
 
