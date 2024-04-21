@@ -1,15 +1,14 @@
 import torch
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from torchvision import utils
-import matplotlib.pyplot as plt
-plt.style.use('ggplot')
-plt.rcParams.update({'font.size': 16, 'axes.labelweight': 'bold'})
 from .optimization import *
 
+plt.rcParams.update({'font.size': 12, 'axes.labelweight': 'bold'})
 
 def plot_pokemon(
     x, y, y_hat=None, x_range=[10, 130], y_range=[10, 130], dx=20, dy=20
@@ -144,7 +143,55 @@ def plot_logistic(
     return fig
 
 
-def plot_gradient_m(x, y, m, slopes, mse, grad_func):
+def plot_gradient_m(X, y, m, slopes, mse, grad_func):
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=slopes,
+            y=mse,
+            line_color="#1ac584",
+            line=dict(width=3),
+            mode="lines",
+            name="MSE",
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=slopes,
+            y=mean_squared_error(y, m * X.flatten()) + grad_func(X, y, m) * (slopes - m),
+            line_color="red",
+            mode="lines",
+            line=dict(width=2),
+            name="gradient",
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=[m],
+            y=[mean_squared_error(y, m * X)],
+            line_color="red",
+            marker=dict(size=14, line=dict(width=1, color="DarkSlateGrey")),
+            mode="markers",
+            name=f"slope {m}",
+        )
+    )
+    fig.update_layout(
+        width=520,
+        height=450,
+        xaxis_title="slope (w)",
+        yaxis_title="MSE",
+        title=f"slope {m[0]:.1f}, gradient {grad_func(X, y, m)[0]:.1f}",
+        title_x=0.46,
+        title_y=0.93,
+        margin=dict(t=60),
+    )
+    fig.update_xaxes(range=[0.4, 1.6], tick0=0.4, dtick=0.2)
+    fig.update_yaxes(range=[0, 2500])
+    return fig
+    
+    
+
+def old_plot_gradient_m(x, y, m, slopes, mse, grad_func):
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
@@ -369,7 +416,7 @@ def plot_grid_search_2d(x, y, slopes, intercepts):
     )
     fig.update_xaxes(
         title="intercept (w<sub>0</sub>)",
-        range=[intercepts.max(), intercepts.min()],
+        range=[intercepts.min(), intercepts.max()],
         tick0=intercepts.max(),
         row=1,
         col=2,
@@ -644,6 +691,7 @@ def plot_gradient_descent_2d(
         width=700,
         height=600,
         margin=dict(t=60),
+        yaxis=dict(scaleanchor="x", scaleratio=1),
         legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
     )
     fig.update_xaxes(
@@ -929,8 +977,8 @@ def plot_panel(f1, f2, f3):
     for n, f in enumerate((f1, f2, f3)):
         for _ in range(len(f.data)):
             fig.add_trace(f.data[_], row=1, col=n + 1)
-        fig.update_xaxes(range=[-40, 138], row=1, col=n + 1)
-        fig.update_yaxes(range=[-30, 58], row=1, col=n + 1)
+        fig.update_xaxes(range=[-40, 110], row=1, col=n + 1)
+        fig.update_yaxes(range=[-60, 70], row=1, col=n + 1)
     fig.update_layout(
         width=1000, height=400, margin=dict(t=60), showlegend=False
     )
@@ -1155,7 +1203,7 @@ def plot_activations(x, functions, rows=2, cols=3, width=800, height=500):
     return fig
 
 
-def plot_classification_2d(X, y, model=None, transform="Sigmoid"):
+def plot_classification_2d(X, y, model=None, transform="Sigmoid", title="Binary classification"):
     c = [
         "#636EFA",
         "#EF553B",
@@ -1185,7 +1233,7 @@ def plot_classification_2d(X, y, model=None, transform="Sigmoid"):
         fig.update_layout(
             width=500,
             height=500,
-            title="Binary Classification",
+            title=title,
             title_x=0.5,
             title_y=0.93,
             xaxis_title="x",
@@ -1201,6 +1249,7 @@ def plot_classification_2d(X, y, model=None, transform="Sigmoid"):
         xx1, xx2 = torch.meshgrid(
             torch.linspace(-1.5, 1.5, 25),
             torch.linspace(-1.5, 1.5, 25),
+            indexing='xy'
         )
         if transform == "Sigmoid":
             Z = model(
@@ -1360,7 +1409,7 @@ def plot_bitmojis(sample_batch, rgb=False):
 def plot_bitmoji(image, label):
     plt.figure(figsize=(4, 4))
     plt.axis("off")
-    plt.title(f"Prediction: {['not_tom', 'tom'][label]}", pad=10)
+    plt.title(f"Prediction: {['not_arman', 'arman'][label]}", pad=10)
     plt.imshow(image[0, 0], cmap='gray');
     
 
@@ -1368,6 +1417,7 @@ def plot_conv(image, filter):
     """Plot convs with matplotlib."""
     d = filter.shape[-1]
     conv = torch.nn.Conv2d(1, 1, kernel_size=(d, d), padding=1)
+    conv.weight.detach_()
     conv.weight[:] = filter
     fig, (ax1, ax2) = plt.subplots(figsize=(8, 4), ncols=2)
     ax1.imshow(image, cmap='gray')
