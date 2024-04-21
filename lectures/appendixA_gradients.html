@@ -1,335 +1,388 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
     <title>Appendix A: Gradients Review &#8212; DSCI 572 Supervised Learning II</title>
-    
-  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-  <link rel="stylesheet"
-    href="../_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
-
-    
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/togglebutton.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
-    </script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/appendixA_gradients';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Appendix B: Logistic Loss" href="appendixB_logistic-loss.html" />
-    <link rel="prev" title="Lecture 8: Advanced Deep Learning" href="lecture8_advanced-deep-learning.html" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
-
-
-
+    <link rel="prev" title="Lecture 8: Advanced Convolutional Models" href="08_advanced-deep-learning.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
     
-        <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="../index.html">
+    
+    
+    
+  </div>
   
-  <img src="../_static/UBC_MDS_logo.png" class="logo" alt="logo">
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../README.html">
   
   
-  <h1 class="site-logo" id="site-title">DSCI 572 Supervised Learning II</h1>
   
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mds-hex-sticker.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/mds-hex-sticker.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Lectures</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_floating-point-numbers.html">Lecture 1: Floating-Point Numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_gradient-descent.html">Lecture 2: Optimization &amp; Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_sgd-intro-to-nn.html">Lecture 3: Stochastic Gradient Descent and Introduction to Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_pytorch-neural-networks-pt1.html">Lecture 4: Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_neural-networks-pt2.html">Lecture 5: Training Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_cnns-pt1.html">Lecture 6: Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_cnns-pt2.html">Lecture 7: CNNs in Practice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_advanced-deep-learning.html">Lecture 8: Advanced Convolutional Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Appendix A: Gradients Review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixD_bitmoji-CNN.html">Appendix D: Creating a CNN to Predict Bitmojis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Attribution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../LICENSE.html">LICENSE</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/UBC-MDS/DSCI_572_sup-learn-2" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
 </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <p class="caption collapsible-parent">
- <span class="caption-text">
-  Welcome
- </span>
-</p>
-<ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture0_introduction.html">
-   Introduction to the Course
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../lecture_learning_objectives.html">
-   Lecture Learning Objectives
-  </a>
- </li>
-</ul>
-<p class="caption collapsible-parent">
- <span class="caption-text">
-  Lectures
- </span>
-</p>
-<ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture1_floating-point.html">
-   Lecture 1: Floating Point Numbers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture2_gradient-descent.html">
-   Lecture 2: Optimization &amp; Gradient Descent
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture3_stochastic-gradient-descent.html">
-   Lecture 3: Stochastic Gradient Descent
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture4_pytorch-neural-networks-pt1.html">
-   Lecture 4: Introduction to Pytorch &amp; Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture5_neural-networks-pt2.html">
-   Lecture 5: Training Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture6_cnns-pt1.html">
-   Lecture 6: Introduction to Convolutional Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture7_cnns-pt2.html">
-   Lecture 7: Advanced Convolutional Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture8_advanced-deep-learning.html">
-   Lecture 8: Advanced Deep Learning
-  </a>
- </li>
-</ul>
-<p class="caption collapsible-parent">
- <span class="caption-text">
-  Appendices
- </span>
-</p>
-<ul class="current nav sidenav_l1">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Appendix A: Gradients Review
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="appendixB_logistic-loss.html">
-   Appendix B: Logistic Loss
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="appendixC_computing-derivatives.html">
-   Appendix C: Computing Derivatives
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="appendixD_bitmoji-CNN.html">
-   Appendix D: Creating a CNN to Predict Bitmojis
-  </a>
- </li>
-</ul>
-
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Tomas Beuzen, MDS 2021<br>Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
 
 
-          
 
 
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
-    </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/lectures/appendixA_gradients.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
-</div>
-
-        <!-- Source interaction buttons -->
 
 
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/appendixA_gradients.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
 
-        <!-- Launch buttons -->
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
 
-    </div>
-
-    <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
-        </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   Introduction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#imports">
-   Imports
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ingredient-1-functions-of-multiple-variables">
-   1. Ingredient 1: Functions of Multiple Variables
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ingredient-2-vector-valued-functions">
-   2. Ingredient 2: Vector-valued Functions
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ingredient-3-partial-derivatives">
-   3. Ingredient 3: Partial Derivatives
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ingredient-4-gradients">
-   4. Ingredient 4: Gradients
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gradients-intuition">
-     4.1 Gradients intuition
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#why-is-it-the-direction-of-fastest-increase">
-     4.2 Why is it the direction of fastest increase?
-    </a>
-   </li>
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
   </ul>
- </li>
-</ul>
+</div>
 
-        </nav>
-        
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Appendix A: Gradients Review</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingredient-1-functions-of-multiple-variables">Ingredient 1: Functions of Multiple Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingredient-2-vector-valued-functions">Ingredient 2: Vector-valued Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingredient-3-partial-derivatives">Ingredient 3: Partial Derivatives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingredient-4-gradients">Ingredient 4: Gradients</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradients-intuition">Gradients intuition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-is-it-the-direction-of-fastest-increase">Why is it the direction of fastest increase?</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
-              <div>
+
+              
                 
-  <p><img alt="" src="../_images/572_banner.png" /></p>
-<div class="section" id="appendix-a-gradients-review">
-<h1>Appendix A: Gradients Review<a class="headerlink" href="#appendix-a-gradients-review" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<hr><p>This short appendix provides a refresher on gradients and calculus. Some of you may never have seen gradients before. Multivariate calculus is not a required prerequisite for the MDS program but it will be helpful to know for this course, so we’ll cover the basics in this appendix. This material has been modified after material originally created by <a class="reference external" href="https://www.mikegelbart.com/">Mike Gelbart</a>.</p>
-</div>
-<div class="section" id="imports">
-<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
-<hr><div class="cell docutils container">
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <a class="reference internal image-reference" href="../_images/dsci572_header.png"><img alt="../_images/dsci572_header.png" src="../_images/dsci572_header.png" style="width: 600px;" /></a>
+<section class="tex2jax_ignore mathjax_ignore" id="appendix-a-gradients-review">
+<h1>Appendix A: Gradients Review<a class="headerlink" href="#appendix-a-gradients-review" title="Permalink to this heading">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>This short appendix provides a refresher on gradients and calculus. Some of you may never have seen gradients before. Multivariate calculus is not a required prerequisite for the MDS program but it will be helpful to know for this course, so we’ll cover the basics in this appendix. This material has been modified after material originally created by <a class="reference external" href="https://www.mikegelbart.com/">Mike Gelbart</a>.</p>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
                      <span class="s1">&#39;axes.labelweight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;axes.grid&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                     <span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">)})</span>
+                     <span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">)})</span>
+
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;svg&#39;]
 </pre></div>
 </div>
 </div>
 </div>
-</div>
-<div class="section" id="ingredient-1-functions-of-multiple-variables">
-<h2>1. Ingredient 1: Functions of Multiple Variables<a class="headerlink" href="#ingredient-1-functions-of-multiple-variables" title="Permalink to this headline">¶</a></h2>
-<hr><ul class="simple">
+</section>
+<section id="ingredient-1-functions-of-multiple-variables">
+<h2>Ingredient 1: Functions of Multiple Variables<a class="headerlink" href="#ingredient-1-functions-of-multiple-variables" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
 <li><p>We saw this in DSCI 551 with joint PDFs.</p></li>
 <li><p>We can write such a function as <span class="math notranslate nohighlight">\(f(x,y,z)\)</span> (for 3 inputs) or <span class="math notranslate nohighlight">\(f(x)\)</span> if <span class="math notranslate nohighlight">\(x\)</span> is a vector.</p></li>
 <li><p>Example: <span class="math notranslate nohighlight">\(f(x,y,z) = x^2 + y^2 + e^z + x^z + xyz\)</span>.</p></li>
@@ -371,13 +424,12 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixA_gradients_10_0.png" src="../_images/appendixA_gradients_10_0.png" />
+<img alt="../_images/41460e9ecad638317057b7ebaf50c8dd7a6cbcbfa60e2c82d31b61eb24f3fd86.svg" src="../_images/41460e9ecad638317057b7ebaf50c8dd7a6cbcbfa60e2c82d31b61eb24f3fd86.svg" /></div>
 </div>
-</div>
-</div>
-<div class="section" id="ingredient-2-vector-valued-functions">
-<h2>2. Ingredient 2: Vector-valued Functions<a class="headerlink" href="#ingredient-2-vector-valued-functions" title="Permalink to this headline">¶</a></h2>
-<hr><ul class="simple">
+</section>
+<section id="ingredient-2-vector-valued-functions">
+<h2>Ingredient 2: Vector-valued Functions<a class="headerlink" href="#ingredient-2-vector-valued-functions" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
 <li><p>You may not have encountered these yet in MDS.</p></li>
 <li><p>These are functions with multiple <em>outputs</em> (and may or may not have multiple <em>inputs</em>).</p></li>
 <li><p>Example with 1 input and 3 outputs:</p></li>
@@ -428,8 +480,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixA_gradients_15_0.png" src="../_images/appendixA_gradients_15_0.png" />
-</div>
+<img alt="../_images/c13f112cb2be9e7c7c258675904e001aae30af537fb08758b9b2dbda34f0b57c.svg" src="../_images/c13f112cb2be9e7c7c258675904e001aae30af537fb08758b9b2dbda34f0b57c.svg" /></div>
 </div>
 <p>Notes:</p>
 <ul class="simple">
@@ -444,10 +495,10 @@
 </li>
 <li><p>(optional) It’s not always the case that the <span class="math notranslate nohighlight">\(i\)</span>th component of the output depends on the <span class="math notranslate nohighlight">\(i\)</span>th component of the inputs - this is also a special case!</p></li>
 </ul>
-</div>
-<div class="section" id="ingredient-3-partial-derivatives">
-<h2>3. Ingredient 3: Partial Derivatives<a class="headerlink" href="#ingredient-3-partial-derivatives" title="Permalink to this headline">¶</a></h2>
-<hr><ul class="simple">
+</section>
+<section id="ingredient-3-partial-derivatives">
+<h2>Ingredient 3: Partial Derivatives<a class="headerlink" href="#ingredient-3-partial-derivatives" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
 <li><p>A partial derivative is just a derivative of a multivariable function with respect to one of the input variables.</p></li>
 <li><p>When taking this derivative, we treat all the other variables as constants.</p>
 <ul>
@@ -462,10 +513,10 @@
 <li><p><strong>Important note</strong>: <span class="math notranslate nohighlight">\(\frac{\partial f}{\partial x} \)</span> is itself a function of <span class="math notranslate nohighlight">\(x,y,z\)</span>, not just a function of <span class="math notranslate nohighlight">\(x\)</span>. Think about the picture from the PDF slide above: the slope depends on your position in all coordinates.</p></li>
 <li><p>(optional) Thus, the partial derivative operator <span class="math notranslate nohighlight">\(\frac{\partial}{\partial x}\)</span> maps from multivariate functions to multivariable functions.</p></li>
 </ul>
-</div>
-<div class="section" id="ingredient-4-gradients">
-<h2>4. Ingredient 4: Gradients<a class="headerlink" href="#ingredient-4-gradients" title="Permalink to this headline">¶</a></h2>
-<hr><ul class="simple">
+</section>
+<section id="ingredient-4-gradients">
+<h2>Ingredient 4: Gradients<a class="headerlink" href="#ingredient-4-gradients" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
 <li><p>This is the easy part: a gradient is just a box holding all the <span class="math notranslate nohighlight">\(d\)</span> partial derivatives (assuming you have a function of <span class="math notranslate nohighlight">\(d\)</span> variables). For example, when <span class="math notranslate nohighlight">\(d=3\)</span>:</p></li>
 </ul>
 <div class="math notranslate nohighlight">
@@ -478,7 +529,7 @@
 <li><p>(optional) a gradient is a function that maps from the original input space to the same space, e.g. <span class="math notranslate nohighlight">\(\mathbb{R}^3\rightarrow \mathbb{R}^3\)</span> (“R three to R three”).</p></li>
 </ul>
 <p><strong>Notation warning</strong>: we use the term “derivative” or “gradient” to mean three different things:</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>Operator (written <span class="math notranslate nohighlight">\(\frac{d}{dx}\)</span> or <span class="math notranslate nohighlight">\(\nabla\)</span>), which maps <strong>functions to functions</strong>; “now we take the gradient”.</p></li>
 <li><p>Function (written <span class="math notranslate nohighlight">\(\frac{df}{dx}\)</span> or <span class="math notranslate nohighlight">\(\nabla f\)</span>), which maps <strong>vectors to vectors</strong>; “the gradient is <span class="math notranslate nohighlight">\(2x+5\)</span>”</p>
 <ul class="simple">
@@ -493,7 +544,7 @@
 </ol>
 <p>This is extremely confusing!</p>
 <p>Here’s a table summarizing the situation, assuming 3 variables (in general it could be any number)</p>
-<table class="colwidths-auto table">
+<table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
 <th class="head"><p>Operator</p></th>
@@ -523,8 +574,8 @@
 </tr>
 </tbody>
 </table>
-<div class="section" id="gradients-intuition">
-<h3>4.1 Gradients intuition<a class="headerlink" href="#gradients-intuition" title="Permalink to this headline">¶</a></h3>
+<section id="gradients-intuition">
+<h3>Gradients intuition<a class="headerlink" href="#gradients-intuition" title="Permalink to this heading">#</a></h3>
 <p>Since a gradient is a vector, we can talk about its magnitude and direction.</p>
 <ul class="simple">
 <li><p>The magnitude is <span class="math notranslate nohighlight">\(\|\nabla f\|\)</span> and tells us <strong>how fast things are changing</strong>.</p></li>
@@ -549,8 +600,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixA_gradients_24_0.png" src="../_images/appendixA_gradients_24_0.png" />
-</div>
+<img alt="../_images/92faae7c54d27e4a4ef3c682c40f3beccaebcfdf7f45c9d7ffc3f55942ac7f73.svg" src="../_images/92faae7c54d27e4a4ef3c682c40f3beccaebcfdf7f45c9d7ffc3f55942ac7f73.svg" /></div>
 </div>
 <div class="math notranslate nohighlight">
 \[\begin{split}\nabla \sin(xy) = \begin{bmatrix} y \cos(xy)\\x\cos(xy)\end{bmatrix}\end{split}\]</div>
@@ -577,15 +627,14 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixA_gradients_27_0.png" src="../_images/appendixA_gradients_27_0.png" />
-</div>
+<img alt="../_images/7cd05014ef30fa3507f825843ac8e95b86e09d1bd9246597a54fd0e5f99d427d.svg" src="../_images/7cd05014ef30fa3507f825843ac8e95b86e09d1bd9246597a54fd0e5f99d427d.svg" /></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">zz</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xxsmall</span><span class="p">,</span><span class="n">yysmall</span><span class="p">,</span><span class="n">gradx</span><span class="p">,</span><span class="n">grady</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xxsmall</span><span class="p">,</span> <span class="n">yysmall</span><span class="p">,</span> <span class="n">gradx</span><span class="p">,</span> <span class="n">grady</span><span class="p">);</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;$\sin(xy)$ and its gradient&quot;</span><span class="p">);</span>
@@ -593,21 +642,20 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixA_gradients_28_0.png" src="../_images/appendixA_gradients_28_0.png" />
+<img alt="../_images/959a5e626cbb2ee1730d5a19375270217b47de3eec20246bee0f0e10ca3fefc9.svg" src="../_images/959a5e626cbb2ee1730d5a19375270217b47de3eec20246bee0f0e10ca3fefc9.svg" /></div>
 </div>
-</div>
-</div>
-<div class="section" id="why-is-it-the-direction-of-fastest-increase">
-<h3>4.2 Why is it the direction of fastest increase?<a class="headerlink" href="#why-is-it-the-direction-of-fastest-increase" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="why-is-it-the-direction-of-fastest-increase">
+<h3>Why is it the direction of fastest increase?<a class="headerlink" href="#why-is-it-the-direction-of-fastest-increase" title="Permalink to this heading">#</a></h3>
 <p>For example if the gradient is:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{bmatrix} 5 \\ 2 \\ -1 \\ 0 \end{bmatrix}\, ,\end{split}\]</div>
 <p>why go in the gradient direction instead of the <span class="math notranslate nohighlight">\(x_1\)</span> direction, since that first component has the biggest partial derivative. Doesn’t it seem wasteful to go partly in those other directions?</p>
 <p>First, a proof that the gradient is the best direction. Let’s say we are at position <span class="math notranslate nohighlight">\(x\)</span> and we move by an infinitesimal (i.e. extremely tiny) <span class="math notranslate nohighlight">\(v\)</span>, which is a vector having components <span class="math notranslate nohighlight">\(v_1, v_2, \ldots v_d\)</span>. The change in <span class="math notranslate nohighlight">\(f\)</span> from moving from <span class="math notranslate nohighlight">\(x\)</span> to <span class="math notranslate nohighlight">\(x+v\)</span> is <span class="math notranslate nohighlight">\(\frac{\partial f}{dx_1} v_1 + \frac{\partial f}{dx_2} v_2 + \ldots \frac{\partial f}{dx_d} v_d\)</span>, where all the partial derivatives are evaluated at <span class="math notranslate nohighlight">\(x\)</span> (I believe this is related to the “total derivative”). In other words, the change in <span class="math notranslate nohighlight">\(f\)</span> is the dot product <span class="math notranslate nohighlight">\(\nabla f \cdot v\)</span>. So now the question is, what vector <span class="math notranslate nohighlight">\(v\)</span> of fixed length maximizes <span class="math notranslate nohighlight">\(\nabla f \cdot v\)</span>. The answer is a vector that points in the same direction as <span class="math notranslate nohighlight">\(\nabla f\)</span>. (That’s a property of the dot product, and is evident by the definition: <span class="math notranslate nohighlight">\(a \cdot b = \| a \| \|b \| \cos(\theta)\)</span>. Since <span class="math notranslate nohighlight">\(\| \nabla f \|\)</span> and <span class="math notranslate nohighlight">\(\|v\|\)</span> are fixed in our case, to maximize this we want to maximize <span class="math notranslate nohighlight">\(\cos(\theta)\)</span>, which means we want <span class="math notranslate nohighlight">\(\cos(\theta)=1\)</span> meaning <span class="math notranslate nohighlight">\(\theta=0\)</span>, or the angle between the vectors is <span class="math notranslate nohighlight">\(0\)</span>).</p>
 <p>Second, the intuition. I think the “paradox” comes from over-privileging the coordinate axes. They are not special in any way! For example if you rotate the coordinate system by 45 degrees, the direction of steepest ascent should also rotate by 45 degrees. Under the suggested system, this would not happen. Why? Well, there is always going to be one element of the gradient that is largest. Does that mean the direction of steepest ascent is always one of the coordinate axis directions? No. That doesn’t make sense and also fails the “rotate by 45 degrees test” because the direction will have rotated by 0, 90, 180 or 270 degrees.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -621,7 +669,7 @@
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./lectures"
         },
         predefinedOutput: true
@@ -629,38 +677,114 @@
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-        </div>
-    </div>
-    
-    
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="lecture8_advanced-deep-learning.html" title="previous page">Lecture 8: Advanced Deep Learning</a>
-    <a class='right-next' id="next-link" href="appendixB_logistic-loss.html" title="next page">Appendix B: Logistic Loss</a>
 
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By Tomas Beuzen<br/>
-        
-            &copy; Copyright 2020.<br/>
-      </p>
-    </div>
-  </footer>
-</main>
-
-
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="08_advanced-deep-learning.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Lecture 8: Advanced Convolutional Models</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="appendixB_logistic-loss.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Appendix B: Logistic Loss</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingredient-1-functions-of-multiple-variables">Ingredient 1: Functions of Multiple Variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingredient-2-vector-valued-functions">Ingredient 2: Vector-valued Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingredient-3-partial-derivatives">Ingredient 3: Partial Derivatives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingredient-4-gradients">Ingredient 4: Gradients</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradients-intuition">Gradients intuition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-is-it-the-direction-of-fastest-increase">Why is it the direction of fastest increase?</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Varada Kolhatkar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-    
-  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

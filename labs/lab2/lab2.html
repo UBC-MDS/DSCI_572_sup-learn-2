@@ -1,0 +1,1074 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>DSCI 572 Lab 2 &#8212; DSCI 572 Supervised Learning II</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'labs/lab2/lab2';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../README.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/mds-hex-sticker.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/mds-hex-sticker.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Lectures</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/01_floating-point-numbers.html">Lecture 1: Floating-Point Numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/02_gradient-descent.html">Lecture 2: Optimization &amp; Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/03_sgd-intro-to-nn.html">Lecture 3: Stochastic Gradient Descent and Introduction to Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/04_pytorch-neural-networks-pt1.html">Lecture 4: Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/05_neural-networks-pt2.html">Lecture 5: Training Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/06_cnns-pt1.html">Lecture 6: Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/07_cnns-pt2.html">Lecture 7: CNNs in Practice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/08_advanced-deep-learning.html">Lecture 8: Advanced Convolutional Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lectures/appendixD_bitmoji-CNN.html">Appendix D: Creating a CNN to Predict Bitmojis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Attribution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../LICENSE.html">LICENSE</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/UBC-MDS/DSCI_572_sup-learn-2" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/labs/lab2/lab2.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>DSCI 572 Lab 2</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructions">Instructions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-floating-point-errors">Exercise 1: floating point errors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-a">snippet (a)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-b">snippet (b)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-c">snippet (c)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-d">snippet (d)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-e">snippet (e)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-f">snippet (f)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-g">snippet (g)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-h">snippet (h)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-i">snippet (i)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-j">snippet (j)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-snippet-k">(optional) snippet (k)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-snippet-l">(optional) snippet (l)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-exercise-2-floating-point-max-min">(optional) Exercise 2: floating point max/min</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-logpdf">Exercise 3: logpdf</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-3-b">(optional) 3(b)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-exercise-4-log-1-exp-z-continued">(optional) Exercise 4: <span class="math notranslate nohighlight">\(\log(1+\exp(z))\)</span>, continued</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-5-softmax-logistic-regression-and-log-sum-exp">Exercise 5: softmax logistic regression and log-sum-exp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-6-sgd-implementation">Exercise 6: SGD implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a">6(a)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b">6(b)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-7-sgdclassifier-and-sgdregresor">Exercise 7: <code class="docutils literal notranslate"><span class="pre">SGDClassifier</span></code> and <code class="docutils literal notranslate"><span class="pre">SGDRegresor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">7(a)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">7(b)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-7-c">(optional) 7(c)</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dsci-572-lab-2">
+<h1>DSCI 572 Lab 2<a class="headerlink" href="#dsci-572-lab-2" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">scipy.stats</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span> <span class="k">as</span> <span class="nn">spo</span>
+<span class="kn">import</span> <span class="nn">scipy.special</span>
+<span class="kn">import</span> <span class="nn">sklearn.datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">SGDClassifier</span><span class="p">,</span> <span class="n">SGDRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">scale</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">minmax_scale</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="instructions">
+<h2>Instructions<a class="headerlink" href="#instructions" title="Permalink to this heading">#</a></h2>
+<p>rubric={mechanics:20}</p>
+<p>Follow the <a class="reference external" href="https://ubc-mds.github.io/resources_pages/general_lab_instructions/">general lab instructions</a>.</p>
+</section>
+<section id="exercise-1-floating-point-errors">
+<h2>Exercise 1: floating point errors<a class="headerlink" href="#exercise-1-floating-point-errors" title="Permalink to this heading">#</a></h2>
+<p>For each of the code snippets below, explain the result. The first three are answered for you, so you can get a sense of what types of explanations we’re looking for. Note that in both the second and third case we get the “expected” result (zero), but the explanations are very different.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.3</span> <span class="o">-</span> <span class="mf">0.2</span> <span class="o">-</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-2.7755575615628914e-17
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Sample solution</strong>: The result is not zero because 0.3, 0.2, and 0.1 are not represented exactly as floating point numbers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.5</span> <span class="o">-</span> <span class="mf">0.25</span> <span class="o">-</span> <span class="mf">0.125</span> <span class="o">-</span> <span class="mf">0.125</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Sample solution</strong>: The result is zero because 0.5, 0.25, and 0.125 are powers of 2 and there they <em>are</em> represented exactly as floating point numbers. There is no roundoff error present.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.4</span> <span class="o">-</span> <span class="mf">0.2</span> <span class="o">-</span> <span class="mf">0.2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Sample solution</strong>: The result is correct (zero) despite the fact that 0.4 and 0.2 are not represented exactly as floating point numbers. This is a case of good luck: while 0.4 and 0.2 are not represented exactly, the roundoff errors happened to cancel out during the subtractions.</p>
+<section id="snippet-a">
+<h3>snippet (a)<a class="headerlink" href="#snippet-a" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">30</span> <span class="o">-</span> <span class="mi">20</span> <span class="o">-</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-b">
+<h3>snippet (b)<a class="headerlink" href="#snippet-b" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">30.0</span> <span class="o">-</span> <span class="mf">20.0</span> <span class="o">-</span> <span class="mf">10.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-c">
+<h3>snippet (c)<a class="headerlink" href="#snippet-c" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="mi">100</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mf">10.0</span><span class="o">**</span><span class="mi">100</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-d">
+<h3>snippet (d)<a class="headerlink" href="#snippet-d" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">10.0</span><span class="o">**</span><span class="mi">100000</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mf">10.0</span><span class="o">**</span><span class="mi">100000</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-e">
+<h3>snippet (e)<a class="headerlink" href="#snippet-e" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-f">
+<h3>snippet (f)<a class="headerlink" href="#snippet-f" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-g">
+<h3>snippet (g)<a class="headerlink" href="#snippet-g" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-h">
+<h3>snippet (h)<a class="headerlink" href="#snippet-h" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-i">
+<h3>snippet (i)<a class="headerlink" href="#snippet-i" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">+</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="snippet-j">
+<h3>snippet (j)<a class="headerlink" href="#snippet-j" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="optional-snippet-k">
+<h3>(optional) snippet (k)<a class="headerlink" href="#optional-snippet-k" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:1}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+<span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e20</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
+<span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e20</span>
+
+<span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">sum</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="optional-snippet-l">
+<h3>(optional) snippet (l)<a class="headerlink" href="#optional-snippet-l" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:1}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">+</span><span class="mf">0.1</span>
+<span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Hint for the above: see <a class="reference external" href="https://en.wikipedia.org/wiki/Pairwise_summation">Pairwise summation</a>.</p>
+</section>
+</section>
+<section id="optional-exercise-2-floating-point-max-min">
+<h2>(optional) Exercise 2: floating point max/min<a class="headerlink" href="#optional-exercise-2-floating-point-max-min" title="Permalink to this heading">#</a></h2>
+<p>rubric={reasoning:2}</p>
+<p>As discussed in lecture, IEEE double precision floating point numbers use 53 bits for the mantissa (one of which is a sign bit) and 11 bits for the exponent (again, one of which is a sign bit). Given thus, calculate the largest (furthest from zero) and smallest (closest to zero) possible representable floating point numbers. Then empirically check your results with Python. Are they what you expected? Discuss.</p>
+<p>NOTE: Python has a special behaviour that we need to watch out for. If you do something like <code class="docutils literal notranslate"><span class="pre">10**1000</span></code> you will get a giant integer. That’s because Python has a dynamically expanding integer type. This has nothing to do with floating point representations, which are the thing we really care about for scientific computation (not to mention that most other languages, including R, do not do this). So, when playing around, make sure you write <code class="docutils literal notranslate"><span class="pre">10**1000.0</span></code> or <code class="docutils literal notranslate"><span class="pre">10.0*1000</span></code> to ensure it’s a floating point. Or <code class="docutils literal notranslate"><span class="pre">1e1000</span></code>… but that doesn’t work for other bases besides 10.</p>
+<p>(Also, and this is <em>REALLY</em> out of scope but just FYI if anyone cares, in some languages <code class="docutils literal notranslate"><span class="pre">1eX</span></code> and <code class="docutils literal notranslate"><span class="pre">10^X</span></code> will return slightly different answers, if the language uses a special routine for <code class="docutils literal notranslate"><span class="pre">1eX</span></code> that is more optimized than the generral power function. I cannot imagine this ever mattering to any of us.)</p>
+</section>
+<section id="exercise-3-logpdf">
+<h2>Exercise 3: logpdf<a class="headerlink" href="#exercise-3-logpdf" title="Permalink to this heading">#</a></h2>
+<p>rubric={reasoning:10}</p>
+<p>In most scientific computing environments, such as R or NumPy/SciPy, there are functions to compute the probability density function (pdf) of a probability distribution, and separate functions to compute the log of the pdf. For example, looking at the <a class="reference external" href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Normal.html">R normal distribution documentation</a>, you will see that you can set <code class="docutils literal notranslate"><span class="pre">log=TRUE</span></code> or <code class="docutils literal notranslate"><span class="pre">log=FALSE</span></code>. Likewise in Python we have <code class="docutils literal notranslate"><span class="pre">scipy.stats.norm.pdf</span></code> and <code class="docutils literal notranslate"><span class="pre">scipy.stats.norm.logpdf</span></code>. And yet, why bother creating these extra functions, when we can just take the log ourselves?! For example, we have NumPy functions for <span class="math notranslate nohighlight">\(\sin(x)\)</span> and <span class="math notranslate nohighlight">\(\cos(x)\)</span> but not for <span class="math notranslate nohighlight">\(\log\sin(x)\)</span> and <span class="math notranslate nohighlight">\(\log \cos (x)\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># is function this useless?</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-1.4189385332046727
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># seems to do the same thing!</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-1.4189385332046727
+</pre></div>
+</div>
+</div>
+</div>
+<section id="optional-3-b">
+<h3>(optional) 3(b)<a class="headerlink" href="#optional-3-b" title="Permalink to this heading">#</a></h3>
+<p>rubric={accuracy:1}</p>
+<p>Write a numerically safe function <code class="docutils literal notranslate"><span class="pre">log_gaussian_pdf</span></code> that computes the log of the standard (zero mean, unit variance) Gaussian PDF. Your function should produce the same result as <code class="docutils literal notranslate"><span class="pre">scipy.stats.norm.logpdf</span></code> when evaluated at <span class="math notranslate nohighlight">\(x=100\)</span>.</p>
+</section>
+</section>
+<section id="optional-exercise-4-log-1-exp-z-continued">
+<h2>(optional) Exercise 4: <span class="math notranslate nohighlight">\(\log(1+\exp(z))\)</span>, continued<a class="headerlink" href="#optional-exercise-4-log-1-exp-z-continued" title="Permalink to this heading">#</a></h2>
+<p>rubric={accuracy:1,reasoning:1}</p>
+<p>In lecture we discussed computing <span class="math notranslate nohighlight">\(\log(1+\exp(z))\)</span>. We wrote a better version of the function for when <span class="math notranslate nohighlight">\(z\gg1\)</span>, reproduced below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">log_1_plus_exp</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">log_1_plus_exp_safe</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">z</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s consider the case of <span class="math notranslate nohighlight">\(z\ll -1\)</span>, i.e. when <span class="math notranslate nohighlight">\(z\)</span> is a large negative number. In that case, we get zero with both of the above implementations:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">log_1_plus_exp</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">log_1_plus_exp_safe</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Your tasks:</p>
+<ol class="arabic simple">
+<li><p>Investigate why this is happening. Is the problem that <span class="math notranslate nohighlight">\(\exp(-100)\)</span> itself underflows?</p></li>
+<li><p>Write a function <code class="docutils literal notranslate"><span class="pre">log_1_plus_exp_safer</span></code> that works well when <span class="math notranslate nohighlight">\(z\gg 1\)</span> and <span class="math notranslate nohighlight">\(z\ll -1\)</span>.</p></li>
+<li><p>For what range of values of <span class="math notranslate nohighlight">\(z\)</span> does your <code class="docutils literal notranslate"><span class="pre">log_1_plus_exp_safer</span></code> function give reasonable results?</p></li>
+<li><p>Your code presumably contains two thresholds, the upper and lower cutoffs for <span class="math notranslate nohighlight">\(z\)</span> at which the approximations are invoked. Can you reason about the “optimal” or “best” values for these thresholds?</p></li>
+</ol>
+</section>
+<section id="exercise-5-softmax-logistic-regression-and-log-sum-exp">
+<h2>Exercise 5: softmax logistic regression and log-sum-exp<a class="headerlink" href="#exercise-5-softmax-logistic-regression-and-log-sum-exp" title="Permalink to this heading">#</a></h2>
+<p>rubric={reasoning:15,accuracy:5}</p>
+<p>In the “multinomial” (aka softmax) approach to multi-class logistic regression, your loss ends up having one term for each class, so you get something of the form <span class="math notranslate nohighlight">\(\log \sum_{k=1}^c \exp(z_k)\)</span>, where <span class="math notranslate nohighlight">\(c\)</span> is the number of classes, and <span class="math notranslate nohighlight">\(z_k\)</span> is a quantity involving the weights and training data. For any choice of a constant <span class="math notranslate nohighlight">\(a\)</span>, we can rewrite this as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}\log \displaystyle\sum_{k=1}^c \exp(z_k) &amp;= \log \displaystyle\sum_{k=1}^c \exp(z_k-a+a)\\ &amp;= \log \left( \displaystyle\sum_{k=1}^c \exp(z_k-a)\exp(a) \right) \\ &amp;= \log \left( \exp(a)\displaystyle\sum_{k=1}^c \exp(z_k-a)\right) \\ &amp;= \log \left( \exp(a) \right) + \log\displaystyle\sum_{k=1}^c \exp(z_k-a) \\ &amp;= a+ \log \displaystyle\sum_{k=1}^c \exp(z_k-a)\end{align}\end{split}\]</div>
+<p>Note: you only need to look at the first and last expression - the middle parts are only there to convince you they are indeed equivalent.</p>
+<ol class="arabic simple">
+<li><p>Explain why this final expression might be more numerically stable and why <span class="math notranslate nohighlight">\(a=\max \{z_1,z_2,\ldots,z_c\}\)</span> is a sensible choice.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(a=\max \{z_1,z_2,\ldots,z_c\}\)</span>, this trick seems to rely on the fact that overflow is more of a danger than underflow, because we may now compute <span class="math notranslate nohighlight">\(exp\)</span> of some very large negative values if <span class="math notranslate nohighlight">\(a\)</span> is large. Explain why overflow is more of a problem than underflow in this calculation.</p></li>
+<li><p>Write a python function <code class="docutils literal notranslate"><span class="pre">log_sum_exp</span></code> that takes in an array <code class="docutils literal notranslate"><span class="pre">z</span></code> and computes the <em>original</em> expression. Write another function <code class="docutils literal notranslate"><span class="pre">log_sum_exp_stable</span></code> that computes the final (more stable) expression using <span class="math notranslate nohighlight">\(a=\max \{z_1,z_2,\ldots,z_c\}\)</span>. Discuss the behaviour of the two functions. Also, compare your implementation to In fact, <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.logsumexp.html#scipy.special.logsumexp"><code class="docutils literal notranslate"><span class="pre">scipy.special.logsumexp</span></code></a> for one or two cases.</p></li>
+<li><p>(optional) Earlier, we used the approximation <span class="math notranslate nohighlight">\(\log(1+\exp(z))\approx z\)</span> when <span class="math notranslate nohighlight">\(z\gg 1\)</span>. Is that just a specific case of what we have here? It seems that what we did earlier was an approximation, whereas what we did here is mathematically exact. Do you think there is any significance to this distinction, in practice?</p></li>
+</ol>
+<p>(FYI: you’ll see this trick in real implementations of ML algorithms! )</p>
+</section>
+<section id="exercise-6-sgd-implementation">
+<h2>Exercise 6: SGD implementation<a class="headerlink" href="#exercise-6-sgd-implementation" title="Permalink to this heading">#</a></h2>
+<p>Below is a Python function that performs gradient descent, much like the code you wrote in lab 1. I just made a few small changes:</p>
+<ul class="simple">
+<li><p>Removed the docstring and <code class="docutils literal notranslate"><span class="pre">print</span></code> statements for brevity.</p></li>
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">x</span></code> to <code class="docutils literal notranslate"><span class="pre">w</span></code>.</p></li>
+<li><p>In this version, the user specifies a fixed number of iterations <code class="docutils literal notranslate"><span class="pre">n_iters</span></code> instead of a tolerance <span class="math notranslate nohighlight">\(\epsilon\)</span>.</p></li>
+<li><p>In this version, the user passes in <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> explicitly, and these are passed to <code class="docutils literal notranslate"><span class="pre">f_grad</span></code>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">f_grad</span><span class="p">,</span> <span class="n">w0</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">α</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">w0</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iters</span><span class="p">):</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">-</span> <span class="n">α</span><span class="o">*</span><span class="n">f_grad</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">w</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The code works (although is very slow as per usual for gradient descent). For example, here we do ordinary least squares linear regression:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">minmax_scale</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">loss_ols</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">X</span><span class="nd">@w</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">loss_ols_grad</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">@</span><span class="p">(</span><span class="n">X</span><span class="nd">@w</span><span class="p">)</span> <span class="o">-</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="nd">@y</span>
+
+<span class="n">w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w_gd</span> <span class="o">=</span> <span class="n">gradient_descent</span><span class="p">(</span><span class="n">loss_ols</span><span class="p">,</span> <span class="n">loss_ols_grad</span><span class="p">,</span> <span class="n">w0</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">10</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w_gd</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ -7.37446749,   4.79336123,   3.71903592,   2.67885881,
+        -2.90900155,  36.50466055,   2.10874674,  -4.55318591,
+         5.45719841,  -6.02418944,  -4.39530169,   9.88901723,
+       -11.79090734])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">coef_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ -7.37446749,   4.79336123,   3.71903592,   2.67885881,
+        -2.90900155,  36.50466055,   2.10874674,  -4.55318591,
+         5.45719841,  -6.02418944,  -4.39530169,   9.88901723,
+       -11.79090734])
+</pre></div>
+</div>
+</div>
+</div>
+<p>As we can see, the coefficients obtained from gradient descent are very similar to those obtained by scikit-learn. All is well so far.</p>
+<section id="a">
+<h3>6(a)<a class="headerlink" href="#a" title="Permalink to this heading">#</a></h3>
+<p>rubric={accuracy:20,quality:10}</p>
+<p>Your task is to implement a function <code class="docutils literal notranslate"><span class="pre">stochastic_gradient_descent</span></code>, that performs SGD, <em>using</em> the <code class="docutils literal notranslate"><span class="pre">gradient_descent</span></code> function provided above. You can have your function accept the same arguments as the <code class="docutils literal notranslate"><span class="pre">gradient_descent</span></code> function above, except:</p>
+<ul class="simple">
+<li><p>Change <code class="docutils literal notranslate"><span class="pre">n_iters</span></code> to <code class="docutils literal notranslate"><span class="pre">n_epochs</span></code>.</p></li>
+<li><p>Add an extra <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> argument.</p></li>
+</ul>
+<p>Note: even though this might not be a good idea in general, you can leave <span class="math notranslate nohighlight">\(\alpha\)</span> constant in this implementation; that is, you can use the same <span class="math notranslate nohighlight">\(\alpha\)</span> across all iterations.</p>
+<p>Note: the pedagogical goal here is to help you see how SGD relates to regular gradient descent. In reality it would be fine to implement SGD “from scratch” without calling a GD function.</p>
+</section>
+<section id="b">
+<h3>6(b)<a class="headerlink" href="#b" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:5}</p>
+<p>Show that when the batch size is set to the whole training set, you get exactly the same results as with gradient descent.</p>
+</section>
+</section>
+<section id="exercise-7-sgdclassifier-and-sgdregresor">
+<h2>Exercise 7: <code class="docutils literal notranslate"><span class="pre">SGDClassifier</span></code> and <code class="docutils literal notranslate"><span class="pre">SGDRegresor</span></code><a class="headerlink" href="#exercise-7-sgdclassifier-and-sgdregresor" title="Permalink to this heading">#</a></h2>
+<p>In this exercise we’ll explore training a classifier with SGD on the <a class="reference external" href="http://help.sentiment140.com/home">Sentiment140 dataset</a>, which contains tweets labeled with sentiment associated with a brand, product, or topic. Please start by doing the following:</p>
+<ol class="arabic simple">
+<li><p>Download the corpus from <a class="reference external" href="http://cs.stanford.edu/people/alecmgo/trainingandtestdata.zip">here</a>.</p></li>
+<li><p>Unzip.</p></li>
+<li><p>Copy the file <code class="docutils literal notranslate"><span class="pre">training.1600000.processed.noemoticon.csv</span></code> into the current directory.</p></li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> file so that you don’t accidentally commit the dataset.</p></li>
+</ol>
+<p>Once you’re done the above, steps, run the starter code below:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data loading and preprocessing</span>
+<span class="n">tweets_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;training.1600000.processed.noemoticon.csv&#39;</span><span class="p">,</span> 
+                        <span class="n">encoding</span> <span class="o">=</span> <span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">,</span>
+                        <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">,</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;no_query&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">])</span>
+<span class="n">tweets_df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tweets_df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;neg&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;pos&#39;</span><span class="p">})</span>
+
+<span class="n">tweets_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="c1"># only consider positive and negative reviews</span>
+<span class="n">tweets_pos_neg_df</span> <span class="o">=</span> <span class="n">tweets_df</span><span class="p">[</span><span class="n">tweets_df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;pos&#39;</span><span class="p">,</span><span class="s1">&#39;neg&#39;</span><span class="p">))]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tweets_pos_neg_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we split the data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tweets_df_train</span><span class="p">,</span> <span class="n">tweets_df_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">tweets_pos_neg_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And then we encode it using <code class="docutils literal notranslate"><span class="pre">CountVectorizer</span></code>, which may take a minute or so:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vec</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">tweets_df_train</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span> 
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">tweets_df_train</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+
+<span class="c1"># just use the already-fit vectorizer</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">tweets_df_test</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span> 
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">tweets_df_test</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that our training data is rather large compared to datasets we’ve explored in the past:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is the fraction of elements that are nonzero. Having a sparse matrix really helps!!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">nnz</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s train a classifier. I’ll use <code class="docutils literal notranslate"><span class="pre">time</span></code> instead of <code class="docutils literal notranslate"><span class="pre">%timeit</span></code> because I want to keep the output, and it gets lost with <code class="docutils literal notranslate"><span class="pre">%timeit</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="n">lr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training took </span><span class="si">%.1f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="id1">
+<h3>7(a)<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:10}</p>
+<p>Train a logistic regression model on the same dataset using <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html"><code class="docutils literal notranslate"><span class="pre">SGDClassifier</span></code></a> instead of <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code>. Compare the training time.</p>
+<p>FYI: there’s also a regression version, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html"><code class="docutils literal notranslate"><span class="pre">SGDRegressor</span></code></a>, which does linear regression with SGD. However, we won’t explore <code class="docutils literal notranslate"><span class="pre">SGDRegressor</span></code> here.</p>
+</section>
+<section id="id2">
+<h3>7(b)<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:15}</p>
+<p>Discuss the training and test accuracies of the two approaches. Can you explain what you’re seeing?</p>
+</section>
+<section id="optional-7-c">
+<h3>(optional) 7(c)<a class="headerlink" href="#optional-7-c" title="Permalink to this heading">#</a></h3>
+<p>rubric={reasoning:2}</p>
+<p>One possible explanation for <code class="docutils literal notranslate"><span class="pre">SGDClassifier</span></code>’s speed is that it’s just doing fewer iterations/epochs. <code class="docutils literal notranslate"><span class="pre">SGDClassifier</span></code> and <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code> have an <code class="docutils literal notranslate"><span class="pre">n_iter_</span></code> attribute which you can check after fitting. Compare these values and discuss them in the context of the above hypothesis. Then, using the <code class="docutils literal notranslate"><span class="pre">max_iter</span></code> parameter, do a “fair” experiment where <code class="docutils literal notranslate"><span class="pre">SGDClassifier</span></code> and <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code> do the same number of passes through the dataset, and comment on the results.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./labs/lab2"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructions">Instructions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-floating-point-errors">Exercise 1: floating point errors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-a">snippet (a)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-b">snippet (b)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-c">snippet (c)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-d">snippet (d)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-e">snippet (e)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-f">snippet (f)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-g">snippet (g)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-h">snippet (h)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-i">snippet (i)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snippet-j">snippet (j)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-snippet-k">(optional) snippet (k)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-snippet-l">(optional) snippet (l)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-exercise-2-floating-point-max-min">(optional) Exercise 2: floating point max/min</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-logpdf">Exercise 3: logpdf</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-3-b">(optional) 3(b)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-exercise-4-log-1-exp-z-continued">(optional) Exercise 4: <span class="math notranslate nohighlight">\(\log(1+\exp(z))\)</span>, continued</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-5-softmax-logistic-regression-and-log-sum-exp">Exercise 5: softmax logistic regression and log-sum-exp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-6-sgd-implementation">Exercise 6: SGD implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a">6(a)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b">6(b)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-7-sgdclassifier-and-sgdregresor">Exercise 7: <code class="docutils literal notranslate"><span class="pre">SGDClassifier</span></code> and <code class="docutils literal notranslate"><span class="pre">SGDRegresor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">7(a)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">7(b)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-7-c">(optional) 7(c)</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Varada Kolhatkar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

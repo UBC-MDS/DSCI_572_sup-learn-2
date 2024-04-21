@@ -1,0 +1,1791 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Lecture 8: Advanced Convolutional Models &#8212; DSCI 572 Supervised Learning II</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/08_advanced-deep-learning';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Appendix A: Gradients Review" href="appendixA_gradients.html" />
+    <link rel="prev" title="Lecture 7: CNNs in Practice" href="07_cnns-pt2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../README.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mds-hex-sticker.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/mds-hex-sticker.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Lectures</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_floating-point-numbers.html">Lecture 1: Floating-Point Numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_gradient-descent.html">Lecture 2: Optimization &amp; Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_sgd-intro-to-nn.html">Lecture 3: Stochastic Gradient Descent and Introduction to Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_pytorch-neural-networks-pt1.html">Lecture 4: Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_neural-networks-pt2.html">Lecture 5: Training Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_cnns-pt1.html">Lecture 6: Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_cnns-pt2.html">Lecture 7: CNNs in Practice</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lecture 8: Advanced Convolutional Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixD_bitmoji-CNN.html">Appendix D: Creating a CNN to Predict Bitmojis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Attribution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../LICENSE.html">LICENSE</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/UBC-MDS/DSCI_572_sup-learn-2" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/08_advanced-deep-learning.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Lecture 8: Advanced Convolutional Models</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lecture-learning-objectives">Lecture Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clarifications">Clarifications</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nn-crossentropyloss-in-pytorch"><code class="docutils literal notranslate"><span class="pre">nn.CrossEntropyLoss</span></code> in PyTorch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-torchsummary">Using torchsummary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-vs-descriminative-approaches">1. Generative vs. Descriminative approaches</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#activity">Activity</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoencoders">2. Autoencoders</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-dimensionality-reduction">2.1. Example 1: Dimensionality Reduction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-image-denoising">2.2. Example 2: Image Denoising</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-layers">Convolution Layers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#transposed-convolution-layers">Transposed Convolution Layers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-adversarial-networks-gans">3. Generative Adversarial Networks (GANs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-gans">3.1 What are GANs?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-a-gan">3.2 Structure of a GAN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-gans">3.3 Training GANs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pytorch-implementation">3.4 PyTorch Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-the-generator">3.4.1 Creating the Generator</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-the-discriminator">3.4.2 Creating the Discriminator</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#instantiating-and-initializing-our-gan">Instantiating and Initializing our GAN</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#training-our-gan">3.4.1 Training our GAN</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-training-progress">3.4.2 Visualizing Training Progress</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-input-networks">4. Multi-input Networks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">5. Conclusion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-up">Coming up …</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-remarks">Final remarks</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <a class="reference internal image-reference" href="../_images/dsci572_header.png"><img alt="../_images/dsci572_header.png" src="../_images/dsci572_header.png" style="width: 600px;" /></a>
+<section class="tex2jax_ignore mathjax_ignore" id="lecture-8-advanced-convolutional-models">
+<h1>Lecture 8: Advanced Convolutional Models<a class="headerlink" href="#lecture-8-advanced-convolutional-models" title="Permalink to this heading">#</a></h1>
+<p><br><br><br></p>
+<section id="lecture-learning-objectives">
+<h2>Lecture Learning Objectives<a class="headerlink" href="#lecture-learning-objectives" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Explain the difference between generative vs. discriminative models</p></li>
+<li><p>Describe what an autoencoder is at a high level and what they can be useful for</p></li>
+<li><p>Describe what a generative adversarial network is at a high level and what they can be useful for</p></li>
+</ul>
+<p><br><br><br></p>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">optim</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<span class="kn">from</span> <span class="nn">torchvision</span> <span class="kn">import</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">torchsummary</span> <span class="kn">import</span> <span class="n">summary</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_blobs</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">utils.plotting</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="nn">animation</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s1">&#39;axes.labelweight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;axes.grid&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
+<span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br><br></p>
+</section>
+<section id="clarifications">
+<h2>Clarifications<a class="headerlink" href="#clarifications" title="Permalink to this heading">#</a></h2>
+<section id="nn-crossentropyloss-in-pytorch">
+<h3><code class="docutils literal notranslate"><span class="pre">nn.CrossEntropyLoss</span></code> in PyTorch<a class="headerlink" href="#nn-crossentropyloss-in-pytorch" title="Permalink to this heading">#</a></h3>
+<p>From the <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">documentation</a></p>
+<ul class="simple">
+<li><p>The input is expected to contain the unnormalized logits for each class (which do not need to be positive or sum to 1, in general).</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span> <span class="c1"># targets for two examples assuming a 4-class classification problem </span>
+
+<span class="n">y_preds_good</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+<span class="n">y_preds_bad</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">criterion</span><span class="p">(</span><span class="n">y_preds_good</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># low loss as expected </span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(0.2602)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">criterion</span><span class="p">(</span><span class="n">y_preds_bad</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># high loss as expected </span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(3.1694)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="using-torchsummary">
+<h3>Using torchsummary<a class="headerlink" href="#using-torchsummary" title="Permalink to this heading">#</a></h3>
+<p>Manually calculating the output map shape of complex CNNs with multiple layers before the final flattening layer can be tedious.</p>
+<p>In these instances, the <code class="docutils literal notranslate"><span class="pre">summary</span></code> function from <code class="docutils literal notranslate"><span class="pre">torchsummary</span></code> can be useful.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">test_CNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">),</span>
+            <span class="c1"># nn.Flatten(),</span>
+            <span class="c1"># nn.Linear(324, 128),</span>
+            <span class="c1"># nn.ReLU(),</span>
+            <span class="c1"># nn.Linear(128, 1)</span>
+        <span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torchsummary</span> <span class="kn">import</span> <span class="n">summary</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">test_CNN</span><span class="p">()</span>
+<span class="c1"># The second argument is the size of your input.</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 4, 9, 9]             --
+|    └─Conv2d: 2-1                       [-1, 8, 60, 60]           608
+|    └─ReLU: 2-2                         [-1, 8, 60, 60]           --
+|    └─MaxPool2d: 2-3                    [-1, 8, 30, 30]           --
+|    └─Conv2d: 2-4                       [-1, 4, 28, 28]           292
+|    └─ReLU: 2-5                         [-1, 4, 28, 28]           --
+|    └─MaxPool2d: 2-6                    [-1, 4, 9, 9]             --
+|    └─Dropout: 2-7                      [-1, 4, 9, 9]             --
+==========================================================================================
+Total params: 900
+Trainable params: 900
+Non-trainable params: 0
+Total mult-adds (M): 2.39
+==========================================================================================
+Input size (MB): 0.05
+Forward/backward pass size (MB): 0.24
+Params size (MB): 0.00
+Estimated Total Size (MB): 0.29
+==========================================================================================
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br><br></p>
+</section>
+</section>
+<section id="generative-vs-descriminative-approaches">
+<h2>1. Generative vs. Descriminative approaches<a class="headerlink" href="#generative-vs-descriminative-approaches" title="Permalink to this heading">#</a></h2>
+<p>Both approaches can be used for supervised classification. But the way they think about separating classes is very different.</p>
+<ul class="simple">
+<li><p><strong>Generative</strong> models can generate new data instances</p>
+<ul>
+<li><p>Example: Generate or draw a cat</p></li>
+<li><p>They build a “model” for each class; they try to capture some characterization of the distribution</p></li>
+<li><p>They capture the joint probability <span class="math notranslate nohighlight">\(p(X, y)\)</span> or just <span class="math notranslate nohighlight">\(p(X)\)</span> (if no labels are available)</p></li>
+<li><p>You predict the class based on which model becomes more likely for the given example</p></li>
+</ul>
+</li>
+<li><p><strong>Discriminative</strong> models descriminate between different kinds of data instances</p>
+<ul>
+<li><p>Example: distinguish dog images from cat images</p></li>
+<li><p>They put all their effort in identifying the boundary between different classes</p></li>
+<li><p>They capture the conditional probability <span class="math notranslate nohighlight">\(p(y \vert X)\)</span></p></li>
+</ul>
+</li>
+</ul>
+<p><img alt="" src="../_images/generative-discriminative.png" /></p>
+<p><a class="reference external" href="https://stanford.edu/~shervine/teaching/cs-229/cheatsheet-supervised-learning">Source</a></p>
+<section id="activity">
+<h3>Activity<a class="headerlink" href="#activity" title="Permalink to this heading">#</a></h3>
+<p>Identify which of the following models are generative vs. discriminative</p>
+<ul class="simple">
+<li><p>Logistic regression</p></li>
+<li><p>Tree-based models</p></li>
+<li><p>Naive Bayes</p></li>
+<li><p>CNNs</p></li>
+<li><p>Large language models (e.g., ChatGPT)</p></li>
+</ul>
+</section>
+</section>
+<section id="autoencoders">
+<h2>2. Autoencoders<a class="headerlink" href="#autoencoders" title="Permalink to this heading">#</a></h2>
+<hr><ul class="simple">
+<li><p>Autoencoders (AE) are networks that are designed to reproduce their input at the output layer</p></li>
+<li><p>They are composed of an “encoder” and “decoder”</p></li>
+<li><p>The hidden layers of the AE are typically smaller than the input layers, such that the dimensionality of the data is reduced as it is passed through the encoder, and then expanded again in the decoder:</p></li>
+</ul>
+<p><img alt="" src="../_images/autoencoder.png" /></p>
+<ul class="simple">
+<li><p>Why would you want to use such a model? As you can see, AEs perform dimensionality reduction by learning to represent your input features using fewer dimensions</p></li>
+<li><p>That can be useful for a range of tasks but we’ll look at some specific examples below</p></li>
+</ul>
+<section id="example-1-dimensionality-reduction">
+<h3>2.1. Example 1: Dimensionality Reduction<a class="headerlink" href="#example-1-dimensionality-reduction" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Here’s some synthetic data of 3 features and two classes</p></li>
+<li><p>Can we reduce the dimensionality of this data to two features while preserving the class separation?</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_samples</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cluster_std</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">plot_scatter3D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6545c1681dae379280cd6d4a0ba84be2ded788e2ccda54988953404c2c27b44b.png" src="../_images/6545c1681dae379280cd6d4a0ba84be2ded788e2ccda54988953404c2c27b44b.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>We can see that <code class="docutils literal notranslate"><span class="pre">X1</span></code> and <code class="docutils literal notranslate"><span class="pre">X2</span></code> split the data nicely, and the <code class="docutils literal notranslate"><span class="pre">X3</span></code> is just noise</p></li>
+<li><p>The question is, can an AE learn that this data can be nicely separated in just two of the three dimensions?</p></li>
+<li><p>Let’s build a simple AE with the following neurons in each layer: 3 -&gt; 2 -&gt; 3:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">autoencoder</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">input_size</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">X_tensor</span><span class="p">,</span>
+                        <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">autoencoder</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>           <span class="c1"># Clear gradients w.r.t. parameters</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>            <span class="c1"># Forward pass to get output</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>  <span class="c1"># Calculate loss</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>                 <span class="c1"># Getting gradients w.r.t. parameters</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>                <span class="c1"># Update parameters</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>We only care about the encoder now, does it represent our data nicely in reduced dimensions?</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original X shape = </span><span class="si">{</span><span class="n">X_tensor</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">X_encoded</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">X_tensor</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; Encoded X shape = </span><span class="si">{</span><span class="n">X_encoded</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Original X shape = torch.Size([500, 3])
+ Encoded X shape = torch.Size([500, 2])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_scatter2D</span><span class="p">(</span><span class="n">X_encoded</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a04ab683be5a5a11cda6a04d285831bab4a2922df533503d0f118fa133f5aed8.png" src="../_images/a04ab683be5a5a11cda6a04d285831bab4a2922df533503d0f118fa133f5aed8.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>What did we just do? We used an AE to effectively reduce the number of features in our data</p></li>
+<li><p>This is very similar to concepts of unsupervised learning and clustering that we’ll discuss in DSCI 563.</p></li>
+</ul>
+</section>
+<section id="example-2-image-denoising">
+<h3>2.2. Example 2: Image Denoising<a class="headerlink" href="#example-2-image-denoising" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Okay, let’s do something more interesting</p></li>
+<li><p>We saw above that AEs can be useful feature reducers (i.e., they can remove unimportant features from our data)</p></li>
+<li><p>This also applies to images and it’s a fun application to de-noise images!</p></li>
+<li><p>Take a look at these images of 8’s from the MNIST dataset, I’m going to mess them up by adding some noise to them:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">32</span>
+
+<span class="c1"># Download data</span>
+<span class="n">transform</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">()])</span>
+<span class="n">trainset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="s1">&#39;data/&#39;</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">trainset</span><span class="o">.</span><span class="n">targets</span> <span class="o">==</span> <span class="mi">8</span>  <span class="c1"># let&#39;s only work with the number 8</span>
+<span class="n">trainset</span><span class="o">.</span><span class="n">targets</span> <span class="o">=</span> <span class="n">trainset</span><span class="o">.</span><span class="n">targets</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">trainset</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">trainset</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">trainloader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">trainset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Sample plot</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">trainloader</span><span class="p">))</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">plot_eights</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">noise</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ec51eba5c629da2237bcb924a5765cf8a0b6ab042251d182379d3d8551b6be09.png" src="../_images/ec51eba5c629da2237bcb924a5765cf8a0b6ab042251d182379d3d8551b6be09.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([32, 1, 28, 28])
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Can we train an AE to get rid of that noise and reconstruct the original 8’s? Let’s give it a try!</p></li>
+<li><p>I’m going to use convolutional layers in my AE now as we are dealing with images</p></li>
+<li><p>We’ll use <code class="docutils literal notranslate"><span class="pre">Conv2D()</span></code> layers to <em>compress</em> our images into a reduced dimensonality, and then we need to “upsample” it back to the original size</p></li>
+<li><p>One ingredient you’ll need to know to do this is “transposed convolutional layers”. These are just like “convolutional layers” but for the purpose of “upsampling” (increasing the size of) our data. Rather than simply expanding the size of our data and interpolating, we use
+<code class="docutils literal notranslate"><span class="pre">nn.ConvTranspose2d()</span></code> layers to help us learn how to best upsample our data:</p></li>
+</ul>
+<p><img alt="" src="../_images/conv_trans_1.gif" /></p>
+<p><img alt="" src="../_images/conv_trans_2.gif" /></p>
+<p>Source: modified from <a class="reference external" href="https://arxiv.org/abs/1603.07285">A guide to convolution arithmetic for deep learning, Vincent Dumoulin (2018)</a></p>
+<section id="convolution-layers">
+<h4>Convolution Layers<a class="headerlink" href="#convolution-layers" title="Permalink to this heading">#</a></h4>
+<p>Convolution layers <strong>downsample</strong> input features. In other words, the goal of convolution layers is to go from <strong>larger features (images)</strong> to <strong>smaller features (images)</strong>.</p>
+<p>Here is an animation of how kernels are applied to input features:</p>
+<p><a class="reference internal" href="../_images/conv-padded.gif"><img alt="../_images/conv-padded.gif" src="../_images/conv-padded.gif" style="width: 200px;" /></a><a class="reference internal" href="../_images/conv-strided-padded.gif"><img alt="../_images/conv-strided-padded.gif" src="../_images/conv-strided-padded.gif" style="width: 200px;" /></a>
+<br>
+<a class="reference external" href="https://github.com/vdumoulin/conv_arithmetic/blob/master/README.md#transposed-convolution-animations">(image source)</a></p>
+<p><br><br><br></p>
+</section>
+<section id="transposed-convolution-layers">
+<h4>Transposed Convolution Layers<a class="headerlink" href="#transposed-convolution-layers" title="Permalink to this heading">#</a></h4>
+<p>This is the first time we see transposed convolution layers. These layers do the opposite of what convolution layers do; that is, instead of downsampling images, they upsample. Transposed convolutions are used in the generator of a GAN to generate a image from some random vector.</p>
+<p>The goal of transposed convolution layers is to go from <strong>smaller features (images)</strong> to <strong>larger features (images)</strong>.</p>
+<p><a class="reference internal" href="../_images/conv-trans-strided.gif"><img alt="../_images/conv-trans-strided.gif" src="../_images/conv-trans-strided.gif" style="width: 200px;" /></a><a class="reference internal" href="../_images/conv-trans-not-strided.gif"><img alt="../_images/conv-trans-not-strided.gif" src="../_images/conv-trans-not-strided.gif" style="width: 200px;" /></a><br>
+<a class="reference external" href="https://github.com/vdumoulin/conv_arithmetic/blob/master/README.md#transposed-convolution-animations">(image source)</a></p>
+<p>While downsampling seems very intuitive, upsampling might look like doing magic: we try to generate information (pixel values) that did not exist before. But it’s practically not hard to do.</p>
+<p>We do something similar to what we did with convolution layers: we convolve (pass) the kernel over the inputs, and multiply each input element by all kernel elements. The resulting array will be part of the larger image:</p>
+<p><a class="reference internal" href="../_images/conv-trans-how.svg"><img alt="../_images/conv-trans-how.svg" src="../_images/conv-trans-how.svg" width="500" /></a><br>
+<a class="reference external" href="https://d2l.ai/chapter_computer-vision/transposed-conv.html">(image source)</a></p>
+<p>If we repeat this operation in several layers, we can progressively increase the size of the input images. This is exactly what the generator does; it starts from some random noise, and progressively expands that into larger and larger images.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">conv_block</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># reduce x-y dims by two; window and stride of 2</span>
+    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">deconv_block</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="n">input_channels</span><span class="p">,</span> <span class="n">output_channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">autoencoder</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+            <span class="n">conv_block</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">deconv_block</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="n">deconv_block</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">deconv_block</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># final conv layer to decrease channel back to 1</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># get pixels between 0 and 1</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">autoencoder</span><span class="p">()</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 8, 3, 3]             --
+|    └─Sequential: 2-1                   [-1, 32, 14, 14]          --
+|    |    └─Conv2d: 3-1                  [-1, 32, 28, 28]          320
+|    |    └─ReLU: 3-2                    [-1, 32, 28, 28]          --
+|    |    └─MaxPool2d: 3-3               [-1, 32, 14, 14]          --
+|    └─Sequential: 2-2                   [-1, 16, 7, 7]            --
+|    |    └─Conv2d: 3-4                  [-1, 16, 14, 14]          4,624
+|    |    └─ReLU: 3-5                    [-1, 16, 14, 14]          --
+|    |    └─MaxPool2d: 3-6               [-1, 16, 7, 7]            --
+|    └─Sequential: 2-3                   [-1, 8, 3, 3]             --
+|    |    └─Conv2d: 3-7                  [-1, 8, 7, 7]             1,160
+|    |    └─ReLU: 3-8                    [-1, 8, 7, 7]             --
+|    |    └─MaxPool2d: 3-9               [-1, 8, 3, 3]             --
+├─Sequential: 1-2                        [-1, 1, 28, 28]           --
+|    └─Sequential: 2-4                   [-1, 8, 7, 7]             --
+|    |    └─ConvTranspose2d: 3-10        [-1, 8, 7, 7]             584
+|    |    └─ReLU: 3-11                   [-1, 8, 7, 7]             --
+|    └─Sequential: 2-5                   [-1, 16, 14, 14]          --
+|    |    └─ConvTranspose2d: 3-12        [-1, 16, 14, 14]          528
+|    |    └─ReLU: 3-13                   [-1, 16, 14, 14]          --
+|    └─Sequential: 2-6                   [-1, 32, 28, 28]          --
+|    |    └─ConvTranspose2d: 3-14        [-1, 32, 28, 28]          2,080
+|    |    └─ReLU: 3-15                   [-1, 32, 28, 28]          --
+|    └─Conv2d: 2-7                       [-1, 1, 28, 28]           289
+==========================================================================================
+Total params: 9,585
+Trainable params: 9,585
+Non-trainable params: 0
+Total mult-adds (M): 3.16
+==========================================================================================
+Input size (MB): 0.00
+Forward/backward pass size (MB): 0.44
+Params size (MB): 0.04
+Estimated Total Size (MB): 0.48
+==========================================================================================
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+├─Sequential: 1-1                        [-1, 8, 3, 3]             --
+|    └─Sequential: 2-1                   [-1, 32, 14, 14]          --
+|    |    └─Conv2d: 3-1                  [-1, 32, 28, 28]          320
+|    |    └─ReLU: 3-2                    [-1, 32, 28, 28]          --
+|    |    └─MaxPool2d: 3-3               [-1, 32, 14, 14]          --
+|    └─Sequential: 2-2                   [-1, 16, 7, 7]            --
+|    |    └─Conv2d: 3-4                  [-1, 16, 14, 14]          4,624
+|    |    └─ReLU: 3-5                    [-1, 16, 14, 14]          --
+|    |    └─MaxPool2d: 3-6               [-1, 16, 7, 7]            --
+|    └─Sequential: 2-3                   [-1, 8, 3, 3]             --
+|    |    └─Conv2d: 3-7                  [-1, 8, 7, 7]             1,160
+|    |    └─ReLU: 3-8                    [-1, 8, 7, 7]             --
+|    |    └─MaxPool2d: 3-9               [-1, 8, 3, 3]             --
+├─Sequential: 1-2                        [-1, 1, 28, 28]           --
+|    └─Sequential: 2-4                   [-1, 8, 7, 7]             --
+|    |    └─ConvTranspose2d: 3-10        [-1, 8, 7, 7]             584
+|    |    └─ReLU: 3-11                   [-1, 8, 7, 7]             --
+|    └─Sequential: 2-5                   [-1, 16, 14, 14]          --
+|    |    └─ConvTranspose2d: 3-12        [-1, 16, 14, 14]          528
+|    |    └─ReLU: 3-13                   [-1, 16, 14, 14]          --
+|    └─Sequential: 2-6                   [-1, 32, 28, 28]          --
+|    |    └─ConvTranspose2d: 3-14        [-1, 32, 28, 28]          2,080
+|    |    └─ReLU: 3-15                   [-1, 32, 28, 28]          --
+|    └─Conv2d: 2-7                       [-1, 1, 28, 28]           289
+==========================================================================================
+Total params: 9,585
+Trainable params: 9,585
+Non-trainable params: 0
+Total mult-adds (M): 3.16
+==========================================================================================
+Input size (MB): 0.00
+Forward/backward pass size (MB): 0.44
+Params size (MB): 0.04
+Estimated Total Size (MB): 0.48
+==========================================================================================
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>So we want to train our model to remove that noise I added</p></li>
+<li><p>Generally speaking, the idea is that the model learns what pixel values are important, we are reducing the dimensionality of the imaages, so our model must learn only the crucial information (i.e., not the noise) needed to reproduce the image</p></li>
+<li><p>Right now, our model probably produces gibberish because it isn’t trained:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">autoencoder</span><span class="p">()</span>
+<span class="n">input_8</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+<span class="n">output_8</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_8</span><span class="p">)</span>
+<span class="n">plot_eight_pair</span><span class="p">(</span><span class="n">input_8</span><span class="p">,</span> <span class="n">output_8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[W NNPACK.cpp:64] Could not initialize NNPACK! Reason: Unsupported hardware.
+</pre></div>
+</div>
+<img alt="../_images/f05077e15ec8a1b6214db42fc6d0b182c9bf2d7e894eff0efc6cffc7c48b1243.png" src="../_images/f05077e15ec8a1b6214db42fc6d0b182c9bf2d7e894eff0efc6cffc7c48b1243.png" />
+</div>
+</div>
+<ul class="simple">
+<li><p>How do we train it?</p></li>
+<li><p>Well we feed in a noisy image, compare it to the non-noisy version, and let the network learn how to make that happen</p></li>
+<li><p>We want the value of the predicted pixels to be as close as possible to the real pixel values, so we’ll use <code class="docutils literal notranslate"><span class="pre">MSELoss()</span></code> as our loss function:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+<span class="n">img_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
+    <span class="n">losses</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">trainloader</span><span class="p">:</span>
+        <span class="n">noisy_batch</span> <span class="o">=</span> <span class="n">batch</span> <span class="o">+</span> <span class="n">noise</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">batch</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">noisy_batch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">noisy_batch</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">noisy_batch</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="n">losses</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">, loss: </span><span class="si">{</span><span class="n">losses</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">trainloader</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Save example results each epoch so we can see what&#39;s going on</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">noisy_8</span> <span class="o">=</span> <span class="n">noisy_batch</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">model_8</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_8</span><span class="p">)</span>
+        <span class="n">real_8</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="n">img_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">make_grid</span><span class="p">([</span><span class="n">noisy_8</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">model_8</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">real_8</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>epoch: 1, loss: 0.1165
+epoch: 2, loss: 0.0635
+epoch: 3, loss: 0.0486
+epoch: 4, loss: 0.0423
+epoch: 5, loss: 0.0394
+epoch: 6, loss: 0.0375
+epoch: 7, loss: 0.0362
+epoch: 8, loss: 0.0351
+epoch: 9, loss: 0.0343
+epoch: 10, loss: 0.0336
+epoch: 11, loss: 0.0329
+epoch: 12, loss: 0.0325
+epoch: 13, loss: 0.0318
+epoch: 14, loss: 0.0314
+epoch: 15, loss: 0.0310
+epoch: 16, loss: 0.0305
+epoch: 17, loss: 0.0302
+epoch: 18, loss: 0.0299
+epoch: 19, loss: 0.0295
+epoch: 20, loss: 0.0291
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="nl">epoch</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">loss</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0914</span>
+<span class="nl">epoch</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">loss</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0501</span>
+<span class="nl">epoch</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">loss</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0431</span>
+<span class="p">...</span>
+<span class="nl">epoch</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w"> </span><span class="n">loss</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0275</span>
+<span class="nl">epoch</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span><span class="w"> </span><span class="n">loss</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0273</span>
+<span class="nl">epoch</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="n">loss</span><span class="o">:</span><span class="w"> </span><span class="mf">0.0273</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Input        Prediction        Actual&quot;</span><span class="p">)</span>
+<span class="n">ims</span> <span class="o">=</span> <span class="p">[[</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span> <span class="n">animated</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_list</span><span class="p">]</span>
+<span class="c1"># ani = animation.ArtistAnimation(fig, ims, interval=1000, repeat_delay=1000, blit=True)</span>
+<span class="c1"># ani.save(&#39;eights.gif&#39;, writer=&#39;imagemagick&#39;, fps=2)</span>
+<span class="c1"># HTML(ani.to_jshtml()) # run this in a new cell to produce the below animation</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="" src="../_images/eights.gif" /></p>
+<ul class="simple">
+<li><p>Pretty cool!</p></li>
+</ul>
+<p><br><br><br><br></p>
+</section>
+</section>
+</section>
+<section id="generative-adversarial-networks-gans">
+<h2>3. Generative Adversarial Networks (GANs)<a class="headerlink" href="#generative-adversarial-networks-gans" title="Permalink to this heading">#</a></h2>
+<section id="what-are-gans">
+<h3>3.1 What are GANs?<a class="headerlink" href="#what-are-gans" title="Permalink to this heading">#</a></h3>
+<p>GANs are a type of neural network models that are used to generate new data, that is indistinguishable from the data that exists in a dataset.</p>
+<p>For example, suppose that we have a dataset of 10,000 images. The question is: can we somehow generate images that are so real-looking that we can’t tell if they are <strong>real</strong> (could potentially come from the dataset) or <strong>fake</strong> (generated by some algorithm)?</p>
+<p>Here, there aren’t any real labels. We just want to be able to produce images that are as real-looking as possible; we don’t classify them. This is why <strong>GAN modeling</strong> is regarded as an <strong>unsupervised learning</strong> task. In other words, we just need a bunch of images (or input data), no labels (or target data or outputs) would be required. We will learn more on unsupervised learning in DSCI 563.</p>
+<p><br><br><br></p>
+<p>GANs were invented in 2014 by Ian Goodfellow and colleagues (see the original paper <a class="reference external" href="https://arxiv.org/abs/1406.2661">here</a>); and have been called “<em>the most interesting idea in the last 10 years in ML</em>” by Yann LeCun, Facebook’s AI research director.</p>
+<p><br><br><br></p>
+<p>Now take a look at the following image:</p>
+<a class="reference internal image-reference" href="../_images/GAN-face.png"><img alt="../_images/GAN-face.png" src="../_images/GAN-face.png" style="width: 400px;" /></a>
+<p>Believe it or not, <strong>this is not a real person!</strong></p>
+<p>The image above is produced by a GAN that is trained on human faces. If you want to see more, visit <span class="xref myst">www.thispersondoesnotexist.com</span>. The website is connected to a GAN model living on the cloud, and each time the page refreshes, it generates a new image of a person who <strong>does not exist!</strong>.</p>
+<p><br><br><br></p>
+</section>
+<section id="structure-of-a-gan">
+<h3>3.2 Structure of a GAN<a class="headerlink" href="#structure-of-a-gan" title="Permalink to this heading">#</a></h3>
+<p><img alt="" src="../_images/GAN-structure.png" /></p>
+<p><a class="reference external" href="https://developers.google.com/machine-learning/gan/gan_structure">Source</a></p>
+<p>In this section, I describe how GANs work for image data, but remember that the idea of GANs is generalizable to any kind of data, not just images.</p>
+<p>Here is the visualization of the structure of a GAN:</p>
+<p><a class="reference internal" href="../_images/gan-1.png"><img alt="../_images/gan-1.png" src="../_images/gan-1.png" style="width: 900px;" /></a><br>
+<a class="reference external" href="https://freecontent.manning.com/practical-applications-of-gans-part-1/">(image source)</a></p>
+<p>The structure of a GAN consists of a <strong>discriminator</strong> and a <strong>generator</strong>:</p>
+<ul class="simple">
+<li><p>A discriminator is just a <strong>typical CNN</strong> that receives an image as the input, and generates a vector of probabilities of the input belonging to some class</p></li>
+<li><p>A generator is an <strong>inverted CNN</strong> that receives a vector of random numbers and generates an image in the output</p></li>
+</ul>
+<p><br><br><br></p>
+<p>The word “adversarial” comes from the fact that we actually have two networks battling each other:</p>
+<ul class="simple">
+<li><p>The generator: tries to generate fake images that look as realistic as possible such that it can <strong>fool</strong> the discriminator</p></li>
+<li><p>The discriminator: takes in real data and fake data and tries to correctly determine whether an input was real or fake</p></li>
+</ul>
+<p><br><br><br></p>
+<p><strong>An analogy:</strong></p>
+<p>Think of the “Generator” as a new counterfeit artist trying to produce realistic-looking famous artworks to sell.</p>
+<p>The “Discriminator” is an art critic, trying to determine if a piece of art is “real” or “fake”.</p>
+<p>At first, the “Generator” produces poor art-replicas which the “Discriminator” can easily tell are fake. But over time, the “Generator” learns ways to produce art that fools the “Discriminator”. Eventually, the “Generator” becomes so good that the “Discriminator” can’t tell if a piece of art is real or fake.</p>
+<p><br><br><br></p>
+</section>
+<section id="training-gans">
+<h3>3.3 Training GANs<a class="headerlink" href="#training-gans" title="Permalink to this heading">#</a></h3>
+<p>Training a GAN happens in two iterative phases:</p>
+<ol class="arabic simple">
+<li><p><strong>Train the Discriminator:</strong></p>
+<ul class="simple">
+<li><p>Generate some fake images with the generator</p></li>
+<li><p>Show the discriminator real images and fake images and get it to classify them correctly (a simple binary classification problem)</p></li>
+</ul>
+</li>
+</ol>
+<ol class="arabic simple" start="2">
+<li><p><strong>Train the Generator:</strong></p>
+<ul class="simple">
+<li><p>Generate fake images with the generator but label them as “real”</p></li>
+<li><p>Pass these fake images through the discriminator, and ask it for its judgment, i.e. the probability of this image being real</p></li>
+<li><p>Pass this judgment to a loss function, and see how far it is from the ideal output. The ideal output is that the generator was so good that it has fooled the discriminator to give it the label of “real”.</p></li>
+<li><p>Do backpropagation based on the gradients of this loss value to adjust the parameters of the generator, such that it can better and better fool the discriminator.</p></li>
+</ul>
+</li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p><strong>Repeat</strong>.</p></li>
+</ol>
+<p><br><br><br></p>
+<p><a class="reference internal" href="../_images/gan-train.png"><img alt="../_images/gan-train.png" src="../_images/gan-train.png" style="width: 600px;" /></a><br>
+<a class="reference external" href="https://sthalles.github.io/intro-to-gans/">(image source)</a></p>
+<p><br><br><br></p>
+</section>
+<section id="pytorch-implementation">
+<h3>3.4 PyTorch Implementation<a class="headerlink" href="#pytorch-implementation" title="Permalink to this heading">#</a></h3>
+<p>Alright, now’s the time to implement a GAN in PyTorch. Since training GANs is a very resource-intensive job, we need to do our computations on a GPU. Here, I’ll write the code <strong>so that you can take this notebook and run it directly on <a class="reference external" href="https://www.kaggle.com">Kaggle</a></strong>. If you want to run it on your own computer, you need to change the folder paths of the dataset that we’re going to use.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;mps&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using device: </span><span class="si">{</span><span class="n">device</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using device: mps
+</pre></div>
+</div>
+</div>
+</div>
+<p>For the purpose of demonstrating how training a GAN works in PyTorch, we’ll use the <a class="reference external" href="https://www.kaggle.com/stoicstatic/face-recognition-dataset">Face Recognition Dataset_</a> from Kaggle, which contains face images of celebrities.</p>
+<p>This dataset contains two folders: <code class="docutils literal notranslate"><span class="pre">Face</span> <span class="pre">Dataset</span></code> and <code class="docutils literal notranslate"><span class="pre">Extracted</span> <span class="pre">Faces</span></code>. We’ll use the images in <code class="docutils literal notranslate"><span class="pre">Extracted</span> <span class="pre">Faces</span></code>, which are already <code class="docutils literal notranslate"><span class="pre">128x128</span></code> pixels. Therefore, there is no need to resize them, which is why I’ve commented out <code class="docutils literal notranslate"><span class="pre">transforms.Resize(IMAGE_SIZE)</span></code> in the code below. This speeds up the computations significantly, as resizing is done on CPU and it would have been the bottle-neck of our computations. Fortunately, we don’t need to do this here:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DATA_DIR</span> <span class="o">=</span> <span class="s2">&quot;../input/face-recognition-dataset/Extracted Faces&quot;</span>
+
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">IMAGE_SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+
+<span class="n">data_transforms</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+<span class="c1">#     transforms.Resize(IMAGE_SIZE),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="p">])</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">ImageFolder</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">DATA_DIR</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">data_transforms</span><span class="p">)</span>
+<span class="n">data_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+<span class="c1"># Plot samples</span>
+<span class="n">sample_batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">data_loader</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">));</span> <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sample Training Images&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">make_grid</span><span class="p">(</span><span class="n">sample_batch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)));</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Size of dataset: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_loader</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">BATCH_SIZE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Example output:</p>
+<a class="reference internal image-reference" href="../_images/faces.png"><img alt="../_images/faces.png" src="../_images/faces.png" style="width: 500px;" /></a>
+<p><br><br><br></p>
+<section id="creating-the-generator">
+<h4>3.4.1 Creating the Generator<a class="headerlink" href="#creating-the-generator" title="Permalink to this heading">#</a></h4>
+<p>The generator takes in a random vector called <strong>latent vector</strong>, which can be thought of as a <code class="docutils literal notranslate"><span class="pre">1x1</span></code> pixel image having an arbitrary number of <strong>channels</strong> (specified in the code by <code class="docutils literal notranslate"><span class="pre">LATENT_SIZE</span></code>).</p>
+<p>Through the generator, we pass this latent vector through the <strong>deconvolution</strong> layers (known as <strong>transposed convolution</strong> layers in PyTorch), and progressively expand its size, such that in the output we’ll have an image similar in dimensions to the images in our dataset. Here for example, our images in the dataset are <code class="docutils literal notranslate"><span class="pre">128x128</span></code>, so the goal of the generator is to start from an image of <code class="docutils literal notranslate"><span class="pre">1x1</span></code> pixel and generate an image of <code class="docutils literal notranslate"><span class="pre">128x128</span></code> pixels.</p>
+<p><strong>Details:</strong></p>
+<ul class="simple">
+<li><p>In the following code, I’ve used <code class="docutils literal notranslate"><span class="pre">nn.BatchNorm2d()</span></code> for all layers, <code class="docutils literal notranslate"><span class="pre">nn.LeakyReLU()</span></code> as activation for intermediate layers, and <code class="docutils literal notranslate"><span class="pre">nn.Tanh()</span></code> as activation for the output of the generator. These are suggested to be used based on empirical evidence in training GANs.</p></li>
+<li><p>We usually do in-place modification of tensors in <code class="docutils literal notranslate"><span class="pre">nn.LeakyReLU()</span></code> by setting <code class="docutils literal notranslate"><span class="pre">inplace=True</span></code> to save some memory.</p></li>
+<li><p>We set <code class="docutils literal notranslate"><span class="pre">bias=False</span></code> because the batch normalization layer contains a bias term, so we don’t want to do it twice.</p></li>
+</ul>
+<p>Note that we mainly play with the strides to progressively expand the size of the input latent vector.</p>
+<p>Here is the code for the generator:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Generator</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">LATENT_SIZE</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            
+            <span class="c1"># input dim: [-1, LATENT_SIZE, 1, 1]</span>
+            <span class="c1"># output size = (1 - 1)*1 - 2*0 + 4</span>
+            
+            <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="n">LATENT_SIZE</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            
+            <span class="c1"># output dim: [-1, 1024, 4, 4]</span>
+            <span class="c1"># output size = (input size - 1)*stride - 2*padding + kernel size</span>
+            <span class="c1"># (4 - 1)*2 - 2 * 1 + 4 = 4 + 4 = 8</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">512</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            
+            <span class="c1"># output dim: [-1, 512, 8, 8]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            
+            <span class="c1"># output dim: [-1, 256, 16, 16]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            
+            <span class="c1"># output dim: [-1, 128, 32, 32]</span>
+            
+            <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            
+            <span class="c1"># output dim: [-1, 64, 64, 64]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+            
+            <span class="c1"># output dim: [-1, 3, 128, 128]</span>
+            
+            <span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span><span class="p">()</span>
+            
+            <span class="c1"># output dim: [-1, 3, 128, 128]</span>
+        <span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+<p>The details of how exactly a transposed convolution layer works in PyTorch can be fairly confusing at first, but here’s some further remarks to help you feel more comfortable with it:</p>
+<p>The parameters <code class="docutils literal notranslate"><span class="pre">stride</span></code> and <code class="docutils literal notranslate"><span class="pre">padding</span></code> in <code class="docutils literal notranslate"><span class="pre">nn.ConvTranspose2d</span></code> are (unfortunately?) not what we’re used to in using <code class="docutils literal notranslate"><span class="pre">nn.Conv2d</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">stride=2</span></code> doesn’t mean that the kernel in the transposed convolution moves in steps of 2 pixels each time. These parameters are, instead, designed such that if you use the same stride and padding for a <code class="docutils literal notranslate"><span class="pre">ConvTranspose2d</span></code> as in a <code class="docutils literal notranslate"><span class="pre">Conv2d</span></code>, and apply it on the output of the that <code class="docutils literal notranslate"><span class="pre">Conv2d</span></code>, it will give you an image of the same shape (but not the same pixel values).</p>
+<p>If you’re wondering about the mechanics of computing a transposed convolution in various scenarios, <strong>make sure to check out <a class="reference external" href="https://arxiv.org/pdf/1603.07285.pdf">this article</a> or <a class="reference external" href="https://numbersmithy.com/understanding-transposed-convolutions-in-pytorch/">this blog post</a>.</strong></p>
+<p><br><br><br></p>
+</section>
+<section id="creating-the-discriminator">
+<h4>3.4.2 Creating the Discriminator<a class="headerlink" href="#creating-the-discriminator" title="Permalink to this heading">#</a></h4>
+<p>As discussed before, this is a conventional CNN that receives an image (<code class="docutils literal notranslate"><span class="pre">128x128</span></code> in our case here) and outputs the probability of this image belonging to some certain class:</p>
+<ul class="simple">
+<li><p>Using pooling layers is less common because they reduce spatial resolution of feature maps and can result in loss of fine-grained details</p></li>
+<li><p>It’s more common to use strided convolutions instead</p></li>
+<li><p>We usually do in-place modification of tensors in <code class="docutils literal notranslate"><span class="pre">nn.LeakyReLU()</span></code> by setting <code class="docutils literal notranslate"><span class="pre">inplace=True</span></code> to save some memory.</p></li>
+<li><p>We set <code class="docutils literal notranslate"><span class="pre">bias=False</span></code> because the batch normalization layer contains a bias term, so we don’t want to do it twice.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Discriminator</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Discriminator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+        
+            <span class="c1"># input dim: [-1, 3, 128, 128]</span>
+            
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+
+            <span class="c1"># output dim: [-1, 64, 64, 64]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+
+            <span class="c1"># output dim: [-1, 64, 32, 32]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+
+            <span class="c1"># output dim: [-1, 128, 16, 16]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+
+            <span class="c1"># output dim: [-1, 256, 8, 8]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="mi">512</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+
+            <span class="c1"># output dim: [-1, 512, 4, 4]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            
+            <span class="c1"># output dim: [-1, 1, 1, 1]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+            
+            <span class="c1"># output dim: [-1]</span>
+
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+            
+            <span class="c1"># output dim: [-1]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+</section>
+<section id="instantiating-and-initializing-our-gan">
+<h4>Instantiating and Initializing our GAN<a class="headerlink" href="#instantiating-and-initializing-our-gan" title="Permalink to this heading">#</a></h4>
+<p>Let’s create the discriminator and generator objects, as well as the loss function and optimizers:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">LATENT_SIZE</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">Generator</span><span class="p">(</span><span class="n">LATENT_SIZE</span><span class="p">)</span>
+<span class="n">discriminator</span> <span class="o">=</span> <span class="n">Discriminator</span><span class="p">()</span>
+
+<span class="n">generator</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">discriminator</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+
+<span class="n">optimizerG</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">betas</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">))</span>
+<span class="n">optimizerD</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">discriminator</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">betas</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+<p>We explored how the starting point of the optimization can affect the final results. It is recommended that to initialize the weights of a GAN with values obtained randomly from a normal distribution. In PyTorch, we can define the initialization function as we like and apply it to the model parameters using the <code class="docutils literal notranslate"><span class="pre">.apply()</span></code> method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">weights_init</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">ConvTranspose2d</span><span class="p">)):</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">):</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">constant_</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        
+<span class="n">generator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">weights_init</span><span class="p">)</span>
+<span class="n">discriminator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">weights_init</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+</section>
+<section id="training-our-gan">
+<h4>3.4.1 Training our GAN<a class="headerlink" href="#training-our-gan" title="Permalink to this heading">#</a></h4>
+<p>We use the following cell to keep track of how a fixed noise (latent vector) is transformed to a generated image in each epoch. We will see that the generations become better and better throughout the epochs:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">img_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">fixed_noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">LATENT_SIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, here is the training loop (you can also put everything inside a function):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NUM_EPOCHS</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="kn">from</span> <span class="nn">statistics</span> <span class="kn">import</span> <span class="n">mean</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Training started:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">D_real_epoch</span><span class="p">,</span> <span class="n">D_fake_epoch</span><span class="p">,</span> <span class="n">loss_dis_epoch</span><span class="p">,</span> <span class="n">loss_gen_epoch</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_EPOCHS</span><span class="p">):</span>
+
+    <span class="c1"># D_real_iter: list that accumulates the average output of the discriminator </span>
+    <span class="c1"># for real images for each batch. High values mean the discriminator is more </span>
+    <span class="c1"># confidently classifying real images as real.</span>
+
+    <span class="c1"># D_fake_iter: Similar to D_real_iter but for fake images. Low values indicate</span>
+    <span class="c1"># the descriminator is confidently classifying them as fake. </span>
+    
+    <span class="c1"># loss_dis_iter: Stores the discriminator loss for each batch. </span>
+    <span class="c1"># This is the sum of the loss on real images and the loss on fake images. </span>
+    <span class="c1"># Monitoring this helps understand how well the discriminator is </span>
+    <span class="c1"># differentiating between real and fake images.</span>
+
+    <span class="c1"># loss_gen_iter: Stores the generator loss for each batch. This indicates </span>
+    <span class="c1"># how well the generator is fooling the discriminator. </span>
+    
+    <span class="n">D_real_iter</span><span class="p">,</span> <span class="n">D_fake_iter</span><span class="p">,</span> <span class="n">loss_dis_iter</span><span class="p">,</span> <span class="n">loss_gen_iter</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">real_batch</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">data_loader</span><span class="p">:</span>
+
+        <span class="c1"># STEP 1: train discriminator</span>
+        <span class="c1"># ==================================</span>
+        <span class="c1"># Train with real data</span>
+        <span class="n">optimizerD</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        
+        <span class="n">real_batch</span> <span class="o">=</span> <span class="n">real_batch</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">real_labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">real_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        
+        <span class="n">output</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">real_batch</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">loss_real</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">real_labels</span><span class="p">)</span>
+        
+        <span class="c1"># Iteration book-keeping</span>
+        <span class="n">D_real_iter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        
+        <span class="c1"># Train with fake data</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">real_batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">LATENT_SIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        
+        <span class="n">fake_batch</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span>
+        <span class="n">fake_labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">real_labels</span><span class="p">)</span>
+        
+        <span class="n">output</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">fake_batch</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">loss_fake</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">fake_labels</span><span class="p">)</span>
+        
+        <span class="c1"># Update discriminator weights</span>
+        <span class="n">loss_dis</span> <span class="o">=</span> <span class="n">loss_real</span> <span class="o">+</span> <span class="n">loss_fake</span>
+        <span class="n">loss_dis</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizerD</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        
+        <span class="c1"># Iteration book-keeping</span>
+        <span class="n">loss_dis_iter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_dis</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">D_fake_iter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        
+        <span class="c1"># STEP 2: train generator</span>
+        <span class="c1"># ==================================</span>
+        <span class="n">optimizerG</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="c1"># Calculate the output with the updated weights of the discriminator</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">fake_batch</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">loss_gen</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">real_labels</span><span class="p">)</span>
+        <span class="n">loss_gen</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        
+        <span class="c1"># Book-keeping</span>
+        <span class="n">loss_gen_iter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss_gen</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        
+        <span class="c1"># Update generator weights and store loss</span>
+        <span class="n">optimizerG</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch (</span><span class="si">{</span><span class="n">epoch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">NUM_EPOCHS</span><span class="si">}</span><span class="s2">)</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
+          <span class="sa">f</span><span class="s2">&quot;Loss_G: </span><span class="si">{</span><span class="n">mean</span><span class="p">(</span><span class="n">loss_gen_iter</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+          <span class="sa">f</span><span class="s2">&quot;Loss_D: </span><span class="si">{</span><span class="n">mean</span><span class="p">(</span><span class="n">loss_dis_iter</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
+          <span class="sa">f</span><span class="s2">&quot;D_real: </span><span class="si">{</span><span class="n">mean</span><span class="p">(</span><span class="n">D_real_iter</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+          <span class="sa">f</span><span class="s2">&quot;D_fake: </span><span class="si">{</span><span class="n">mean</span><span class="p">(</span><span class="n">D_fake_iter</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Epoch book-keeping</span>
+    <span class="n">loss_gen_epoch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">loss_gen_iter</span><span class="p">))</span>
+    <span class="n">loss_dis_epoch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">loss_dis_iter</span><span class="p">))</span>
+    <span class="n">D_real_epoch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">D_real_iter</span><span class="p">))</span>
+    <span class="n">D_fake_epoch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">D_fake_iter</span><span class="p">))</span>
+    
+    <span class="c1"># Keeping track of the evolution of a fixed noise latent vector</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">fake_images</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">fixed_noise</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+        <span class="c1">#img_list.append(utils.make_grid(fake_images, normalize=True, nrows=10))</span>
+        
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Training ended.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Example output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Epoch</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">16.1643</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">2.7680</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.8808</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.1760</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">5.1395</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.2464</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.7797</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.2442</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">2.3695</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.3886</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.6162</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.3758</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">4</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">2.3272</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.3902</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.6065</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.3902</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">5</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">2.4110</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.2522</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.6205</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.3870</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">6</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">2.6082</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.2582</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.6301</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.3727</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">7</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">2.3240</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.2784</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.6152</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.3882</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">8</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">2.3167</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.3681</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.6032</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.3983</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">9</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">2.3370</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.2700</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.6068</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.3959</span>
+<span class="n">Epoch</span> <span class="p">(</span><span class="mi">10</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>	 <span class="n">Loss_G</span><span class="p">:</span> <span class="mf">2.3772</span> <span class="n">Loss_D</span><span class="p">:</span> <span class="mf">1.2815</span>	 <span class="n">D_real</span><span class="p">:</span> <span class="mf">0.6077</span> <span class="n">D_fake</span><span class="p">:</span> <span class="mf">0.3872</span>
+</pre></div>
+</div>
+<p>During the training of the discriminator in a GAN, it is important to prevent updates to the generator’s parameters. This is achieved in the code by using the <code class="docutils literal notranslate"><span class="pre">detach()</span></code> method on the <code class="docutils literal notranslate"><span class="pre">fake_batch</span></code>. When <code class="docutils literal notranslate"><span class="pre">detach()</span></code> is applied to a tensor in PyTorch, it creates a new tensor that is disconnected from the current computation graph, meaning that it does not track gradients. Consequently, when <code class="docutils literal notranslate"><span class="pre">fake_batch.detach()</span></code> is used in our code, it instructs PyTorch not to calculate gradients for the generator during the discriminator’s backward pass. Without <code class="docutils literal notranslate"><span class="pre">detach()</span></code>, gradients from the discriminator’s loss, when evaluating fake images, would propagate back through both the discriminator and the generator, which is not desirable during this phase of training.</p>
+<p>Here’s the relevant part of the code for training the discriminator with fake data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">fake_batch</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">loss_fake</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">fake_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On the other hand, in the generator training phase, the objective is to update the generator’s parameters such that it becomes better at generating images. Here, the gradients need to flow through both the discriminator and the generator. This is why <code class="docutils literal notranslate"><span class="pre">detach()</span></code> is not used when passing <code class="docutils literal notranslate"><span class="pre">fake_batch</span></code> to the discriminator.</p>
+<p>Here’s the code segment for training the generator:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">fake_batch</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">loss_gen</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">real_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><br><br><br></p>
+</section>
+<section id="visualizing-training-progress">
+<h4>3.4.2 Visualizing Training Progress<a class="headerlink" href="#visualizing-training-progress" title="Permalink to this heading">#</a></h4>
+<p>The following plots will help you see how the loss values of the generator and the discriminator, as well as the probabilities generated by the discriminator on real and fake images evolve during the training of our GAN:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">loss_gen_epoch</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;loss_gen&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">loss_dis_epoch</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;loss_dis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Epoch&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Example output:</p>
+<a class="reference internal image-reference" href="../_images/loss_epoch.png"><img alt="../_images/loss_epoch.png" src="../_images/loss_epoch.png" style="width: 350px;" /></a>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">D_real_epoch</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;D_real&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">D_fake_epoch</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;D_fake&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Epoch&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Probability&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Example output:</p>
+<a class="reference internal image-reference" href="../_images/D_epoch.png"><img alt="../_images/D_epoch.png" src="../_images/D_epoch.png" style="width: 350px;" /></a>
+<p><br><br><br></p>
+<p>The following code cells help to see the evolution of one fixed noise vector throughout the epochs. The generator is applied on this fixed random noise in each epoch, and the results are saved as batches of generated images.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ims</span> <span class="o">=</span> <span class="p">[[</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">animated</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">img_list</span><span class="p">[::</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">ArtistAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ims</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">repeat_delay</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ani</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;GAN.gif&#39;</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="s1">&#39;imagemagick&#39;</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">ani</span><span class="o">.</span><span class="n">to_jshtml</span><span class="p">())</span> <span class="c1"># run this in a new cell to produce the below animation</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>These are my results after running the GAN model for around 100 epochs:</p>
+<p><a class="reference internal" href="../_images/GAN.gif"><img alt="../_images/GAN.gif" src="../_images/GAN.gif" style="width: 600px;" /></a><br></p>
+<p><strong>Note:</strong> You might have noticed the checker-board patterns that appear in the generated images, especially early in the training process. This is a known issue with transposed convolutions. This problem and potential solutions are discussed in great detail in <a class="reference external" href="https://distill.pub/2016/deconv-checkerboard/">this article</a>.</p>
+<p>Here is a picture of GAN training from the original <a class="reference external" href="https://arxiv.org/abs/1406.2661">paper</a>.</p>
+<ul class="simple">
+<li><p>Data generating distribution <span class="math notranslate nohighlight">\(\rightarrow\)</span> Green solid line</p></li>
+<li><p>Real data distribution <span class="math notranslate nohighlight">\(\rightarrow\)</span> black dotted line</p></li>
+<li><p>Discriminator distribution <span class="math notranslate nohighlight">\(\rightarrow\)</span> Blue dashed line</p></li>
+<li><p>Lower horizontal line <span class="math notranslate nohighlight">\(\rightarrow\)</span> domain from which <span class="math notranslate nohighlight">\(z\)</span> is sampled (uniform distribution in this case)</p></li>
+</ul>
+<p><img alt="" src="../_images/GAN-plots.png" /></p>
+<p><a class="reference external" href="https://arxiv.org/abs/1406.2661">Source</a></p>
+<ul class="simple">
+<li><p>(a) Initially we have a partially accurate classifier</p></li>
+<li><p>(b) After training the discriminator for a few epochs it is able to classify real vs. fake examples.</p></li>
+<li><p>(c) The gradient of the discriminator guides the generator to move to the real data distribution</p></li>
+<li><p>(d) After several steps of training, if the generator distribution and the real data distribution align. The discriminator is unable to differentiate between the two distributions.</p></li>
+</ul>
+<p><br><br><br><br></p>
+</section>
+</section>
+</section>
+<section id="multi-input-networks">
+<h2>4. Multi-input Networks<a class="headerlink" href="#multi-input-networks" title="Permalink to this heading">#</a></h2>
+<hr><ul class="simple">
+<li><p>Sometimes you’ll want to combine different types of data in a single network</p></li>
+<li><p>The most common case is combining tabular data with image data, for example, using both real estate data and images of a house to predict its sale price:</p></li>
+</ul>
+<p><img alt="" src="../_images/multi-input.png" /></p>
+<p>Source: “<a class="reference external" href="https://www.flickr.com/photos/68089229&#64;N06/17458373552">House</a>” by <a class="reference external" href="https://www.flickr.com/photos/68089229&#64;N06">oatsy40</a>, “<a class="reference external" href="https://www.flickr.com/photos/17573364&#64;N00/433449690">House in Vancouver</a>” by <a class="reference external" href="https://www.flickr.com/photos/17573364&#64;N00">pnwra</a>, “<a class="reference external" href="https://www.flickr.com/photos/21098413&#64;N04/5405425139">House</a>” by <a class="reference external" href="https://www.flickr.com/photos/21098413&#64;N04">noona11</a> all licensed under <a class="reference external" href="https://creativecommons.org/licenses/by/2.0/?ref=ccsearch&amp;atype=rich">CC BY 2.0</a>.</p>
+<ul class="simple">
+<li><p>In such a problem you may want to combine:</p>
+<ol class="arabic simple">
+<li><p>a NN for the tabular data</p></li>
+<li><p>a CNN for the image data</p></li>
+</ol>
+</li>
+<li><p>The way we often do this is create these two models, and then combine them together into a model that produces a single output</p></li>
+<li><p>This sounds complicated but it’s pretty easy! We only need one new ingredient which is a concatenation function: <code class="docutils literal notranslate"><span class="pre">torch.cat()</span></code></p></li>
+<li><p>Below is a simple example:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MultiModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cnn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">multi</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">x_cnn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cnn</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">x_fc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">x_multi</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x_cnn</span><span class="p">,</span> <span class="n">x_fc</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi</span><span class="p">(</span><span class="n">x_multi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">MultiModel</span><span class="p">()</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">model</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>The above network doesn’t really do anything but show that we can easily combine a CNN and fully connected NN!</p></li>
+</ul>
+<p><br><br><br><br></p>
+</section>
+<section id="conclusion">
+<h2>5. Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">#</a></h2>
+<p>How did we do with the course learning objectives?</p>
+<ul class="simple">
+<li><p>Identify common computational issues caused by floating-point arithmatic, e.g., rounding, overflow, etc., and program defensively against these errors.</p></li>
+<li><p>Explain how the gradient descent algorithm and its variants work.</p></li>
+<li><p>Explain the fundamental concepts of neural networks including layers, nodes, and activation functions and gain proficiency in implementing basic neural networks using <code class="docutils literal notranslate"><span class="pre">PyTorch</span></code>.</p></li>
+<li><p>Illustrate the process of backpropagation in neural network training.</p></li>
+<li><p>Explain how convolutional neural networks work and implement them for image classification using PyTorch.</p></li>
+<li><p>Explain and apply transfer learning and the different flavours of it: “out-of-the-box”, “feature extractor”, “fine tuning”.</p></li>
+<li><p>Describe at a high level the basic principles and architecture of Generative Adversarial Networks (GANs)</p></li>
+</ul>
+<section id="coming-up">
+<h3>Coming up …<a class="headerlink" href="#coming-up" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Clustering, dimensionality reduction, word embeddings, recommender systems (DSCI 563)</p></li>
+<li><p>Training at scale/distributed computing (coming in DSCI 525)</p></li>
+<li><p>Working with other forms of data like time series (DSCI 574)</p></li>
+<li><p>Markov models, topic modeling, recurrent neural networks, and transformers (DSCI 575)</p></li>
+</ul>
+</section>
+<section id="final-remarks">
+<h3>Final remarks<a class="headerlink" href="#final-remarks" title="Permalink to this heading">#</a></h3>
+<p>I hope you learned something useful from the course. I was teaching this course for the first time and I had fun teaching this material to you!</p>
+<p>Here are fake versions of you, me, and our classroom 😀. (I also see some strawberries in the picture although they were not in the prompt 🍓🍓.) I generated this image by DALL-E, an AI image creation tool, using the following prompt.</p>
+<blockquote>
+<div><p>Generate a high-resolution photo of a computer science professor thanking her students for the term and wishing them luck on the upcoming quizzes and blocks … Happy vibes and nice lighting.</p>
+</div></blockquote>
+<p><img alt="" src="../_images/Dalle-CS-prof.png" /></p>
+<p>FYI: The online course evaluations are up, it’ll be great if you can fill them in when you get a chance.</p>
+<p>https://canvas.ubc.ca/courses/123600/external_tools/4732</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "dsci572"
+        },
+        kernelOptions: {
+            name: "dsci572",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'dsci572'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="07_cnns-pt2.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Lecture 7: CNNs in Practice</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="appendixA_gradients.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Appendix A: Gradients Review</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lecture-learning-objectives">Lecture Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clarifications">Clarifications</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nn-crossentropyloss-in-pytorch"><code class="docutils literal notranslate"><span class="pre">nn.CrossEntropyLoss</span></code> in PyTorch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-torchsummary">Using torchsummary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-vs-descriminative-approaches">1. Generative vs. Descriminative approaches</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#activity">Activity</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autoencoders">2. Autoencoders</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-dimensionality-reduction">2.1. Example 1: Dimensionality Reduction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-image-denoising">2.2. Example 2: Image Denoising</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-layers">Convolution Layers</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#transposed-convolution-layers">Transposed Convolution Layers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generative-adversarial-networks-gans">3. Generative Adversarial Networks (GANs)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-gans">3.1 What are GANs?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-a-gan">3.2 Structure of a GAN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-gans">3.3 Training GANs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pytorch-implementation">3.4 PyTorch Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-the-generator">3.4.1 Creating the Generator</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-the-discriminator">3.4.2 Creating the Discriminator</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#instantiating-and-initializing-our-gan">Instantiating and Initializing our GAN</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#training-our-gan">3.4.1 Training our GAN</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-training-progress">3.4.2 Visualizing Training Progress</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-input-networks">4. Multi-input Networks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">5. Conclusion</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-up">Coming up …</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#final-remarks">Final remarks</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Varada Kolhatkar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

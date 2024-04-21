@@ -1,0 +1,2561 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Lecture 1: Floating-Point Numbers &#8212; DSCI 572 Supervised Learning II</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/01_floating-point-numbers';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Lecture 2: Optimization &amp; Gradient Descent" href="02_gradient-descent.html" />
+    <link rel="prev" title="DSCI 572: Supervised Learning II" href="../README.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../README.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mds-hex-sticker.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/mds-hex-sticker.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Lectures</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Lecture 1: Floating-Point Numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_gradient-descent.html">Lecture 2: Optimization &amp; Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_sgd-intro-to-nn.html">Lecture 3: Stochastic Gradient Descent and Introduction to Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_pytorch-neural-networks-pt1.html">Lecture 4: Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_neural-networks-pt2.html">Lecture 5: Training Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_cnns-pt1.html">Lecture 6: Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_cnns-pt2.html">Lecture 7: CNNs in Practice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_advanced-deep-learning.html">Lecture 8: Advanced Convolutional Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixC_computing-derivatives.html">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixD_bitmoji-CNN.html">Appendix D: Creating a CNN to Predict Bitmojis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Attribution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../LICENSE.html">LICENSE</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/UBC-MDS/DSCI_572_sup-learn-2" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/01_floating-point-numbers.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Lecture 1: Floating-Point Numbers</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lecture-learning-objectives">Lecture Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-for-you">❓❓ Questions for you</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-1">Exercise 1.1</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-floating-point-errors">Motivation: Floating Point Errors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1">Example 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-is-this-relevant-in-deep-learning-and-machine-learning-in-general">Why is this relevant in deep learning and machine learning in general?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-numbers-and-integers">Binary Numbers and Integers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fractional-numbers-in-binary">Fractional Numbers in Binary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed-point-numbers">Fixed Point Numbers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#floating-point-numbers">Floating-point numbers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#floating-point-standard">Floating Point Standard</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rounding-errors-and-spacing">Rounding Errors and Spacing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rounding-errors">Rounding Errors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spacing">Spacing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">❓❓ Questions for you</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-2">Exercise 1.2</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-on-floating-points">More on Floating Points</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-floating-point-range">(OPTIONAL) Floating Point Range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-subnormal-numbers">(OPTIONAL) Subnormal Numbers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#order-of-operations">Order of Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#writing-functions">Writing Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precision-memory-speed">Precision, Memory, Speed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">❓❓ Questions for you</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-3">Exercise 1.3</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lecture-highlights">Lecture Highlights</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <a class="reference internal image-reference" href="../_images/dsci572_header.png"><img alt="../_images/dsci572_header.png" src="../_images/dsci572_header.png" style="width: 600px;" /></a>
+<section class="tex2jax_ignore mathjax_ignore" id="lecture-1-floating-point-numbers">
+<h1>Lecture 1: Floating-Point Numbers<a class="headerlink" href="#lecture-1-floating-point-numbers" title="Permalink to this heading">#</a></h1>
+<p><br><br><br></p>
+<section id="lecture-learning-objectives">
+<h2>Lecture Learning Objectives<a class="headerlink" href="#lecture-learning-objectives" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Compare and contrast the representations of integers and floating-point numbers</p></li>
+<li><p>Explain how double-precision floating-point numbers are represented by 64 bits</p></li>
+<li><p>Identify common computational issues caused by floating-point numbers, e.g., rounding, overflow, etc.</p></li>
+<li><p>Calculate the “spacing” of a 64 bit floating-point number in Python</p></li>
+<li><p>Write code defensively against numerical errors</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">numpy.iinfo()</span></code>/<code class="docutils literal notranslate"><span class="pre">numpy.finfo()</span></code> to work out the possible numerical range of an integer or float dtype</p></li>
+</ul>
+<p><br><br><br></p>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">utils.floating_point</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;svg&#39;]
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;axes.labelweight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">)})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+</section>
+<section id="questions-for-you">
+<h2>❓❓ Questions for you<a class="headerlink" href="#questions-for-you" title="Permalink to this heading">#</a></h2>
+<section id="exercise-1-1">
+<h3>Exercise 1.1<a class="headerlink" href="#exercise-1-1" title="Permalink to this heading">#</a></h3>
+<p><strong>iClicker cloud join link: https://join.iclicker.com/SDMQ</strong></p>
+<p><strong>Which of the following Python statements do you think will return True?</strong></p>
+<ul class="simple">
+<li><p>(A) <code class="docutils literal notranslate"><span class="pre">1.0</span> <span class="pre">+</span> <span class="pre">2.0</span> <span class="pre">+</span> <span class="pre">3.0</span> <span class="pre">==</span> <span class="pre">6.0</span></code></p></li>
+<li><p>(B) <code class="docutils literal notranslate"><span class="pre">0.1</span> <span class="pre">+</span> <span class="pre">0.2</span> <span class="pre">==</span> <span class="pre">0.3</span></code></p></li>
+<li><p>(C) <code class="docutils literal notranslate"><span class="pre">1e16</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">==</span> <span class="pre">1e16</span></code></p></li>
+<li><p>(D) <code class="docutils literal notranslate"><span class="pre">1e16</span> <span class="pre">+</span> <span class="pre">2</span> <span class="pre">==</span> <span class="pre">1e16</span></code></p></li>
+<li><p>(E) <code class="docutils literal notranslate"><span class="pre">1e16</span> <span class="pre">+</span> <span class="pre">1.0</span> <span class="pre">+</span> <span class="pre">1.0</span>&#160; <span class="pre">==</span> <span class="pre">1e16</span></code></p></li>
+</ul>
+<p><br><br><br><br></p>
+</section>
+</section>
+<section id="motivation-floating-point-errors">
+<h2>Motivation: Floating Point Errors<a class="headerlink" href="#motivation-floating-point-errors" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="mf">3.0</span> <span class="o">==</span> <span class="mf">6.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">==</span> <span class="mf">0.3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.0</span>  <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Computers cannot always represent numbers as accurately as some of us might think.</p></li>
+<li><p>The problem boils down to this: we have a finite amount of bits in our computer to store an infinite amount of numbers.</p></li>
+<li><p>This inevitably leads to precision errors, rounding errors, underflows, and overflows.</p></li>
+</ul>
+<p>Although the rounding error in each calculation may seem insignificant, it can become substantial when accumulated over a large number of calculations.</p>
+<section id="example-1">
+<h3>Example 1<a class="headerlink" href="#example-1" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Suppose you have an odometer which adds 1.0 cm (0.01) at a timestep. How would it look like after 100_000_000 timesteps (1000 kilometers)?
+(<a class="reference external" href="https://jvns.ca/blog/2023/01/13/examples-of-floating-point-problems/#example-1-the-odometer-that-stopped">Example source</a>)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1000 km = 1_000_000 meters = 100_000_000 cm </span>
+<span class="n">meters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="mi">100_000_000</span>
+<span class="n">increment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+    <span class="n">meters</span> <span class="o">+=</span> <span class="n">increment</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Odometer reading after 1000 km: </span><span class="si">%6g</span><span class="s1"> km 😕&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">meters</span><span class="o">/</span><span class="mi">1000</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Odometer reading after 1000 km: 262.144 km 😕
+</pre></div>
+</div>
+</div>
+</div>
+<p>What’s going on here?
+<br><br><br><br><br><br><br><br></p>
+</section>
+<section id="example-2">
+<h3>Example 2<a class="headerlink" href="#example-2" title="Permalink to this heading">#</a></h3>
+<p>Suppose you work at a bank where the software rounds numbers to four decimal places. For example it would round the interest rate of 0.030045 to 0.0300.</p>
+<ul class="simple">
+<li><p>Number of customers: <span class="math notranslate nohighlight">\(\$1,000,000\)</span></p></li>
+<li><p>Minimum account balance per customer: <span class="math notranslate nohighlight">\( \$1,000\)</span></p></li>
+<li><p>Actual yearly interest rate: <span class="math notranslate nohighlight">\(\$0.030045 (3.0045\%)\)</span></p></li>
+<li><p>Rounded yearly interest rate:<span class="math notranslate nohighlight">\(\$0.0300 (3.00\%)\)</span></p></li>
+<li><p>Interest per account:</p>
+<ul>
+<li><p>Without rounding: <span class="math notranslate nohighlight">\(\$1000 * \$0.030045 = \$30.045\)</span></p></li>
+<li><p>With rounding: <span class="math notranslate nohighlight">\(\$1000 * \$0.030 = \$30.00\)</span></p></li>
+</ul>
+</li>
+<li><p>Difference per account: <span class="math notranslate nohighlight">\(\$30.045 - \$30.00 = \$0.045\)</span></p></li>
+<li><p>Cumulative impact for 1 Million customers:</p>
+<ul>
+<li><p>Total Error per year: <span class="math notranslate nohighlight">\(\$0.045 / \text{account} * 1,000,000 \text{ accounts} = \$45,000\)</span></p></li>
+</ul>
+</li>
+</ul>
+<p>The per-account rounding error is small, just <span class="math notranslate nohighlight">\(\$0.045\)</span>. However, across 1 million customers, this error aggregates to <span class="math notranslate nohighlight">\(\$45,000\)</span> per year!
+<br><br><br><br><br><br><br><br></p>
+</section>
+<section id="why-is-this-relevant-in-deep-learning-and-machine-learning-in-general">
+<h3>Why is this relevant in deep learning and machine learning in general?<a class="headerlink" href="#why-is-this-relevant-in-deep-learning-and-machine-learning-in-general" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Deep learning models are often trained on large datasets with millions of parameters and require a vast amount of numerical computations.</p></li>
+<li><p>In such models, small rounding errors in floating-point calculations can accumulate as data passes through multiple layers and we might end up converging to a suboptimal set of parameters.</p></li>
+<li><p>In general, precision of floating point numbers, efficient computation, and numerical stability are very important aspects in machine learning, especially in optimization.</p></li>
+</ul>
+<p>In this lecture, we are going to take a journey to discover</p>
+<ul class="simple">
+<li><p>How double-precision floating-point numbers are represented by 64 bits?</p></li>
+<li><p>How bad are the rounding errors?</p></li>
+<li><p>How can we code defensively against numerical errors?</p></li>
+</ul>
+<p><br><br><br></p>
+</section>
+</section>
+<section id="binary-numbers-and-integers">
+<h2>Binary Numbers and Integers<a class="headerlink" href="#binary-numbers-and-integers" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>We are used to using a base-10 number system (i.e., “decimal” or “denary”)</p></li>
+<li><p>For example, we can read the number 104 as:</p>
+<ul>
+<li><p>1 x 100 (<span class="math notranslate nohighlight">\(10^2\)</span>)</p></li>
+<li><p>0 x 10 (<span class="math notranslate nohighlight">\(10^1\)</span>)</p></li>
+<li><p>4 x 1 (<span class="math notranslate nohighlight">\(10^0\)</span>)</p></li>
+</ul>
+</li>
+</ul>
+<ul class="simple">
+<li><p>Or in a tabular format:</p></li>
+</ul>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Unit</p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(10^2\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(10^1\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(10^0\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Value</p></td>
+<td class="text-left"><p>100</p></td>
+<td class="text-left"><p>10</p></td>
+<td class="text-left"><p>1</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Number of units</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>0</p></td>
+<td class="text-left"><p>4</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Total</strong></p></td>
+<td class="text-left"><p><strong>100</strong></p></td>
+<td class="text-left"><p><strong>0</strong></p></td>
+<td class="text-left"><p><strong>4</strong></p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>Many of you will be aware that computers use a base-2 system (i.e., “binary”) to store data</p></li>
+<li><p>Binary is based on powers of 2 rather than powers of 10 and we only have two numbers (0 and 1) to work with (think of them as “off” and “on” switches respectively)</p></li>
+<li><p>If you’re interested in learning more about how computers work under the hood, check out <a class="reference external" href="https://www.youtube.com/playlist?list=PL8dPuuaLjXtNlUrzyH5r6jN9ulIgZBpdo&amp;app=desktop">this excellent Youtube series on computer science by CrashCourse</a></p></li>
+<li><p>In binary, 104 looks like:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">104</span><span class="si">:</span><span class="s2">b</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># I&#39;m using the python f-string format code &quot;b&quot; to display my integer in binary</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;1101000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also directly obtain the binary representation of a number using Python’s built-in <code class="docutils literal notranslate"><span class="pre">bin()</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">bin</span><span class="p">(</span><span class="mi">104</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0b1101000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>So this is:</p></li>
+</ul>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Unit</p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^6\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^5\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^4\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^3\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^2\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^1\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^0\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Value</p></td>
+<td class="text-left"><p>64</p></td>
+<td class="text-left"><p>32</p></td>
+<td class="text-left"><p>16</p></td>
+<td class="text-left"><p>8</p></td>
+<td class="text-left"><p>4</p></td>
+<td class="text-left"><p>2</p></td>
+<td class="text-left"><p>1</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Number of units</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>0</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>0</p></td>
+<td class="text-left"><p>0</p></td>
+<td class="text-left"><p>0</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Total</strong></p></td>
+<td class="text-left"><p><strong>64</strong></p></td>
+<td class="text-left"><p><strong>32</strong></p></td>
+<td class="text-left"><p><strong>0</strong></p></td>
+<td class="text-left"><p><strong>8</strong></p></td>
+<td class="text-left"><p><strong>0</strong></p></td>
+<td class="text-left"><p><strong>0</strong></p></td>
+<td class="text-left"><p><strong>0</strong></p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>We call these single binary 0/1 values, <strong>bits</strong></p></li>
+<li><p>So we needed 7 bits to represent the number 104</p></li>
+<li><p>We can confirm using the <code class="docutils literal notranslate"><span class="pre">.bit_length()</span></code> integer method</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">104</span>
+<span class="n">x</span><span class="o">.</span><span class="n">bit_length</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Here are the first 10 positive integers in binary (using 4 bits):</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DECIMAL | BINARY&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;================&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   </span><span class="si">{</span><span class="n">_</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">   |  </span><span class="si">{</span><span class="n">_</span><span class="si">:</span><span class="s2">04b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DECIMAL | BINARY
+================
+   00   |  0000
+   01   |  0001
+   02   |  0010
+   03   |  0011
+   04   |  0100
+   05   |  0101
+   06   |  0110
+   07   |  0111
+   08   |  1000
+   09   |  1001
+   10   |  1010
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>And a useful GIF counting up in binary to drive the point home:</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/binary-denary.gif"><img alt="../_images/binary-denary.gif" src="../_images/binary-denary.gif" style="width: 400px;" /></a>
+<p>Source: <a class="reference external" href="https://www.futurelearn.com/courses/how-computers-work/0/steps/49261">futurelearn.com</a></p>
+<p><br><br><br></p>
+<ul class="simple">
+<li><p>The range of <strong>unsigned integers</strong> we can represent with <code class="docutils literal notranslate"><span class="pre">N</span></code> bits is: 0 to <span class="math notranslate nohighlight">\(2^{N}-1\)</span>, just like the range of unsigned integers with <code class="docutils literal notranslate"><span class="pre">N</span></code> digits is: 0 to <span class="math notranslate nohighlight">\(10^{N}-1\)</span>.</p></li>
+<li><p>The range of <strong>signed integers</strong> you can represent with <code class="docutils literal notranslate"><span class="pre">N</span></code> bits is: <span class="math notranslate nohighlight">\(-2^{N-1}\)</span> to <span class="math notranslate nohighlight">\(2^{N-1}-1\)</span></p></li>
+</ul>
+<blockquote>
+<div><p><strong>(OPTIONAL)</strong> You don’t really need to know this, but it’s worth mentioning that:</p>
+<p>The reason for why the range of 8-bit integers is -128 to 127, instead of -127 to 127 is because of a particular way of representing negative numbers in computer hardware (see these Wikipedia links: <a class="reference external" href="https://en.wikipedia.org/wiki/Signed_number_representations">1</a> and <a class="reference external" href="https://en.wikipedia.org/wiki/Method_of_complements">2</a>), known as <strong>two’s complement</strong> (this is the most widely used system today, but there are also other systems which you can find in the Wikipedia article).</p>
+<ul class="simple">
+<li><p>It is basically a workaround, on the hardware level, to avoid having different methods for addition and subtraction for positive and negative numbers. In decimal, it’s like saying 700 - 250 = 450 can be done by writing 700 + 750 = 1450 and then drop the 1, giving 450 (750 is the tens’s complement of 250). Put otherwise, <strong>we turned a subtraction operation into an addition by doing this</strong>.</p></li>
+<li><p>There is no negative zero in this system, which is why we get one more number to store for free (1,000,0000 in binary represents -128 in decimal). The more important implication of this is that there’s no check needed to see if non-zero values are not just negative zero (e.g., 1000 is non-zero, but would be interpreted as negative zero in a 4-bit digit that uses the sign-and-magnitude system of representing negative numbers).</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>For example, with 8 bits we can represent the unsigned integers 0 to <span class="math notranslate nohighlight">\(2^8 - 1 = 255\)</span>, or signed integers from -128 to 127:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bits</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unsigned min: 0&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unsigned max: </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">bits</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;signed min: </span><span class="si">{</span><span class="o">-</span><span class="mi">2</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="p">(</span><span class="n">bits</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;signed max: </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="p">(</span><span class="n">bits</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unsigned min: 0
+unsigned max: 255
+
+signed min: -128
+signed max: 127
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>We can confirm all this with the numpy function <code class="docutils literal notranslate"><span class="pre">np.iinfo()</span></code>:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span>  <span class="c1"># use np.iinfo() to check out the limits of a dtype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>iinfo(min=-128, max=127, dtype=int8)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span>  <span class="c1"># &quot;uint8&quot; is an unsigned 8-bit integer, so ranging from 0 to 2^7</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>iinfo(min=0, max=255, dtype=uint8)
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Depending on the language/library you’re using, you may get an error or some other funky behaviour if you try to store an integer smaller/larger than the allowable</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">129</span><span class="p">,</span> <span class="mi">256</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span>  <span class="c1"># these numbers are outside the allowable range!</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([127,   0], dtype=int8)
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+<p><strong>(OPTIONAL) Reason:</strong></p>
+<p>In case of 256, it merely converts it to binary:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">bin</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0b100000000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>and then forces it to an 8-bit memory location, which means that only the zeros in 100000000 will be retained, and the 9-th digit (the leftmost 1) will be discarded. Therefore, we get zero.</p>
+<p>On the other hand, since -129 is a negative number, NumPy computes the two’s complement of 129. To do that:</p>
+<ul class="simple">
+<li><p>the first step is to flip 0s to 1s and 1s to 0s in <code class="docutils literal notranslate"><span class="pre">10000001</span></code> (the binary representation of unsigned 129), which gives <code class="docutils literal notranslate"><span class="pre">01111110</span></code></p></li>
+<li><p>and then add 1 to the result: <code class="docutils literal notranslate"><span class="pre">01111110</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">01111111</span></code>. This bit pattern already belongs to another number in that range:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span><span class="p">(</span><span class="mb">0b01111111</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>127
+</pre></div>
+</div>
+</div>
+</div>
+<p>This image below, which shows the 2’s complement circle in case of a 4-bit digit, makes this process more clear:</p>
+<a class="reference internal image-reference" href="../_images/2s-complement-wheel.png"><img alt="../_images/2s-complement-wheel.png" src="../_images/2s-complement-wheel.png" style="width: 300px;" /></a>
+<p><a class="reference external" href="https://courses.cs.washington.edu/courses/cse351/19sp/sections/03/cse351_sec3_soln.pdf">source</a></p>
+<p><br><br><br></p>
+<ul class="simple">
+<li><p>To store the example values above, we need more bits in the memory</p></li>
+<li><p>For example, 16 bits will be more than enough:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">129</span><span class="p">,</span> <span class="mi">128</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int16&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-129,  128], dtype=int16)
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>You often see bits in multiples of 8 (e.g., 8, 16, 32, 64, etc)</p></li>
+<li><p>8 bits is traditionally called 1 “byte”</p></li>
+</ul>
+<p><strong>Note:</strong> Python does not restrict the number of bits for storing an integer. It can dynamically allocate more memory to store your integer if needed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">2000</span>
+<span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>114813069527425452423283320117768198402231770208869520047764273682576626139237031385665948631650626991844596463898746277344711896086305533142593135616665318539129989145312280000688779148240044871428926990063486244781615463646388363947317026040466353970904996558162398808944629605623311649536164221970332681344168908984458505602379484807914058900934776500429002716706625830522008132236281291761267883317206598995396418127021779858404042159853183251540889433902091920554957783589672039160081957216630582755380425583726015528348786419432054508915275783882625175435528800822842770817965453762184851149029376
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="o">.</span><span class="n">bit_length</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2001
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+</section>
+<section id="fractional-numbers-in-binary">
+<h2>Fractional Numbers in Binary<a class="headerlink" href="#fractional-numbers-in-binary" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>At this point you might be thinking, “Well that’s all well and good for integers, but what about fractional numbers like 14.75?”</p></li>
+<li><p>Let’s interpret the number 14.75 in our familiar decimal format</p></li>
+</ul>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Unit</p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(10^1\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(10^0\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(10^{-1}\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(10^{-2}\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Value</p></td>
+<td class="text-left"><p>10</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>0.1</p></td>
+<td class="text-left"><p>0.01</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Number of units</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>4</p></td>
+<td class="text-left"><p>7</p></td>
+<td class="text-left"><p>5</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Total</strong></p></td>
+<td class="text-left"><p><strong>10</strong></p></td>
+<td class="text-left"><p><strong>4</strong></p></td>
+<td class="text-left"><p><strong>0.7</strong></p></td>
+<td class="text-left"><p><strong>0.05</strong></p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>That seems pretty natural, and in binary it’s much the same</p></li>
+<li><p>Anything to the right of the decimal point (now called a “binary point”) is treated with a <strong>negative exponent</strong></p></li>
+<li><p>So in binary, 14.75 would look like this: 1110.11</p></li>
+</ul>
+<ul class="simple">
+<li><p>Let’s break that down:</p></li>
+</ul>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Unit</p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^3\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^2\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^1\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^0\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^{-1}\)</span></p></th>
+<th class="head text-left"><p><span class="math notranslate nohighlight">\(2^{-2}\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Value</p></td>
+<td class="text-left"><p>8</p></td>
+<td class="text-left"><p>4</p></td>
+<td class="text-left"><p>2</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>0.5</p></td>
+<td class="text-left"><p>0.25</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Number of units</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>0</p></td>
+<td class="text-left"><p>1</p></td>
+<td class="text-left"><p>1</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Total</strong></p></td>
+<td class="text-left"><p><strong>8</strong></p></td>
+<td class="text-left"><p><strong>4</strong></p></td>
+<td class="text-left"><p><strong>2</strong></p></td>
+<td class="text-left"><p><strong>0</strong></p></td>
+<td class="text-left"><p><strong>0.5</strong></p></td>
+<td class="text-left"><p><strong>0.25</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p><br><br><br></p>
+</section>
+<section id="fixed-point-numbers">
+<h2>Fixed Point Numbers<a class="headerlink" href="#fixed-point-numbers" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>As we learned earlier, we typically have a fixed number of bits to work with when storing a number, e.g., 8, 16, 32, 64 bits etc.</p></li>
+<li><p>How do we decide where to put the binary point to allow for fractional numbers?</p></li>
+<li><p>With 8 bits, one option is to put <strong>4 bits on the left and 4 on the right</strong>:</p></li>
+</ul>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit</p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(2^{3}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(2^{2}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(2^{1}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(2^{0}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(2^{-1}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(2^{-2}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(2^{-3}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(2^{-4}\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Value</p></td>
+<td><p>8</p></td>
+<td><p>4</p></td>
+<td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>0.5</p></td>
+<td><p>0.25</p></td>
+<td><p>0.125</p></td>
+<td><p>0.0625</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>In this case, the largest and smallest (closest to 0) numbers we could represent in the unsigned case are:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">2.0</span><span class="o">**</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15.9375
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0625
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>But what if we wanted to represent numbers larger than this?</p></li>
+<li><p>We could shift the binary point right, so we have 6 on the left and 2 on the right, then our range would be:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">2.0</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>63.75
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.25
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>We get this trade-off between being able to represent large numbers and small numbers</p></li>
+<li><p>What if we want to represent both very large and very small numbers?</p></li>
+</ul>
+<p><br><br><br></p>
+</section>
+<section id="floating-point-numbers">
+<h2>Floating-point numbers<a class="headerlink" href="#floating-point-numbers" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Rather than having a fixed location for our binary point, we could let it “float” around depending on what number we want to store</p></li>
+<li><p>Recall “scientific notation”, which for the number 1234 looks like <span class="math notranslate nohighlight">\(1.234 \times 10^3\)</span>, or for computers we usually use <code class="docutils literal notranslate"><span class="pre">e</span></code> (exponent) for shorthand:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">1234</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;1.234e+03&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>The “exponent” controls the location of the decimal point</p></li>
+<li><p>Consider the following numbers:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(1.234 \times 10^0 = 1.234\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(1.234 \times 10^1 = 12.34\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(1.234 \times 10^2 = 123.4\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(1.234 \times 10^3 = 1234.\)</span></p></li>
+</ul>
+</li>
+</ul>
+<p><br><br><br></p>
+<ul class="simple">
+<li><p>See how by changing the value of the exponent we can control the location of the floating point and represent a range of values?</p></li>
+<li><p>We’ll be using the exact same logic with the binary system to come up with our “floating-point numbers”</p></li>
+<li><p>This means that <strong>instead of powers of 10, we want to express numbers in powers of 2</strong></p></li>
+<li><p>This is floating point format:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[1.\underbrace{M}_\text{Mantissa} \times \underbrace{2^E}_\text{Exponent}\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(M\)</span> = Mantissa</p></li>
+<li><p><span class="math notranslate nohighlight">\(E\)</span> = Exponent</p></li>
+<li><p>In binary, <span class="math notranslate nohighlight">\(1.M\)</span> is always between 1 and 2, just like in decimal the significand is always between 1 and 10 (if it’s bigger than that you simply add 1 to the powers of 2 or 10)</p></li>
+</ul>
+<p><br><br><br></p>
+<ul class="simple">
+<li><p>Consider the number 10</p></li>
+<li><p><span class="math notranslate nohighlight">\(10 = 1.25 \times 2^3\)</span></p></li>
+<li><p>So <span class="math notranslate nohighlight">\(M=.25\)</span> and <span class="math notranslate nohighlight">\(E=3\)</span></p></li>
+<li><p>But we want binary, not decimal, so <span class="math notranslate nohighlight">\(M=01\)</span> and <span class="math notranslate nohighlight">\(E=11\)</span></p></li>
+<li><p>Therefore, 10 in floating point binary is: <span class="math notranslate nohighlight">\(1.01 \times 2^{11}\)</span></p>
+<ul>
+<li><p>Note that the <span class="math notranslate nohighlight">\(.\)</span> is a <strong>“binary point”</strong> (or more generally the <em>radix point</em>), digits on the left are 2’s with positive exponents, digits on the right are 2’s with negative exponents</p></li>
+</ul>
+</li>
+</ul>
+<ul class="simple">
+<li><p>This is where the magic happens, just as the exponent of 10 in scientific notation defines the location of the decimal point, so does the exponent of a floating-point number define the location of the binary point</p></li>
+<li><p>For <span class="math notranslate nohighlight">\(1.01 \times 2^{11}\)</span>, the exponent is 11 in binary and 3 in decimal, so move the binary point three places to the right: <span class="math notranslate nohighlight">\(1.01 \times 2^{11} = 1010.\)</span></p></li>
+<li><p>What is the decimal representation of binary 1010?</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span><span class="p">(</span><span class="mb">0b1010</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>We now have this “floating-point” data type that uses an exponent to help us represent both small and large fractional numbers (unlike fixed point where we would have to choose one or the other)</p></li>
+<li><p>I wrote a function <code class="docutils literal notranslate"><span class="pre">binary()</span></code> to display any number in floating point format:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binary</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Decimal: 1.25 x 2^3
+  Binary: 1.01 x 2^11
+
+    Sign: 0 (+)
+Mantissa: 01 (0.25)
+Exponent: 11 (3)
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Let’s try the speed of light: <span class="math notranslate nohighlight">\(2.998 \times 10 ^ 8 m/s\)</span></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binary</span><span class="p">(</span><span class="mf">2.998e8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Decimal: 1.11684203147888184 x 2^28
+  Binary: 1.0001110111101001010111 x 2^11100
+
+    Sign: 0 (+)
+Mantissa: 0001110111101001010111 (0.11684203147888184)
+Exponent: 11100 (28)
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>A mole of a substance: <span class="math notranslate nohighlight">\(6.02214076 \times 10^{23}\)</span> particles</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binary</span><span class="p">(</span><span class="mf">6.02214076e23</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Decimal: 1.9925592330949422 x 2^78
+  Binary: 1.1111111000011000010111001010010101111100010100010111 x 2^1001110
+
+    Sign: 0 (+)
+Mantissa: 1111111000011000010111001010010101111100010100010111 (0.9925592330949422)
+Exponent: 1001110 (78)
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Planck’s constant: <span class="math notranslate nohighlight">\(6.62607004 \times 10^{-34} \left[m^2 kg / s\right]\)</span></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binary</span><span class="p">(</span><span class="mf">6.62607004e-34</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Decimal: 1.720226132656187 x 2^-111
+  Binary: 1.1011100001100000101111010110010101111011100111100001 x 2^-1101111
+
+    Sign: 0 (+)
+Mantissa: 1011100001100000101111010110010101111011100111100001 (0.720226132656187)
+Exponent: -1101111 (-111)
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>You get the point, we can represent a wide range of numbers with this format.</p></li>
+</ul>
+<p><br><br><br></p>
+<section id="floating-point-standard">
+<h3>Floating Point Standard<a class="headerlink" href="#floating-point-standard" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>One question you might have about the above: how many bits should I use for the mantissa and how many for the exponent?</p></li>
+<li><p>Well that’s already been decided for you in: IEEE Standard for Floating-Point Arithmetic (<a class="reference external" href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a>) which is what most computers/software use</p></li>
+<li><p>You’ll mostly be using the data types <code class="docutils literal notranslate"><span class="pre">float64</span></code> and <code class="docutils literal notranslate"><span class="pre">float32</span></code></p></li>
+<li><p><strong>Float 64</strong> (also called “double precision”)</p>
+<ul>
+<li><p>1 bit for the overall sign</p></li>
+<li><p>52 bits for the mantissa (<a class="reference external" href="https://stackoverflow.com/a/18409644">plus 1 implied bit</a>)</p></li>
+<li><p>11 bits for the exponent</p></li>
+</ul>
+</li>
+</ul>
+<a class="reference internal image-reference" href="../_images/float64.png"><img alt="../_images/float64.png" src="../_images/float64.png" style="width: 600px;" /></a>
+<p><a class="reference external" href="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/IEEE_754_Double_Floating_Point_Format.svg/1236px-IEEE_754_Double_Floating_Point_Format.svg.png">image source</a></p>
+<ul class="simple">
+<li><p><strong>Float 32</strong> (also called “single precision”)</p>
+<ul>
+<li><p>1 bit for the overall sign</p></li>
+<li><p>23 bits for the mantissa (plus 1 implied bit)</p></li>
+<li><p>8 bits for the exponent</p></li>
+</ul>
+</li>
+</ul>
+<a class="reference internal image-reference" href="../_images/float32.png"><img alt="../_images/float32.png" src="../_images/float32.png" style="width: 600px;" /></a>
+<p><a class="reference external" href="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Float_example.svg/1180px-Float_example.svg.png">image source</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ?np.finfo</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>finfo(resolution=1e-15, min=-1.7976931348623157e+308, max=1.7976931348623157e+308, dtype=float64)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">tiny</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.2250738585072014e-308
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+</section>
+</section>
+<section id="rounding-errors-and-spacing">
+<h2>Rounding Errors and Spacing<a class="headerlink" href="#rounding-errors-and-spacing" title="Permalink to this heading">#</a></h2>
+<section id="rounding-errors">
+<h3>Rounding Errors<a class="headerlink" href="#rounding-errors" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Many fractional numbers can’t be represented exactly using binary</p></li>
+<li><p><strong>Instead, your computer will round numbers to the closest representable number and we get rounding errors</strong></p></li>
+<li><p>For example, 0.1 can’t be exactly represented in binary (feel free to try and make 0.1 using binary floating point format).</p></li>
+<li><p>Python usually hides this fact for us out of convenience:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.1
+</pre></div>
+</div>
+</div>
+</div>
+<p>but here is what’s stored in the memory as 0.1:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.1</span><span class="si">:</span><span class="s2">.100f</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0.1000000000000000055511151231257827021181583404541015625000000000000000000000000000000000000000000000&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>So 0.1 is actually represented as a number slightly bigger than 0.1</p></li>
+<li><p>I wrote a function to work out if a number is stored exactly or inexactly, and to show the rounding error:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_rep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You entered: 0.1
+Which is inexactly stored as: 0.1000000000000000055511151231257827021181583404541015625
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_rep</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You entered: 0.25
+Which is exactly stored as: 0.25
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Read more about float representation in the Python docs <a class="reference external" href="https://docs.python.org/3/tutorial/floatingpoint.html">here</a>.</p></li>
+</ul>
+<p>The reason why the following returns <code class="docutils literal notranslate"><span class="pre">False</span></code> is none of these numbers are exactly represented.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">==</span> <span class="mf">0.3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_rep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You entered: 0.1
+Which is inexactly stored as: 0.1000000000000000055511151231257827021181583404541015625
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_rep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You entered: 0.2
+Which is inexactly stored as: 0.200000000000000011102230246251565404236316680908203125
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">float_rep</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You entered: 0.3
+Which is inexactly stored as: 0.29999999999999998889776975374843459576368331909179688
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+</section>
+<section id="spacing">
+<h3>Spacing<a class="headerlink" href="#spacing" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>So how bad are these rounding errors? Let’s find out…</p></li>
+<li><p>We can quantify the “spacing” between representable numbers</p></li>
+<li><p>Imagine we’re in the decimal system again:</p>
+<ul>
+<li><p><strong>For a number with a fixed number of significant digits</strong>, the spacing between that number and the next greater number can be determined as the smallest significant digit multiplied by the exponent:</p></li>
+</ul>
+</li>
+</ul>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Number</p></th>
+<th class="head"><p>Next greater</p></th>
+<th class="head"><p>Spacing</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>8.982e0</p></td>
+<td><p>8.983e0</p></td>
+<td><p>0.001e0 = 0.001</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.001e1</p></td>
+<td><p>0.002e1</p></td>
+<td><p>0.001e1 = 0.01</p></td>
+</tr>
+<tr class="row-even"><td><p>3.423e2</p></td>
+<td><p>3.424e2</p></td>
+<td><p>0.001e2 = 0.1</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>The spacing can be determined as <strong>the smallest part of the mantissa multiplied by a number’s exponent</strong></p></li>
+<li><p>The same goes for binary. The steps happen at every power of 2 instead of 10, and we have way more digits after the decimal (52 instead of 3), but everything else is pretty much the same.</p></li>
+<li><p>So the spacing size, as a function of the number itself, is a staircase function:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100000</span><span class="p">,</span> <span class="mi">10000000</span><span class="p">)</span>
+
+<span class="n">spacing</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">52</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Number itself&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Gap to the next number&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b6953d3205ac8c27a413daa4a918f00ce6bf83f86c198ec9f2390ba4d160907e.svg" src="../_images/b6953d3205ac8c27a413daa4a918f00ce6bf83f86c198ec9f2390ba4d160907e.svg" /></div>
+</div>
+<ul class="simple">
+<li><p>As the <strong>magnitude</strong> of the number increases (<span class="math notranslate nohighlight">\(\uparrow\)</span>)</p>
+<ul>
+<li><p>The <strong>exponent</strong> increases (<span class="math notranslate nohighlight">\(\uparrow\)</span>)</p></li>
+<li><p>The <strong>spacing</strong> between representable numbers increases (<span class="math notranslate nohighlight">\(\uparrow\)</span>)</p></li>
+<li><p>The <strong>precision</strong> decreases (<span class="math notranslate nohighlight">\(\downarrow\)</span>)</p></li>
+</ul>
+</li>
+</ul>
+<ul class="simple">
+<li><p>For <code class="docutils literal notranslate"><span class="pre">float64</span></code>, we have 52 explicit bits for the mantissa, therefore the smallest significant digit is <span class="math notranslate nohighlight">\(2^{-52}\)</span></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">52</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.220446049250313e-16
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Numpy has a helpful function we can use to calculate spacing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">np.nextafter(x1,</span> <span class="pre">x2)</span></code> returns the next representable floating-point value after <code class="docutils literal notranslate"><span class="pre">x1</span></code> towards <code class="docutils literal notranslate"><span class="pre">x2</span></code></p></li>
+<li><p>The next representable number after 1 should be 1 plus the spacing above, let’s check:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.0000000000000002
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">spacing</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.220446049250313e-16
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spacing</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">52</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>If you do a calculation that puts you somewhere between the <strong>space</strong> of two numbers, the computer will automatically round to the nearest one</p></li>
+<li><p>I like to think of this as a mountain range in the computer</p></li>
+<li><p>In the valleys are representable numbers, if a calculation puts us on a mountain side, we’ll roll down the mountain to the closest valley</p></li>
+<li><p>For example, spacing for the number 1 is <span class="math notranslate nohighlight">\(2^{-52}\)</span>, so if we don’t add at least half that, we won’t reach the next representable number:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">spacing</span> <span class="o">==</span> <span class="mi">1</span>  <span class="c1"># add less than half the spacing</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<a class="reference internal image-reference" href="../_images/fall_left.png"><img alt="../_images/fall_left.png" src="../_images/fall_left.png" style="width: 500px;" /></a>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">+</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">spacing</span> <span class="o">==</span> <span class="mi">1</span> <span class="c1"># add a more than half the spacing</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<a class="reference internal image-reference" href="../_images/fall_right.png"><img alt="../_images/fall_right.png" src="../_images/fall_right.png" style="width: 500px;" /></a>
+<ul class="simple">
+<li><p>We’re working with pretty small numbers here so you might not be too shocked</p></li>
+<li><p>But remember, the bigger our exponent, the bigger our rounding errors will be!</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">large_number</span> <span class="o">=</span> <span class="mf">1e25</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binary</span><span class="p">(</span><span class="n">large_number</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Decimal: 1.03397576569128469 x 2^83
+  Binary: 1.0000100010110010101000101100001010000000001010010001 x 2^1010011
+
+    Sign: 0 (+)
+Mantissa: 0000100010110010101000101100001010000000001010010001 (0.03397576569128469)
+Exponent: 1010011 (83)
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>The exponent is 83 so the spacing should be:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spacing</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">52</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="mi">83</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">spacing</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.14748e+09
+</pre></div>
+</div>
+</div>
+</div>
+<p>Or with <code class="docutils literal notranslate"><span class="pre">np.nextafter</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">**</span> <span class="mi">83</span>
+<span class="n">spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">**</span><span class="mi">84</span><span class="p">)</span> <span class="o">-</span> <span class="n">num</span>
+<span class="n">spacing</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2147483648.0
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>1 billion is less than half that spacing, so if we add it to <code class="docutils literal notranslate"><span class="pre">large_number</span></code>, we won’t cross the mountain peak, and we’ll slide back down into the same valley:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">one_billion</span> <span class="o">=</span> <span class="mf">1e9</span>
+<span class="mf">1e25</span> <span class="o">+</span> <span class="n">one_billion</span> <span class="o">==</span> <span class="mf">1e25</span>  <span class="c1"># adding a billion didn&#39;t change our number!</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>2 billion is more than half that spacing, so if we add it to <code class="docutils literal notranslate"><span class="pre">large_number</span></code>, we’ll slide into the next valley (representable number):</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">two_billion</span> <span class="o">=</span> <span class="mf">2e9</span>
+<span class="mf">1e25</span> <span class="o">+</span> <span class="n">two_billion</span> <span class="o">==</span> <span class="mf">1e25</span>  <span class="c1"># adding two billion (more than half the spacing) did change our number</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Another implication of having a finite number of floating point digits to represent an infinite number system is that two numbers may share the same representation in memory</p></li>
+<li><p>For example, these are all <code class="docutils literal notranslate"><span class="pre">True</span></code>:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.99999999999999999</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1.00000000000000004</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1.00000000000000009</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>No matter what number you are, if you don’t pass over the peak to your left or right, you’ll roll back down to the valley</p></li>
+<li><p>And also remember, the bigger the number, the bigger the spacing/rounding errors</p></li>
+</ul>
+<p><br><br><br><br></p>
+</section>
+</section>
+<section id="id1">
+<h2>❓❓ Questions for you<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<section id="exercise-1-2">
+<h3>Exercise 1.2<a class="headerlink" href="#exercise-1-2" title="Permalink to this heading">#</a></h3>
+<p>Now that you know about spacing discuss the reasons for the following.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">==</span> <span class="mf">0.3</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binary</span><span class="p">(</span><span class="mf">1e16</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Decimal: 1.11022302462515654 x 2^53
+  Binary: 1.0001110000110111100100110111111000001 x 2^110101
+
+    Sign: 0 (+)
+Mantissa: 0001110000110111100100110111111000001 (0.11022302462515654)
+Exponent: 110101 (53)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">bin</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0b10010&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.0</span>  <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br><br></p>
+</section>
+</section>
+<section id="more-on-floating-points">
+<h2>More on Floating Points<a class="headerlink" href="#more-on-floating-points" title="Permalink to this heading">#</a></h2>
+<section id="optional-floating-point-range">
+<h3>(OPTIONAL) Floating Point Range<a class="headerlink" href="#optional-floating-point-range" title="Permalink to this heading">#</a></h3>
+<p>Recall that most compute environments you’ll encounter will be using IEEE double precision (<code class="docutils literal notranslate"><span class="pre">float64</span></code>), so 52 bits for the mantissa, 11 for the exponent. In order to obtain the range of values for IEEE <code class="docutils literal notranslate"><span class="pre">float64</span></code>, we first need to know that the <strong>exponent</strong> in this standard is expressed differently than we expect. Let’s see:</p>
+<p><br><br><br></p>
+<p>With 11 bits, we would expect the range of representable signed integers to be <span class="math notranslate nohighlight">\(-2^{10}\)</span> to <span class="math notranslate nohighlight">\(2^{10} - 1\)</span> (i.e. <span class="math notranslate nohighlight">\(-1024\)</span> to <span class="math notranslate nohighlight">\(+1023\)</span>). We learned in previous sections that the two’s-complement system avoids having both <span class="math notranslate nohighlight">\(-0\)</span> and <span class="math notranslate nohighlight">\(+0\)</span>, and thus enables us to store one more number instead of one of those signed zeros.</p>
+<p>Instead of the two’s-complement system, however, IEEE <code class="docutils literal notranslate"><span class="pre">float64</span></code> numbers use a <strong>biased format</strong> to represent the exponent.</p>
+<p>This is done to make comparison between two floating-point numbers easier, if the entire bit pattern is taken to be an integer (see <a class="reference external" href="https://indepth.dev/posts/1018/the-mechanics-behind-exponent-bias-in-floating-point#advantages-over-two-s-complement">this</a> for more info).</p>
+<ul class="simple">
+<li><p>In the biased format, <strong>the entire signed exponent is represented as an unsigned integer, with a bias subtracted from it</strong>. With 11 bits, the range of <strong>unsigned</strong> values we can store would be <span class="math notranslate nohighlight">\(0\)</span> to <span class="math notranslate nohighlight">\(2^{11} - 1\)</span> or <span class="math notranslate nohighlight">\(2047\)</span>.</p></li>
+<li><p>With the bias set to <span class="math notranslate nohighlight">\(1023\)</span>, the range of <strong>signed</strong> values represented by those numbers would be</p></li>
+</ul>
+<p><span class="math notranslate nohighlight">\(0 - 1023 = -1023\)</span></p>
+<p>to</p>
+<p><span class="math notranslate nohighlight">\(2047 - 1023 = 1024\)</span></p>
+<ul class="simple">
+<li><p>Two numbers from that range are used for <a class="reference external" href="https://people.orie.cornell.edu/snp32/orie_6125/ieee754/ieee754.html">special cases</a> (such as subnormal numbers or infinities):</p>
+<ul>
+<li><p>all 0 bits (<span class="math notranslate nohighlight">\(-1023\)</span>), and</p></li>
+<li><p>all 1 bits (<span class="math notranslate nohighlight">\(+1024\)</span>)</p></li>
+</ul>
+</li>
+</ul>
+<ul class="simple">
+<li><p>Finally, this means that the smallest exponent is <span class="math notranslate nohighlight">\(-1022\)</span> and the greatest exponent is <span class="math notranslate nohighlight">\(+1023\)</span>.</p></li>
+</ul>
+<p><br><br><br></p>
+<ul class="simple">
+<li><p>For <code class="docutils literal notranslate"><span class="pre">float64</span></code>, the maximum mantissa can be calculated as the sum of all 52 bits from (<span class="math notranslate nohighlight">\(2^{-1}\)</span> to <span class="math notranslate nohighlight">\(2^{-52}\)</span>):</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_mantissa</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">53</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">max_mantissa</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.9999999999999998
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Therefore the maximum float we can represent is (remember our format is <span class="math notranslate nohighlight">\(1.M \times 2 ^ E\)</span>):</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">max_mantissa</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">1023</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.7976931348623157e+308
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Let’s confirm using the <code class="docutils literal notranslate"><span class="pre">numpy</span></code> function <code class="docutils literal notranslate"><span class="pre">np.finfo()</span></code>:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.7976931348623157e+308
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>What happens if we try to make a number bigger than this?</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 10.0 ** 309</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Or in <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, it throws a warning and defaults to <code class="docutils literal notranslate"><span class="pre">inf</span></code>:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mi">309</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/b3/g26r0dcx4b35vf3nk31216hc0000gr/T/ipykernel_16523/1970181666.py:1: RuntimeWarning: overflow encountered in power
+  np.power(10.0, 309)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>inf
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Now let’s do the minimum value:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1.0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">1022</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.2250738585072014e-308
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>You don’t need to worry about this derivation too much, after all <code class="docutils literal notranslate"><span class="pre">numpy</span></code> can help!</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">minexp</span>  <span class="c1"># minimum exponent value</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-1022
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">tiny</span>  <span class="c1"># smallest possible positive value</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.2250738585072014e-308
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br></p>
+</section>
+<section id="optional-subnormal-numbers">
+<h3>(OPTIONAL) Subnormal Numbers<a class="headerlink" href="#optional-subnormal-numbers" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>What happens if we try to store a number smaller than the above?</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">1024</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.562684646268003e-309
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Um, it worked… 🤔</p></li>
+<li><p>Remember how I discussed “special bit patterns” earlier? One of these is “<a class="reference external" href="https://en.wikipedia.org/wiki/Denormal_number">subnormal numbers</a>”</p></li>
+<li><p>This is well beyond the scope of the course, but briefly, subnormal numbers help us fill the gap between 0 and <span class="math notranslate nohighlight">\(2^{-1022}\)</span></p></li>
+<li><p>If the exponent is set to its minimum value, then we can play with the bits (if we are willing to sacrifice precision): <strong>instead of the mantissa starting with a 1, we can start it with a 0</strong></p></li>
+<li><p>This gives our mantissa a minimum value of <span class="math notranslate nohighlight">\(2^{-52}\)</span> (rather than 1, which is what we had before)</p></li>
+<li><p>So the smallest subnormal number we can have is <span class="math notranslate nohighlight">\(2^{-52} \times 2 ^ {-1022} = 2 ^ {-1074}\)</span>:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">1074</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5e-324
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Anything less than this is rounded to 0:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span> <span class="o">**</span> <span class="o">-</span><span class="mi">1075</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Note that with subnormal numbers, we lose more and more precision for smaller and smaller numbers, because we can no longer use the exponent to make the binary point float around.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>You can read more <a class="reference external" href="https://people.orie.cornell.edu/snp32/orie_6125/ieee754/ieee754.html#subnormal-numbers">in this article</a> and this <a class="reference external" href="https://stackoverflow.com/a/14002396/14179508">stackoverflow post</a>, but as I said, this is beyond the scope of the course.</p></li>
+</ul>
+<p><br><br><br></p>
+</section>
+<section id="order-of-operations">
+<h3>Order of Operations<a class="headerlink" href="#order-of-operations" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Consider the following:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>What’s up with that?</p></li>
+<li><p>Let’s break it down…</p></li>
+<li><p>First the spacing of <code class="docutils literal notranslate"><span class="pre">1e16</span></code> is:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="mf">1e16</span><span class="p">,</span> <span class="mf">1e17</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1e16</span>
+<span class="n">spacing</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>So the above should make sense, we aren’t adding more than half the spacing, so we remain at <code class="docutils literal notranslate"><span class="pre">1e16</span></code></p></li>
+<li><p>Another example:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>This time we added <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">+</span> <span class="pre">1)</span></code>, which is more than half the spacing, and we got a <code class="docutils literal notranslate"><span class="pre">False</span></code> as expected</p></li>
+<li><p>But now let’s remove the parentheses:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mf">1e16</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Back to <code class="docutils literal notranslate"><span class="pre">True</span></code>, what’s going on…</p></li>
+<li><p>Well we have an “order of operations” here, the <code class="docutils literal notranslate"><span class="pre">1e16</span> <span class="pre">+</span> <span class="pre">1</span></code> happens first, which is just <code class="docutils literal notranslate"><span class="pre">1e16</span></code>, and then we try add <code class="docutils literal notranslate"><span class="pre">1</span></code> again but the same thing happens</p></li>
+<li><p>What do you think will happen with this one?</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">1e16</span> <span class="o">==</span> <span class="mf">1e16</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>This time, the <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">1</span></code> happened first, which is <code class="docutils literal notranslate"><span class="pre">2</span></code>, and then we add <code class="docutils literal notranslate"><span class="pre">1e16</span></code></p></li>
+</ul>
+<p><br><br><br></p>
+</section>
+<section id="writing-functions">
+<h3>Writing Functions<a class="headerlink" href="#writing-functions" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Later in this course we’ll create a Logistic Regression model from scratch and you’ll have to calculate something that looks like:</p></li>
+</ul>
+<p><span class="math notranslate nohighlight">\(\log(1+\exp(z))\)</span></p>
+<ul class="simple">
+<li><p>Looks pretty harmless right?</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">log_1_plus_exp</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>But what happens if <code class="docutils literal notranslate"><span class="pre">z</span></code> is large? Say, 1000:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">log_1_plus_exp</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/b3/g26r0dcx4b35vf3nk31216hc0000gr/T/ipykernel_16523/2578511584.py:2: RuntimeWarning: overflow encountered in exp
+  return np.log(1 + np.exp(z))
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>inf
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>We get an overflow error when <code class="docutils literal notranslate"><span class="pre">z</span></code> in <code class="docutils literal notranslate"><span class="pre">exp(z)</span></code> is large!</p></li>
+<li><p>In fact, we can find out what the limit of <code class="docutils literal notranslate"><span class="pre">z</span></code> is:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">max</span>
+<span class="n">max_float</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.7976931348623157e+308
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_float</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>709.782712893384
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>If we pass anything bigger than that into <code class="docutils literal notranslate"><span class="pre">np.exp()</span></code> we’ll get an overflow error</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">710</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/b3/g26r0dcx4b35vf3nk31216hc0000gr/T/ipykernel_16523/574927170.py:1: RuntimeWarning: overflow encountered in exp
+  np.exp(710)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>inf
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>However, you might know that for <span class="math notranslate nohighlight">\(z \gg 1\)</span>:</p></li>
+</ul>
+<p><span class="math notranslate nohighlight">\(\log(1+\exp(z)) \approx \log(\exp(z)) = z\)</span></p>
+<ul class="simple">
+<li><p>e.g.:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="mi">700</span>
+<span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>700.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>The returned looks the same as <span class="math notranslate nohighlight">\(z\)</span>!</p>
+<ul class="simple">
+<li><p>We can use this to account for the overflow error:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@np</span><span class="o">.</span><span class="n">vectorize</span>  <span class="c1"># decorator to vectorize the function</span>
+<span class="k">def</span> <span class="nf">log_1_plus_exp_safe</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">z</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Avoiding overflow error with approximation of </span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>        
+        <span class="k">return</span> <span class="n">z</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">log_1_plus_exp_safe</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Avoiding overflow error with approximation of 1000!
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([   1.31326169,   10.0000454 ,  100.        , 1000.        ])
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>This is part of the reason we use libraries like <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code>, etc. They’ve taken care of all of this for us.</p></li>
+</ul>
+<p><br><br><br></p>
+</section>
+<section id="precision-memory-speed">
+<h3>Precision, Memory, Speed<a class="headerlink" href="#precision-memory-speed" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>So double precision floats are pretty standard and require 64 bits to store:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">()</span><span class="o">.</span><span class="n">nbytes</span>  <span class="c1"># number of bytes consumed by a float64</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">()</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">*</span> <span class="mi">8</span>  <span class="c1"># recall 1 byte = 8 bits</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>64
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>When dealing with huge datasets or models with millions or billions of parameters it may be desirable to lower the precision of our numbers to use less memory and/or gain speed</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x64</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;array size: </span><span class="si">{</span><span class="n">x64</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;array type: </span><span class="si">{</span><span class="n">x64</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mem. usage: </span><span class="si">{</span><span class="n">x64</span><span class="o">.</span><span class="n">nbytes</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array size: (1000, 1000)
+array type: float64
+mem. usage: 8.0 MB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x32</span> <span class="o">=</span> <span class="n">x64</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;array type: </span><span class="si">{</span><span class="n">x32</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mem. usage: </span><span class="si">{</span><span class="n">x32</span><span class="o">.</span><span class="n">nbytes</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array type: float32
+mem. usage: 4.0 MB
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Below I’m squaring the elements of my two arrays. They have the same number of elements, but different data types - let’s observe the difference in the speed of the operation:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">time64</span> <span class="o">=</span> <span class="o">%</span><span class="k">timeit</span> -q -o -r 3 x64 ** 2
+<span class="n">time32</span> <span class="o">=</span> <span class="o">%</span><span class="k">timeit</span> -q -o -r 3 x32 ** 2
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;float32 array is </span><span class="si">{</span><span class="n">time64</span><span class="o">.</span><span class="n">average</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">time32</span><span class="o">.</span><span class="n">average</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">x faster than float64 array here.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>float32 array is 2.16x faster than float64 array here.
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>I’m showing you this as foreboding for later topics dealing with memory and deep neural networks, where we’ll use these ideas of precision vs speed to optimize our models.</p></li>
+</ul>
+<p><br><br><br></p>
+</section>
+</section>
+<section id="id2">
+<h2>❓❓ Questions for you<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<section id="exercise-1-3">
+<h3>Exercise 1.3<a class="headerlink" href="#exercise-1-3" title="Permalink to this heading">#</a></h3>
+<p><strong>iClicker cloud join link: https://join.iclicker.com/SDMQ</strong></p>
+<p><strong>Select all of the following statements which are TRUE.</strong></p>
+<ul class="simple">
+<li><p>(A) In IEEE double precision representation, the spacing between two consecutive representable numbers is constant throughout the entire range of numbers.</p></li>
+<li><p>(B) In floating-point arithmetic, the associative property of addition (i.e., (a + b) + c = a + (b + c)) doesn’t always hold true.</p></li>
+<li><p>(C) In floating-point representation, increasing the number of bits in the exponent part can increase the precision of the representation.</p></li>
+<li><p>(D) A 64-bit floating-point number typically uses twice as much memory as a 32-bit floating-point number.</p></li>
+<li><p>(E) In floating point arithmetic, it’s often recommended to check if the numbers are close within a small tolerance instead of checking for equality directly.</p></li>
+</ul>
+<div class="tip dropdown admonition">
+<p class="admonition-title">V’s Solutions!</p>
+<p>B, D, E</p>
+</div>
+<p><br><br><br><br></p>
+<p>Three ways to calculate spacing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="mf">1e25</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2147483648.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="mf">1e25</span><span class="p">,</span> <span class="mf">1e26</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1e25</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2147483648.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span><span class="o">**-</span><span class="mi">52</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="mi">83</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2147483648.0
+</pre></div>
+</div>
+</div>
+</div>
+<p><br><br><br><br></p>
+</section>
+</section>
+<section id="lecture-highlights">
+<h2>Lecture Highlights<a class="headerlink" href="#lecture-highlights" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Most fractional numbers are not represented exactly by floating-point numbers in computers which can lead to rounding errors.</p></li>
+<li><p>Most compute environments you’ll encounter will use IEEE double precision, but others do exist (especially single precision). Some software will require you to use a particular data type due to computational limitations (for example, PyTorch sometimes forces you to use <code class="docutils literal notranslate"><span class="pre">float32</span></code> instead of <code class="docutils literal notranslate"><span class="pre">float64</span></code>).</p></li>
+<li><p>There is a biggest and smallest floating-point number (depending on precision), beyond these we get overflow or underflow errors. Use <code class="docutils literal notranslate"><span class="pre">np.nextafter()</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.finfo()</span></code> to work out float spacing and ranges.</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "dsci572"
+        },
+        kernelOptions: {
+            name: "dsci572",
+            path: "./lectures"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'dsci572'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../README.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DSCI 572: Supervised Learning II</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="02_gradient-descent.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Lecture 2: Optimization &amp; Gradient Descent</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lecture-learning-objectives">Lecture Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#questions-for-you">❓❓ Questions for you</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-1">Exercise 1.1</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-floating-point-errors">Motivation: Floating Point Errors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1">Example 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-is-this-relevant-in-deep-learning-and-machine-learning-in-general">Why is this relevant in deep learning and machine learning in general?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-numbers-and-integers">Binary Numbers and Integers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fractional-numbers-in-binary">Fractional Numbers in Binary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed-point-numbers">Fixed Point Numbers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#floating-point-numbers">Floating-point numbers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#floating-point-standard">Floating Point Standard</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rounding-errors-and-spacing">Rounding Errors and Spacing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rounding-errors">Rounding Errors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spacing">Spacing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">❓❓ Questions for you</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-2">Exercise 1.2</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#more-on-floating-points">More on Floating Points</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-floating-point-range">(OPTIONAL) Floating Point Range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-subnormal-numbers">(OPTIONAL) Subnormal Numbers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#order-of-operations">Order of Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#writing-functions">Writing Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#precision-memory-speed">Precision, Memory, Speed</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">❓❓ Questions for you</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-1-3">Exercise 1.3</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lecture-highlights">Lecture Highlights</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Varada Kolhatkar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

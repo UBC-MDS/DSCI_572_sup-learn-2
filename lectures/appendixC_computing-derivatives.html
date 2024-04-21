@@ -1,326 +1,370 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
     <title>Appendix C: Computing Derivatives &#8212; DSCI 572 Supervised Learning II</title>
-    
-  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-  <link rel="stylesheet"
-    href="../_static/vendor/open-sans_all/1.44.1/index.css">
-  <link rel="stylesheet"
-    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
-
-    
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/togglebutton.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
-    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
-    <script >
-        const thebe_selector = ".thebe"
-        const thebe_selector_input = "pre"
-        const thebe_selector_output = ".output"
-    </script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'lectures/appendixC_computing-derivatives';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Appendix D: Creating a CNN to Predict Bitmojis" href="appendixD_bitmoji-CNN.html" />
     <link rel="prev" title="Appendix B: Logistic Loss" href="appendixB_logistic-loss.html" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en" />
-
-
-
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
     
-        <div class="navbar-brand-box">
-<a class="navbar-brand text-wrap" href="../index.html">
+    
+    
+    
+  </div>
   
-  <img src="../_static/UBC_MDS_logo.png" class="logo" alt="logo">
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../README.html">
   
   
-  <h1 class="site-logo" id="site-title">DSCI 572 Supervised Learning II</h1>
   
+  
+    
+    
+      
+    
+    
+    <img src="../_static/mds-hex-sticker.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/mds-hex-sticker.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Lectures</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_floating-point-numbers.html">Lecture 1: Floating-Point Numbers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_gradient-descent.html">Lecture 2: Optimization &amp; Gradient Descent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_sgd-intro-to-nn.html">Lecture 3: Stochastic Gradient Descent and Introduction to Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_pytorch-neural-networks-pt1.html">Lecture 4: Introduction to Pytorch &amp; Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_neural-networks-pt2.html">Lecture 5: Training Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_cnns-pt1.html">Lecture 6: Introduction to Convolutional Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_cnns-pt2.html">Lecture 7: CNNs in Practice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_advanced-deep-learning.html">Lecture 8: Advanced Convolutional Models</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="appendixA_gradients.html">Appendix A: Gradients Review</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixB_logistic-loss.html">Appendix B: Logistic Loss</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Appendix C: Computing Derivatives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendixD_bitmoji-CNN.html">Appendix D: Creating a CNN to Predict Bitmojis</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Attribution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../LICENSE.html">LICENSE</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/UBC-MDS/DSCI_572_sup-learn-2" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
 </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form>
-<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-    <p class="caption collapsible-parent">
- <span class="caption-text">
-  Welcome
- </span>
-</p>
-<ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture0_introduction.html">
-   Introduction to the Course
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../lecture_learning_objectives.html">
-   Lecture Learning Objectives
-  </a>
- </li>
-</ul>
-<p class="caption collapsible-parent">
- <span class="caption-text">
-  Lectures
- </span>
-</p>
-<ul class="nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture1_floating-point.html">
-   Lecture 1: Floating Point Numbers
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture2_gradient-descent.html">
-   Lecture 2: Optimization &amp; Gradient Descent
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture3_stochastic-gradient-descent.html">
-   Lecture 3: Stochastic Gradient Descent
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture4_pytorch-neural-networks-pt1.html">
-   Lecture 4: Introduction to Pytorch &amp; Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture5_neural-networks-pt2.html">
-   Lecture 5: Training Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture6_cnns-pt1.html">
-   Lecture 6: Introduction to Convolutional Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture7_cnns-pt2.html">
-   Lecture 7: Advanced Convolutional Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="lecture8_advanced-deep-learning.html">
-   Lecture 8: Advanced Deep Learning
-  </a>
- </li>
-</ul>
-<p class="caption collapsible-parent">
- <span class="caption-text">
-  Appendices
- </span>
-</p>
-<ul class="current nav sidenav_l1">
- <li class="toctree-l1">
-  <a class="reference internal" href="appendixA_gradients.html">
-   Appendix A: Gradients Review
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="appendixB_logistic-loss.html">
-   Appendix B: Logistic Loss
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Appendix C: Computing Derivatives
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="appendixD_bitmoji-CNN.html">
-   Appendix D: Creating a CNN to Predict Bitmojis
-  </a>
- </li>
-</ul>
 
-</nav> <!-- To handle the deprecated key -->
 
-<div class="navbar_extra_footer">
-  Tomas Beuzen, MDS 2021<br>Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
 
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/lectures/appendixC_computing-derivatives.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
 </div>
 
 
-          
 
 
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="row topbar fixed-top container-xl">
-    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
     </div>
-    <div class="col pl-2 topbar-main">
-        
-        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-arrow-left"></i>
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        
-        
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/lectures/appendixC_computing-derivatives.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
-    </div>
+  
 </div>
+</div>
+              
+              
 
-        <!-- Source interaction buttons -->
-
-
-        <!-- Full screen (wrap in <a> to have style consistency -->
-        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-                title="Fullscreen mode"><i
-                    class="fas fa-expand"></i></button></a>
-
-        <!-- Launch buttons -->
-
-    </div>
-
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Appendix C: Computing Derivatives</h1>
     <!-- Table of contents -->
-    <div class="d-none d-md-block col-md-2 bd-toc show">
-        
-        <div class="tocsection onthispage pt-5 pb-3">
-            <i class="fas fa-list"></i> Contents
-        </div>
-        <nav id="bd-toc-nav">
-            <ul class="nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#gradients-introduction">
-   1. Gradients Introduction
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#symbolic-differentiation">
-   2. Symbolic Differentiation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#numerical-differentiation-finite-differences">
-   3. Numerical Differentiation (Finite Differences)
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#error-of-derivative-estimates">
-     3.1. Error of Derivative Estimates
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#gradients">
-     3.2. Gradients
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#cost-of-estimating-a-gradient">
-     3.3. Cost of Estimating a Gradient
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#optional-other-finite-difference-formulas">
-     3.4. (Optional) Other Finite Difference Formulas
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#summary">
-     3.5. Summary
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#automatic-differentiation">
-   4. Automatic Differentiation
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#do-i-never-need-to-take-a-derivative-again">
-     4.1. Do I Never Need to Take a Derivative Again?
-    </a>
-   </li>
-  </ul>
- </li>
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradients-introduction">Gradients Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-differentiation">Symbolic Differentiation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-differentiation-finite-differences">Numerical Differentiation (Finite Differences)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-of-derivative-estimates">Error of Derivative Estimates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradients">Gradients</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-of-estimating-a-gradient">Cost of Estimating a Gradient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-other-finite-difference-formulas">(Optional) Other Finite Difference Formulas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 </ul>
-
-        </nav>
-        
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-differentiation">Automatic Differentiation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#do-i-never-need-to-take-a-derivative-again">Do I Never Need to Take a Derivative Again?</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-        
-              <div>
+
+              
                 
-  <p><img alt="" src="../_images/572_banner.png" /></p>
-<div class="section" id="appendix-c-computing-derivatives">
-<h1>Appendix C: Computing Derivatives<a class="headerlink" href="#appendix-c-computing-derivatives" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <a class="reference internal image-reference" href="../_images/dsci572_header.png"><img alt="../_images/dsci572_header.png" src="../_images/dsci572_header.png" style="width: 600px;" /></a>
+<section class="tex2jax_ignore mathjax_ignore" id="appendix-c-computing-derivatives">
+<h1>Appendix C: Computing Derivatives<a class="headerlink" href="#appendix-c-computing-derivatives" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sklearn</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
 <span class="kn">import</span> <span class="nn">sklearn.linear_model</span>
 <span class="kn">import</span> <span class="nn">scipy.optimize</span>
 <span class="kn">import</span> <span class="nn">autograd</span> <span class="c1"># pip install autograd</span>
@@ -328,15 +372,16 @@
 <span class="kn">import</span> <span class="nn">autograd.numpy</span> <span class="k">as</span> <span class="nn">anp</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s1">&#39;axes.labelweight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">)})</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;axes.labelweight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;figure.figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">)})</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_formats = [&#39;svg&#39;]
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="gradients-introduction">
-<h2>1. Gradients Introduction<a class="headerlink" href="#gradients-introduction" title="Permalink to this headline">¶</a></h2>
-<hr><p>What if we are optimizing a function and we don’t know its derivative/gradient. This could happen because:</p>
+<section id="gradients-introduction">
+<h2>Gradients Introduction<a class="headerlink" href="#gradients-introduction" title="Permalink to this heading">#</a></h2>
+<p>What if we are optimizing a function and we don’t know its derivative/gradient. This could happen because:</p>
 <ul class="simple">
 <li><p>You’re optimizing the parameters of a computer simulation</p>
 <ul>
@@ -350,26 +395,28 @@
 <li><p>The derivative is just too much effort to compute and it’s slowing down your prototyping efforts</p></li>
 </ul>
 <p>What to do? Well, there are 3 main approaches to computing derivatives with a computer:</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>Symbolic differentiation</p></li>
 <li><p>Numerical differentiation</p></li>
 <li><p>Automatic differentiation</p></li>
 </ol>
 <p>We’ll explore these different options in this short appendix. Note that this material has been modified after material originally created by <a class="reference external" href="https://www.mikegelbart.com/">Mike Gelbart</a>.</p>
 <p>As a running example, consider <span class="math notranslate nohighlight">\(f(x)=\sin(x)\)</span>. We know that <span class="math notranslate nohighlight">\(f'(x)\equiv\frac{df(x)}{dx}=\cos(x)\)</span> and thus <span class="math notranslate nohighlight">\(f'(1)=\cos(1)\)</span></p>
-</div>
-<div class="section" id="symbolic-differentiation">
-<h2>2. Symbolic Differentiation<a class="headerlink" href="#symbolic-differentiation" title="Permalink to this headline">¶</a></h2>
-<hr><p>Symbolic differentiation is basically what you learned in calculus. We interpret the symbols in an equation and apply the rules of differentiation. Wolfram Alpha is a good tool for this, e.g., <a class="reference external" href="https://www.wolframalpha.com/input/?i=derivative+of+sin(x)">https://www.wolframalpha.com/input/?i=derivative+of+sin(x)</a>.</p>
+</section>
+<section id="symbolic-differentiation">
+<h2>Symbolic Differentiation<a class="headerlink" href="#symbolic-differentiation" title="Permalink to this heading">#</a></h2>
+<p>Symbolic differentiation is basically what you learned in calculus. We interpret the symbols in an equation and apply the rules of differentiation. Wolfram Alpha is a good tool for this, e.g., <a class="reference external" href="https://www.wolframalpha.com/input/?i=derivative+of+sin(x)">https://www.wolframalpha.com/input/?i=derivative+of+sin(x)</a>.</p>
 <p>Symbolic differentiation is useful but less so when dealing with data. We will not say more about this now. You should be aware of its existence.</p>
-</div>
-<div class="section" id="numerical-differentiation-finite-differences">
-<h2>3. Numerical Differentiation (Finite Differences)<a class="headerlink" href="#numerical-differentiation-finite-differences" title="Permalink to this headline">¶</a></h2>
-<hr><p>A derivative is defined as:</p>
+</section>
+<section id="numerical-differentiation-finite-differences">
+<h2>Numerical Differentiation (Finite Differences)<a class="headerlink" href="#numerical-differentiation-finite-differences" title="Permalink to this heading">#</a></h2>
+<p>A derivative is defined as:</p>
 <div class="math notranslate nohighlight">
 \[\frac{df(x)}{dx} \equiv \lim_{h\rightarrow 0} \frac{f(x+h)-f(x)}{h} \]</div>
 <p>Numerical differentiation simply approximates the above using a very small <span class="math notranslate nohighlight">\(h\)</span>:</p>
-<p>$<span class="math notranslate nohighlight">\(\frac{df(x)}{dx} \approx \frac{f(x+h)-f(x)}{h}\)</span><span class="math notranslate nohighlight">\( for small \)</span>h$.</p>
+<div class="math notranslate nohighlight">
+\[\frac{df(x)}{dx} \approx \frac{f(x+h)-f(x)}{h}\]</div>
+<p>for small <span class="math notranslate nohighlight">\(h\)</span>.</p>
 <p>This approach is called “finite differences”. I like to think of it as an estimate of as the “rise over run” estimate of slope. Let’s give it a try!</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -400,9 +447,9 @@
 </div>
 </div>
 <p>Not bad!</p>
-<div class="section" id="error-of-derivative-estimates">
-<h3>3.1. Error of Derivative Estimates<a class="headerlink" href="#error-of-derivative-estimates" title="Permalink to this headline">¶</a></h3>
-<p>In <a class="reference internal" href="lecture1_floating-point.html"><span class="doc std std-doc">Lecture 1</span></a> we discussed numerical issues due to the <strong>floating point</strong> representation. There’s another entirely different type of numerical error that arises from the <em>discretization</em> inherent finite difference approximations. Let’s explore this a bit. What do you think will happen to the absolute error of the estimate of the derivative if I change <span class="math notranslate nohighlight">\(h\)</span>?</p>
+<section id="error-of-derivative-estimates">
+<h3>Error of Derivative Estimates<a class="headerlink" href="#error-of-derivative-estimates" title="Permalink to this heading">#</a></h3>
+<p>In <span class="xref myst">Lecture 1</span> we discussed numerical issues due to the <strong>floating point</strong> representation. There’s another entirely different type of numerical error that arises from the <em>discretization</em> inherent finite difference approximations. Let’s explore this a bit. What do you think will happen to the absolute error of the estimate of the derivative if I change <span class="math notranslate nohighlight">\(h\)</span>?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -418,8 +465,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixC_computing-derivatives_14_0.png" src="../_images/appendixC_computing-derivatives_14_0.png" />
-</div>
+<img alt="../_images/3640c45f4f72b185320a264c144bd3ea0d45da5445149f585440a74466e64c8f.svg" src="../_images/3640c45f4f72b185320a264c144bd3ea0d45da5445149f585440a74466e64c8f.svg" /></div>
 </div>
 <p>The above plot says that the error between our estimate and the true derivative grows as <span class="math notranslate nohighlight">\(h\)</span> gets bigger. Makes sense, right? But the plot thickens when we look at very small values of <span class="math notranslate nohighlight">\(h\)</span>…</p>
 <div class="cell docutils container">
@@ -432,8 +478,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixC_computing-derivatives_16_0.png" src="../_images/appendixC_computing-derivatives_16_0.png" />
-</div>
+<img alt="../_images/ddb8a04b4f42c68f48429a4a0ffcf15a9e3896be6bccdeba735211502db58981.svg" src="../_images/ddb8a04b4f42c68f48429a4a0ffcf15a9e3896be6bccdeba735211502db58981.svg" /></div>
 </div>
 <p>Wait… what?</p>
 <p>When <span class="math notranslate nohighlight">\(h\ll 1\)</span> we have that <span class="math notranslate nohighlight">\(\left| f(x+h)-f(x) \right| \ll 1\)</span>. This leads to <em>roundoff errors</em>. Is it underflow?</p>
@@ -445,11 +490,10 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixC_computing-derivatives_18_0.png" src="../_images/appendixC_computing-derivatives_18_0.png" />
-</div>
+<img alt="../_images/072eb520aa004e38104010f5f952075d91dcff32852c40596870fdb323a08b56.svg" src="../_images/072eb520aa004e38104010f5f952075d91dcff32852c40596870fdb323a08b56.svg" /></div>
 </div>
 <p>Well that flat part is underflow (estimate of the derivative is exactly zero). But what’s up with the part in between, from <span class="math notranslate nohighlight">\(h=10^{-16}\)</span> to <span class="math notranslate nohighlight">\(10^{-7}\)</span>?</p>
-<p>The problem is regular old roundoff error (go back to <a class="reference internal" href="lecture1_floating-point.html"><span class="doc std std-doc">Lecture 1</span></a> if you’ve forgottn what this is). Roughly speaking, the magnitude of these roundoff errors is independent of <span class="math notranslate nohighlight">\(h\)</span> (e.g. when computing <span class="math notranslate nohighlight">\(f(x)\)</span> it has nothing to do with <span class="math notranslate nohighlight">\(h\)</span>), and so the <span class="math notranslate nohighlight">\(h\)</span> in the denominator causes <span class="math notranslate nohighlight">\(\frac{1}{h}\)</span>-like behavior. We can test this with a line, using our friend <span class="math notranslate nohighlight">\(10^{-16}\)</span> from <a class="reference internal" href="lecture1_floating-point.html"><span class="doc std std-doc">Lecture 1</span></a>.</p>
+<p>The problem is regular old roundoff error (go back to <span class="xref myst">Lecture 1</span> if you’ve forgottn what this is). Roughly speaking, the magnitude of these roundoff errors is independent of <span class="math notranslate nohighlight">\(h\)</span> (e.g. when computing <span class="math notranslate nohighlight">\(f(x)\)</span> it has nothing to do with <span class="math notranslate nohighlight">\(h\)</span>), and so the <span class="math notranslate nohighlight">\(h\)</span> in the denominator causes <span class="math notranslate nohighlight">\(\frac{1}{h}\)</span>-like behavior. We can test this with a line, using our friend <span class="math notranslate nohighlight">\(10^{-16}\)</span> from <span class="xref myst">Lecture 1</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -459,8 +503,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/appendixC_computing-derivatives_20_0.png" src="../_images/appendixC_computing-derivatives_20_0.png" />
-</div>
+<img alt="../_images/4d7009a5d2c8d044a3ef9a428ae04a8e148b8117ae640bfe66ec5fae6ecf9835.svg" src="../_images/4d7009a5d2c8d044a3ef9a428ae04a8e148b8117ae640bfe66ec5fae6ecf9835.svg" /></div>
 </div>
 <p>We’ve seen a bunch of plots, but what have we actually learned? Well:</p>
 <ul class="simple">
@@ -468,9 +511,9 @@
 <li><p>however, when <span class="math notranslate nohighlight">\(h\)</span> is too small then roundoff error kicks in and the error starts to increase (this effect is linear in <span class="math notranslate nohighlight">\(1/h\)</span>)</p></li>
 </ul>
 <p>What you really need to know: picking <span class="math notranslate nohighlight">\(h\)</span> is tricky: it can’t be too big or too small.</p>
-</div>
-<div class="section" id="gradients">
-<h3>3.2. Gradients<a class="headerlink" href="#gradients" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="gradients">
+<h3>Gradients<a class="headerlink" href="#gradients" title="Permalink to this heading">#</a></h3>
 <p>So, what about gradients?</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\nabla f(x) = \begin{bmatrix} \frac{\partial f}{\partial x_1} \\ \frac{\partial f}{\partial x_2} \\ \vdots \\ \frac{\partial f}{\partial x_d} \end{bmatrix}\end{split}\]</div>
@@ -486,27 +529,27 @@
 <div class="math notranslate nohighlight">
 \[\begin{split}\frac{\partial f(x)}{\partial x_2} \approx \frac{f\left(\begin{bmatrix}x_1 \\ x_2 + h \\ x_3 \\ \vdots \\ x_d \end{bmatrix} \right)-f(x)}{h}\end{split}\]</div>
 <p>And so on and so forth.</p>
-</div>
-<div class="section" id="cost-of-estimating-a-gradient">
-<h3>3.3. Cost of Estimating a Gradient<a class="headerlink" href="#cost-of-estimating-a-gradient" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="cost-of-estimating-a-gradient">
+<h3>Cost of Estimating a Gradient<a class="headerlink" href="#cost-of-estimating-a-gradient" title="Permalink to this heading">#</a></h3>
 <p>As you can see above, estimating a gradient requires <span class="math notranslate nohighlight">\(d+1\)</span> function evaluations. That can be expensive - perhaps <span class="math notranslate nohighlight">\(d\)</span> is <span class="math notranslate nohighlight">\(1000\)</span> or <span class="math notranslate nohighlight">\(10000\)</span>. If you can compute the gradient symbolically, that is much better.</p>
-</div>
-<div class="section" id="optional-other-finite-difference-formulas">
-<h3>3.4. (Optional) Other Finite Difference Formulas<a class="headerlink" href="#optional-other-finite-difference-formulas" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="optional-other-finite-difference-formulas">
+<h3>(Optional) Other Finite Difference Formulas<a class="headerlink" href="#optional-other-finite-difference-formulas" title="Permalink to this heading">#</a></h3>
 <p>There are better finite differences formulas than the one we are using, such as the centered difference formula:</p>
 <div class="math notranslate nohighlight">
 \[\frac{df(x)}{dx} \approx \frac{f(x+h)-f(x-h)}{2h}\]</div>
 <p>In this case the error goes down as <span class="math notranslate nohighlight">\(h^2\)</span>, which is great, but most of the benefits come in applications that don’t concern us here (e.g., solving differential equations). However, in <span class="math notranslate nohighlight">\(d\)</span> dimensions, this requires <span class="math notranslate nohighlight">\(2d\)</span> evaluations of the function instead of <span class="math notranslate nohighlight">\(d+1\)</span>, because with the forward difference formula (the original one above) we reuse the point <span class="math notranslate nohighlight">\(f(x)\)</span> for all the partial derivatives. Really, which formula you use depends on what you’re doing.</p>
 <p>If you’re really bored, you can also check out the <a class="reference external" href="https://timvieira.github.io/blog/post/2014/08/07/complex-step-derivative/">complex step method</a>.</p>
-</div>
-<div class="section" id="summary">
-<h3>3.5. Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">#</a></h3>
 <p>If we can’t figure out the derivative of a function, but have code that computes the function, we can <em>approximate</em> the derivative using finite differences. This works pretty well but there are some pitfalls. In particular you need to choose <span class="math notranslate nohighlight">\(h\)</span> carefully and it costs <span class="math notranslate nohighlight">\(O(d)\)</span> function evaluations to estimate a gradient. It seems better to actually know the derivative if possible, because the computations will be faster and more accurate.</p>
-</div>
-</div>
-<div class="section" id="automatic-differentiation">
-<h2>4. Automatic Differentiation<a class="headerlink" href="#automatic-differentiation" title="Permalink to this headline">¶</a></h2>
-<hr><p>Automatic differentiation (AD) is another way to take the derivative given some code that computes <span class="math notranslate nohighlight">\(f\)</span>. It is advertised as the “best of both worlds” between symbolic and numerical differentiation:</p>
+</section>
+</section>
+<section id="automatic-differentiation">
+<h2>Automatic Differentiation<a class="headerlink" href="#automatic-differentiation" title="Permalink to this heading">#</a></h2>
+<p>Automatic differentiation (AD) is another way to take the derivative given some code that computes <span class="math notranslate nohighlight">\(f\)</span>. It is advertised as the “best of both worlds” between symbolic and numerical differentiation:</p>
 <ul class="simple">
 <li><p>Pro: takes the code as input, not math.</p></li>
 <li><p>Pro: does not have the problem of choosing <span class="math notranslate nohighlight">\(h\)</span>, or the extra <span class="math notranslate nohighlight">\(O(d)\)</span> cost.</p></li>
@@ -589,7 +632,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.       , 0.9779244, 0.       , 0.       ])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.       , 0.8388448, 0.       , 0.       ])
 </pre></div>
 </div>
 </div>
@@ -602,7 +645,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.       , 0.9779244, 0.       , 0.       ])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.       , 0.8388448, 0.       , 0.       ])
 </pre></div>
 </div>
 </div>
@@ -637,7 +680,7 @@ Evaluated function!
 Evaluated function!
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.       , 0.9779243, 0.       , 0.       ])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.        , 0.83884453, 0.        , 0.        ])
 </pre></div>
 </div>
 </div>
@@ -653,7 +696,7 @@ Evaluated function!
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Evaluated function!
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.       , 0.9779244, 0.       , 0.       ])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.       , 0.8388448, 0.       , 0.       ])
 </pre></div>
 </div>
 </div>
@@ -678,7 +721,7 @@ Evaluated function!
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0, 1.0, 0.8561805793442914, 0.008334506453204469]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0, 1.0, 0.22176843559103543, 1.5829762293698537]
 </pre></div>
 </div>
 </div>
@@ -691,7 +734,7 @@ Evaluated function!
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.        , 1.        , 0.85618058, 0.00833451])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.        , 1.        , 0.22176844, 1.58297623])
 </pre></div>
 </div>
 </div>
@@ -720,7 +763,7 @@ Evaluated function!
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-1.09518376, -1.13930008,  0.        ,  0.        ])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.95277637, -0.52425614,  0.        ,  0.        ])
 </pre></div>
 </div>
 </div>
@@ -733,7 +776,7 @@ Evaluated function!
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-1.09518376, -1.13930008,  0.        ,  0.        ])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.95277637, -0.52425614,  0.        ,  0.        ])
 </pre></div>
 </div>
 </div>
@@ -756,8 +799,8 @@ Evaluated function!
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.58231171, -0.07432767, -0.44828741, -0.16104079, -1.9348398 ,
-        1.1971574 ,  1.54178319, -0.07784519,  1.86594288, -0.56552392])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.97369251, -2.31538039, -0.70716912,  0.84031742, -2.23766131,
+       -0.23711665, -1.00731654,  0.07554957, -0.58959108,  0.46803134])
 </pre></div>
 </div>
 </div>
@@ -773,8 +816,8 @@ Evaluated function!
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.58231172, -0.07432767, -0.44828741, -0.16104082, -1.93483981,
-        1.19715741,  1.5417832 , -0.07784521,  1.86594288, -0.56552394])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.9736925 , -2.31538045, -0.7071691 ,  0.84031747, -2.23766131,
+       -0.23711668, -1.00731657,  0.07554957, -0.58959108,  0.46803136])
 </pre></div>
 </div>
 </div>
@@ -808,19 +851,19 @@ Evaluated function!
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0.58501101, -0.07144062, -0.4559222 , -0.15739645, -1.94802414,
-        1.18996671,  1.52951647, -0.08104441,  1.8759754 , -0.56918479])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-0.96555241, -2.32608123, -0.71405059,  0.84137761, -2.226602  ,
+       -0.24343648, -1.00125349,  0.08771633, -0.59001858,  0.46743015])
 </pre></div>
 </div>
 </div>
 </div>
 <p>Nice! (They are not exactly the same because of <code class="docutils literal notranslate"><span class="pre">epsilon</span></code> hyperparameter in <code class="docutils literal notranslate"><span class="pre">HuberRegressor</span></code>.)</p>
-<div class="section" id="do-i-never-need-to-take-a-derivative-again">
-<h3>4.1. Do I Never Need to Take a Derivative Again?<a class="headerlink" href="#do-i-never-need-to-take-a-derivative-again" title="Permalink to this headline">¶</a></h3>
+<section id="do-i-never-need-to-take-a-derivative-again">
+<h3>Do I Never Need to Take a Derivative Again?<a class="headerlink" href="#do-i-never-need-to-take-a-derivative-again" title="Permalink to this heading">#</a></h3>
 <p>Hopefully not? There are production-grade automatic differentiation systems, like those used in TensorFlow or PyTorch so you may never have to worry about taking a derivative ever again.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -831,49 +874,129 @@ Evaluated function!
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "conda-env-mds572-py"
+            mode: "python"
         },
         kernelOptions: {
-            kernelName: "conda-env-mds572-py",
+            name: "python3",
             path: "./lectures"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'conda-env-mds572-py'</script>
+    <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-        </div>
-    </div>
-    
-    
-    <div class='prev-next-bottom'>
-        
-    <a class='left-prev' id="prev-link" href="appendixB_logistic-loss.html" title="previous page">Appendix B: Logistic Loss</a>
-    <a class='right-next' id="next-link" href="appendixD_bitmoji-CNN.html" title="next page">Appendix D: Creating a CNN to Predict Bitmojis</a>
 
-    </div>
-    <footer class="footer mt-5 mt-md-0">
-    <div class="container">
-      <p>
-        
-          By Tomas Beuzen<br/>
-        
-            &copy; Copyright 2020.<br/>
-      </p>
-    </div>
-  </footer>
-</main>
-
-
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="appendixB_logistic-loss.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Appendix B: Logistic Loss</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="appendixD_bitmoji-CNN.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Appendix D: Creating a CNN to Predict Bitmojis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gradients-introduction">Gradients Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#symbolic-differentiation">Symbolic Differentiation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-differentiation-finite-differences">Numerical Differentiation (Finite Differences)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-of-derivative-estimates">Error of Derivative Estimates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradients">Gradients</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cost-of-estimating-a-gradient">Cost of Estimating a Gradient</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-other-finite-difference-formulas">(Optional) Other Finite Difference Formulas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-differentiation">Automatic Differentiation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#do-i-never-need-to-take-a-derivative-again">Do I Never Need to Take a Derivative Again?</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Varada Kolhatkar
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-    
-  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
-
-
-    
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
