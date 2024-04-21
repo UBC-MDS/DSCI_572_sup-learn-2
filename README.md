@@ -4,13 +4,7 @@ Welcome to Supervised Learning II! In this course, we delve into the world of de
 
 ## Important links 
 
-- [Course Jupyter book](https://pages.github.ubc.ca/MDS-2023-24/DSCI_572_sup-learn-2_students)
-- [Course GitHub page](https://github.ubc.ca/MDS-2023-24/DSCI_572_sup-learn-2_students)
-- [Slack Channel](https://ubc-mds.slack.com/messages/572_sup-learn-2)
-- [Canvas](https://canvas.ubc.ca/courses/130312)
-- [Gradescope](https://www.gradescope.ca/courses/12078)
-- [iClicker Cloud](https://join.iclicker.com/SDMQ)
-- [Class + office hours calendar](https://ubc-mds.github.io/calendar/)
+- [Course Jupyter book](https://ubc-mds.github.io/DSCI_572_sup-learn-2/README.html)
 
 ## Course learning outcomes    
 
