@@ -1,89 +1,191 @@
-![](lectures/img/572_banner.png)
-
 # DSCI 572: Supervised Learning II
 
-An introduction to deep learning with Python and Pytorch. Covers optmization, neural network basics, convolutional neural networks, and advanced topics such as autoencoders and generative adversarial networks.
+Welcome to Supervised Learning II! In this course, we delve into the world of deep learning using Python and PyTorch. You'll learn about optimization, the fundamentals of neural networks, and convolutional neural networks. We'll also explore some advanced topics such as generative adversarial networks.
 
-- [Course Jupyter Book](https://ubc-mds.github.io/DSCI_572_sup-learn-2/README.html)
+## Important links 
 
-2021 Instructor: Tomas Beuzen
+- [Course Jupyter book](https://pages.github.ubc.ca/MDS-2023-24/DSCI_572_sup-learn-2_students)
+- [Course GitHub page](https://github.ubc.ca/MDS-2023-24/DSCI_572_sup-learn-2_students)
+- [Slack Channel](https://ubc-mds.slack.com/messages/572_sup-learn-2)
+- [Canvas](https://canvas.ubc.ca/courses/130312)
+- [Gradescope](https://www.gradescope.ca/courses/12078)
+- [iClicker Cloud](https://join.iclicker.com/SDMQ)
+- [Class + office hours calendar](https://ubc-mds.github.io/calendar/)
 
-### Lectures
+## Course learning outcomes    
 
-Find the lecture schedule below. I'm developing new material for this course, but I've included links to old lectures and other useful videos for those that are interested.
+<details>
+  <summary>Click to expand!</summary>
 
-| # | Topic  | Optional Watching/Reading |
-|---|--------|--------------|
-| 1 | [Floating Point Errors](lectures/lecture1_floating-point.ipynb) | <ul><li>[Float Toy](https://evanw.github.io/float-toy/)</li><li>Chapter 2 of Ascher and Greif's book, [available online for students](http://epubs.siam.org/doi/book/10.1137/9780898719987) (you must be on campus wifi)</li></ul> |
-| 2 | [Optimization and Gradient Descent](lectures/lecture2_gradient-descent.ipynb) | <ul><li>[Mike's old optimization video](https://youtu.be/bzj1L997uT8?t=67)</li><li>[Mike's old gradient descent video](https://youtu.be/ao34xqQvuT4)</li></ul> |
-| 3 | [Stochastic Gradient Descent](lectures/lecture3_stochastic-gradient-descent.ipynb) | <ul><li>[Mike's old stochastic gradient video](https://youtu.be/lmqV5Z5HZzc?t=106)</li></ul> |
-| 4 | [Introduction to Neural Networks & PyTorch](lectures/lecture4_pytorch-neural-networks-pt1.ipynb) | <ul><li>[3Blue1Brown's video - But what is a Neural Network?](https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)</li><li> [StatQuest's video - Neural Networks Part 1: Inside the Black Box](https://www.youtube.com/watch?v=CqOfi41LfDw)</li><li>[Second part of Mike's old neural network video](https://youtu.be/w60cKkCV_Qk?t=1466)</li><li>[DL Book Chapter 6](http://www.deeplearningbook.org/) </li></ul>|
-| 5 | [Training Neural Networks](lectures/lecture5_neural-networks-pt2.ipynb) | <ul><li>[3Blue1Brown's video - Gradient descent, how neural networks learn](https://www.youtube.com/watch?v=IHZwWFHWa-w&index=2&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)</li><li>[StatQuest's video - Neural Networks Part 2: Backpropagation Main Ideas](https://www.youtube.com/watch?v=IN2XmBhILt4)</li><li>[Mike's old neural network fit video](https://youtu.be/3l9pyhpxGtU?t=124) (last 15 min is about convolutions)</li></ul>
-| 6 | Convolutional Neural Networks Part 1 | <ul><li>[Mike's old convolutional neural network video](https://youtu.be/qb01ggeiT_g)</li><li>[Convolutional Neural Networks](http://cs231n.github.io/convolutional-networks/)</li><li>[A guide to convolution arithmetic for deep learning](https://arxiv.org/pdf/1603.07285.pdf)</li><li>[An Intuitive Explanation of Convolutional Neural Networks](https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/)</li><li>[DL Book Chapter 9](http://www.deeplearningbook.org/)</li></ul>|
-| 7 |  Convolutional Neural Networks Part 2 | TBD|
-| 8 |  Advanced Neural Networks | TBD |
+By the end of this course, you will be able to:
+- Identify common computational issues caused by floating-point arithmatic, e.g., rounding, overflow, etc., and program defensively against these errors.
+- Explain how the gradient descent algorithm and its variants work.
+- Explain the fundamental concepts of neural networks including layers, nodes, and activation functions and gain proficiency in implementing basic neural networks using `PyTorch`.  
+- Illustrate the process of backpropagation in neural network training. 
+- Explain how convolutional neural networks work and implement them for image classification using PyTorch. 
+- Explain and apply transfer learning and the different flavours of it: "out-of-the-box", "feature extractor", "fine tuning".
+- Describe at a high level the basic principles and architecture of Generative Adversarial Networks (GANs)
 
-### Labs and Quizzes
+</details>
 
-You are responsible for the following deliverables, which will determine your course grade:
+## Deliverables
 
-| Assessment       | Weight |
-|------------------|--------|
-| Lab Assignment 1 | 15%    |
-| Lab Assignment 2 | 15%    |
-| Quiz 1           | 20%    |
-| Lab Assignment 3 | 15%    |
-| Lab Assignment 4 | 15%    |
-| Quiz 2           | 20%    |
+<details>
+  <summary>Click to expand!</summary>
+    
+The following deliverables will determine your course grade:
 
-Labs are Jupyter notebooks comprised of more comprehensive exercises aimed at demonstrating and reinforcing concepts learned during lectures. Quizzes will be conducted on Canvas in week 3 and week 5, are open book and are typically 40 mins long with a focus on short-answer questions. More information on quizzes will be provided closer to their dates.
+| Assessment       | Weight  | Where to submit|
+| :---:            | :---:   |:---:  | 
+| Lab Assignment 1 | 12%     | [Gradescope](https://www.gradescope.ca/courses/11554) |
+| Lab Assignment 2 | 12%     | [Gradescope](https://www.gradescope.ca/courses/11554) |
+| Lab Assignment 3 | 12%     | [Gradescope](https://www.gradescope.ca/courses/11554) |
+| Lab Assignment 4 | 12%     | [Gradescope](https://www.gradescope.ca/courses/11554) |
+| iClicker participation     | 2%      | [iClicker Cloud](https://join.iclicker.com/DAZZ) | 
+| Quiz 1           | 25%     | [Canvas](https://canvas.ubc.ca/courses/123600)     |
+| Quiz 2           | 25%     | [Canvas](https://canvas.ubc.ca/courses/123600)     |
+
+See [Calendar](https://ubc-mds.github.io/calendar/) for the due dates. 
+</details>
 
 
-## Optional Reference/Learning Materials
+## Teaching Team
+<details>
+  <summary>Click to expand!</summary>
+
+    
+| Role           | Name             | 
+| ---------------- | -------------- |
+| Lecture Instructor | Varada Kolhatkar |
+| Lab Instructor     | Varada Kolhatkar |
+| Teaching Assistant | Ali Balapour |
+| Teaching Assistant | Prajeet Bajpai |
+| Teaching Assistant | Wenxuan (Skylar) Fang |
+| Teaching Assistant | Abdul Muntakim Rafi |
+    
+</details>
+   
+
+## Lectures 
+
+### Format
+<details>
+  <summary>Click to expand!</summary>
+    
+I strongly recommend reviewing the corresponding lecture notes before each lecture. During the lectures, I will focus on the key concepts. It's also highly advised to download the relevant datasets and run the lecture Jupyter notebooks on your own. Experimenting with the code will greatly improve your understanding.
+
+</details>
+
+### Lecture schedule
+
+This course occurs during **Block 4** in the 2023/24 school year.
+
+| # | Topic                                      | Resources and optional readings            |
+|---|--------------------------------------------|--------------------------------------------|
+| 1 | Floating Point Errors                      | <li> [Floating Point Arithmetic: Issues and Limitations](https://docs.python.org/3/tutorial/floatingpoint.html)</li>
+| 2 | Optimization and Gradient Descent          | |
+| 3 | Stochastic Gradient Descent                | |
+| 4 | Introduction to Neural Networks & PyTorch  | |
+| 5 | Training Neural Networks                   | |
+| 6 | Convolutional Neural Networks Part 1       | <li> [Stanford cs231 CNNs notes](https://cs231n.github.io/convolutional-networks/) </li> |
+| 7 | Convolutional Neural Networks Part 2       | |
+| 8 | Advanced Deep Learning                     | |
+
+## Installation
+ 
+We are providing you with a `conda` environment file which is available [here](dsci572env.yml). You can download this file and create a conda environment for the course and activate it as follows. 
+
+```
+conda env create -f dsci572env.yml
+conda activate 572
+```
+
+In order to use this environment in `Jupyter`, you will have to install `nb_conda_kernels` in the environment where you have installed `Jupyter` (typically the `base` environment). You will then be able to select this new environment in `Jupyter`. If you're unable to see the environment in Jupyter, you might have to install the kernel manually. See the documentation [here](https://ipython.readthedocs.io/en/stable/install/kernel_install.html). For more details on this, refer to your [521 lecture 7](https://pages.github.ubc.ca/MDS-2023-24/DSCI_521_platforms-dsci_students/lectures/7-virtual-environments.html#).
+
+I've only attempted to install this environment file on a few machines, and you may encounter issues with certain packages from the `yml` file when executing the commands above. This is not uncommon and may suggest that the specified package version is not yet available for your operating system via `conda`. When this occurs, you have a couple of options:
+
+1. Modify the local version of the `yml` file to remove the line containing that package.
+2. Create the environment without that package. 
+3. Activate the environment and install the package manually either with `conda install` or `pip install` in the environment.   
+
+_Note that this is not a complete list of the packages we'll be using in the course and there might be a few packages you will be installing using `conda install` later in the course. But this is a good enough list to get you started._ 
+
+## Course communication
+<details>
+  <summary>Click to expand!</summary>
+
+We are all here to support your learning and success in the course and the program. Here's how our communication will work during the course.
+
+### Clarifications on the lecture notes or lab questions
+
+If there is any clarification on the lecture material or lab questions, I'll post a Slack message on our course channel and tag you. **It is your responsibility to read the messages whenever you are tagged.** (I know that there are too many things for you to keep track of. You do not have to read all the messages but please make sure to carefully read the messages whenever you are tagged.) 
+
+### Questions on lecture material or labs
+
+If you have questions about the lecture material or lab questions, please post them on the course Slack channel rather than direct messaging me or the TAs. Here are the advantages of doing so: 
+- You'll get a quicker response. 
+- Your classmates will benefit from the discussion. 
+
+When you ask your question on the course channel, please avoid tagging the instructor unless it's specific for the instructor (e.g., if you notice some mistake in the lecture notes). If you tag a specific person, other teaching team members or your colleagues are discouraged to respond. This decreases the response rate on the channel. 
+
+Please use some consistent convention when you ask questions on Slack to facilitate easy search for others or future you. For example, if you want to ask a question on Exercise 3.2 from Lab 1, start your post with the label `lab1-ex2.3`. Or if you have a question on lecture 2 material, start your post with the label `lecture2`. Once the question is answered/solved, you can add "(solved)" tag before the label (e.g., (solved) `lab1-ex2.3`. Do not delete your post even if you figure out the answer on your own. The question and the discussion can still be beneficial to others.  
+
+### Questions related to grading
+
+If you have concerns related to grading:
+
+1. First, ensure that you have thoroughly reviewed your response, our solution key, and any TA feedback.
+2. Verify that your concerns align with our 'Reasonable grading concerns' policy, which you can read [here](https://ubc-mds.github.io/policies/).
+
+If you believe your concerns are valid:
+- For assignments: Submit a regrade request on Gradescope.
+- For quizzes: Directly message the TA responsible for grading that question. (I will inform you on Slack who has graded what after grades are returned.)
+- If you cannot resolve the issue with the TA, send a Slack message to the instructor, including the relevant TA in the conversation.
+
+### Questions related to your personal situation or talking about sensitive information
+ 
+I am open to having a conversation with you. If you'd like to discuss any sensitive matters, please send me a direct message on Slack (and mention/tag me) instead of posting it in the course channel. It may take some time for me to respond, but I'll make every effort to reply as promptly as I can. If I cannot address your issue directly, I can at least direct you to the appropriate person who may be able to assist you. 
+</details>
+
+## Reference Material
+<details>
+  <summary>Click to expand!</summary>
 
 ### Deep learning resources
-- [Dive into Deep Learning](http://d2l.ai/chapter_introduction/index.html), a book based on STAT 157 at UC Berkeley.
-- [Deep learning YouTube series](https://www.youtube.com/watch?v=aircAruvnKk) by 3Blue1Brown.
-- [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) (free online book).
-- [Deep Learning](http://www.deeplearningbook.org/). Ian Goodfellow, Yoshua Bengio and Aaron Courville.
-- [Deep Learning with Python](https://machinelearningmastery.com/deep-learning-with-python). Jason Brownlee.
-- [Stanford UFLDL tutorial](http://deeplearning.stanford.edu/wiki/index.php/UFLDL_Tutorial) (or [here](http://deeplearning.stanford.edu/tutorial/))
-- [Geoff Hinton Coursera lectures](https://www.youtube.com/playlist?list=PLoRl3Ht4JOcdU872GhiYWf6jwrk_SNhz9)
+
+- [3Blue1Brown Deep learning YouTube series](https://www.youtube.com/watch?v=aircAruvnKk)
+- [Yann LeCun's NYU Deep Learning course](https://atcold.github.io/pytorch-Deep-Learning/)
+- [Geoff Hinton's Coursera lectures](https://www.youtube.com/playlist?list=PLoRl3Ht4JOcdU872GhiYWf6jwrk_SNhz9)
 - [CS231n: Convolutional Neural Networks for Visual Recognition (Stanford)](http://cs231n.github.io/)
-- [Grokking Deep Learning](https://www.manning.com/books/grokking-deep-learning)
-- [Practical Deep Learning For Coders, Part 1](http://course.fast.ai/) and some more resources on their blog [here](http://www.fast.ai/2016/12/19/favorite-posts/)
-- [A Guide to Deep Learning](http://yerevann.com/a-guide-to-deep-learning/)
-- [Awesome Deep Learning](https://github.com/ChristosChristofidis/awesome-deep-learning), which is a list of other resources
+- [Introduction to Deep Learning](https://sebastianraschka.com/blog/2021/dl-course.html)
+- [Deep Learning for Computer Vision (U of Michigan)](https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/)
 - [Full Stack Deep Learning](https://fullstackdeeplearning.com/)
+- [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/)
+- [_Awesome_ Deep Learning](https://github.com/ChristosChristofidis/awesome-deep-learning)
+- [_Awesome_ ML Youtube channels](https://github.com/JoseDeFreitas/awesome-youtubers#machine-learning)
 
 ### ML-related textbooks
 
-- Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow: Concepts, Tools, and Techniques to Build Intelligent Systems by Aurélien Géron. Code/notebooks available [here](https://github.com/ageron/handson-ml2). (Endorsed by an MDS student!)
-- James, Gareth; Witten, Daniela; Hastie, Trevor; and Tibshirani, Robert. An Introduction to Statistical Learning: with Applications in R. 2014. Plus [Python code](https://github.com/JWarmenhoven/ISLR-python) and [more Python code](https://github.com/mscaudill/IntroStatLearn).
-- Russell, Stuart, and Peter Norvig. Artificial intelligence: a modern approach. 1995.
-- David Poole and Alan Mackwordth. Artificial Intelligence: foundations of computational agents. 2nd edition (2017). [Free e-book](http://artint.info/).
-- Kevin Murphy. Machine Learning: A Probabilistic Perspective. 2012.
-- Christopher Bishop. Pattern Recognition and Machine Learning. 2007.
-- Pang-Ning Tan, Michael Steinbach, Vipin Kumar. Introduction to Data Mining. 2005.
-- Mining of Massive Datasets. Jure Leskovec, Anand Rajaraman, Jeffrey David Ullman. 2nd ed, 2014.
+- [Dive into Deep Learning](http://d2l.ai/index.html)
+- [Deep Learning](http://www.deeplearningbook.org/) by Ian Goodfellow, Yoshua Bengio and Aaron Courville
+- [An Introduction to Statistical Learning: with Applications in R](https://www.statlearning.com/) by Gareth James, Daniela Witten, Trevor Hastie, and Rob Tibshirani (Python code [here](https://github.com/JWarmenhoven/ISLR-python) and [here](https://github.com/mscaudill/IntroStatLearn)).
+- [Artificial intelligence: a modern approach](https://aima.cs.berkeley.edu/global-index.html) by Stuart Russell and Peter Norvig.
+- [Artificial Intelligence: foundations of computational agents](http://artint.info/) by David Poole and Alan Mackwordth.
+- Pattern Recognition and Machine Learning by Christopher Bishop.
+- [Probabilistic Machine Learning: An Introduction](https://probml.github.io/pml-book/book1.html) by [Kevin Murphy](https://www.cs.ubc.ca/~murphyk/).
 
 ### Math for ML
 
 - [Mathematics for Machine Learning](https://mml-book.github.io/)
 - [The Matrix Calculus You Need For Deep Learning](http://parrt.cs.usfca.edu/doc/matrix-calculus/index.html)
-- [Introduction to Optimizers](https://blog.algorithmia.com/introduction-to-optimizers/)
 
 ### Other ML resources
 
 - [A Course in Machine Learning](http://ciml.info/)
 - [Nando de Freitas lecture videos](https://www.youtube.com/watch?v=PlhFWT7vAEw) and [online course](https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/)
 
-### Interesting ML Competition Write-Ups
+## License
 
-- [Diabetic retinopathy Kaggle competition write-up](http://jeffreydf.github.io/diabetic-retinopathy-detection/)
-- [Galaxy Zoo Kaggle competition write-up](https://benanne.github.io/2014/04/05/galaxy-zoo.html)
-- [National Data Science Bowl competition write-up](https://benanne.github.io/2015/03/17/plankton.html)
+© 2023 Varada Kolhatkar, Arman Seyed-Ahmadi, Tomas Beuzen, Mike Gelbart, and Aaron Berk
 
-## Policies
-
-Please see the general [MDS policies](https://ubc-mds.github.io/policies/).
+Software licensed under [the MIT License](https://spdx.org/licenses/MIT.html), non-software content licensed under [the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License](https://creativecommons.org/licenses/by-nc-sa/4.0/). See the [license file](LICENSE.md) for more information.
